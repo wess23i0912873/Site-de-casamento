@@ -1,0 +1,12 @@
+Objetivo: Criar a estrutura base (HTML, CSS e JS) de um site de casamento moderno e elegante para os noivos "Wesley & Stefany".
+Paleta de Cores e Estilo: O site deve ser desenvolvido utilizando apenas Branco (fundo principal), Preto (textos e sombras) e Azul (botões, destaques e detalhes). Usar uma tipografia elegante, combinando fontes serifadas para os títulos e sem serifa para os textos longos.
+Comportamento de Navegação (Menu Lateral): Criar um menu de navegação fixo (fixed) encostado no lado esquerdo da tela. Os links/botões desse menu ("Sobre Nós", "Detalhes", "RSVP", "Presentes") devem ficar alinhados verticalmente, com o texto girado/deitado (escritos de baixo para cima, usando writing-mode ou transform: rotate). Ao clicar nesses botões, o site deve rolar suavemente (scroll-behavior: smooth) para a seção correspondente.
+Comportamento Visual de Rolagem (Overlay Scrolling): Implementar um efeito de seções sobrepostas. Cada seção principal (section) deve ter altura total da tela (min-height: 100vh) e utilizar a propriedade CSS position: sticky com top: 0. Assim, ao fazer o scroll, a seção atual trava na tela e a seção seguinte desliza por cima dela, cobrindo-a.
+Estrutura das Seções:
+Hero (Tela Inicial): Centralizado, com um título grande e elegante escrito "Wesley & Stefany".
+A Noiva: 3 a 4 quadrados com fundo cinza (placeholders para fotos futuras) com layout moderno e um texto genérico elegante (Lorem Ipsum) descrevendo a noiva.
+O Noivo: Rolando para baixo, um layout similar ao da noiva: 3 a 4 placeholders para fotos e um texto genérico descrevendo o noivo.
+Detalhes do Evento: Informações de Data, Horário e Local (Cerimônia e Recepção) organizados de forma limpa.
+RSVP: Um formulário visual (com campos de Nome, Email e acompanhantes) e um botão de envio azul.
+Lista de Presentes: Uma interface visual com formato de "Cards". Cada card terá um placeholder quadrado para a foto do presente, o nome fictício do item, e dois botões lado a lado: "Reservar" e "Doar via Pix".
+Regra de Segurança: Não use chaves Pix ou dados reais. Use apenas informações de preenchimento (placeholders).
