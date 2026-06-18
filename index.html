@@ -3,481 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Site oficial de casamento de Wesley & Stefany. Confirmação de presença (RSVP), lista de presentes e detalhes do evento.">
+    <meta name="description" content="Site oficial de casamento de Wesley & Stefany. Design editorial minimalista com navegação lateral inspirada em alta costura.">
     <title>Wesley & Stefany — Casamento</title>
     
-    <!-- Google Fonts: Cormorant Garamond (Serif para títulos) e Montserrat (Sans-serif para corpo) -->
+    <!-- Google Fonts: Cormorant Garamond (Serif elegante para títulos/monogramas) e Montserrat (Sans-serif limpa para textos) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
     
     <!-- CSS File -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Menu Lateral Fixo -->
-    <nav class="side-nav" aria-label="Navegação Principal">
-        <a href="#hero" class="nav-logo" aria-label="Ir para o início">
-            <span class="monogram">W&S</span>
+    <!-- Menu Lateral Fixo / Topo Mobile (Estética Editorial) -->
+    <nav class="editorial-nav" aria-label="Navegação Editorial">
+        <a href="#" class="nav-logo" aria-label="Ir para o início">
+            <span class="logo-w">W</span>
+            <span class="logo-s">S</span>
         </a>
+        
         <div class="nav-links">
-            <a href="#noiva" class="nav-link">Sobre Nós</a>
-            <a href="#detalhes" class="nav-link">Detalhes</a>
-            <a href="#rsvp" class="nav-link">RSVP</a>
-            <a href="#presentes" class="nav-link">Presentes</a>
-        </div>
-        <div class="nav-footer">
-            <span class="date-vertical">19.09.26</span>
+            <div class="nav-item-wrapper">
+                <a href="#sobre-nos" class="nav-link">Sobre Nós</a>
+                <span class="decor-line" aria-hidden="true"></span>
+            </div>
+            <div class="nav-item-wrapper">
+                <a href="#detalhes" class="nav-link">Detalhes</a>
+                <span class="decor-line" aria-hidden="true"></span>
+            </div>
+            <div class="nav-item-wrapper rsvp-item">
+                <a href="#rsvp" class="nav-link">
+                    RSVP
+                    <span class="rsvp-tooltip" title="Confirmar Presença" aria-label="Confirmar Presença">?</span>
+                </a>
+                <span class="decor-line" aria-hidden="true"></span>
+            </div>
+            <div class="nav-item-wrapper">
+                <a href="#presentes" class="nav-link">Presentes</a>
+                <span class="decor-line" aria-hidden="true"></span>
+            </div>
         </div>
     </nav>
 
-    <!-- Botão de Menu Mobile (Hambúrguer) -->
-    <button class="mobile-menu-toggle" aria-label="Abrir Menu" aria-expanded="false">
-        <span class="bar"></span>
-        <span class="bar"></span>
-        <span class="bar"></span>
-    </button>
+    <!-- Conteúdo Principal (Vazio para o Passo 1) -->
+    <main></main>
 
-    <!-- Menu Mobile Overlay -->
-    <div class="mobile-nav-overlay">
-        <div class="mobile-nav-links">
-            <a href="#hero" class="mobile-nav-link">Início</a>
-            <a href="#noiva" class="mobile-nav-link">Sobre Nós</a>
-            <a href="#detalhes" class="mobile-nav-link">Detalhes</a>
-            <a href="#rsvp" class="mobile-nav-link">RSVP</a>
-            <a href="#presentes" class="mobile-nav-link">Presentes</a>
-        </div>
-    </div>
-
-    <!-- Container Principal de Rolagem -->
-    <main class="scroll-container">
-        
-        <!-- SEÇÃO 1: HERO -->
-        <section id="hero" class="sticky-section active-visible" style="z-index: 1;">
-            <div class="section-content hero-content">
-                <p class="hero-subtitle">SALVE A DATA — 19 DE SETEMBRO DE 2026</p>
-                <h1 class="hero-title">Wesley & Stefany</h1>
-                <div class="divider">
-                    <span class="line"></span>
-                    <span class="heart">♥</span>
-                    <span class="line"></span>
-                </div>
-                <p class="hero-countdown" id="countdown">Carregando contagem regressiva...</p>
-                <div class="scroll-arrow" aria-hidden="true">
-                    <a href="#noiva" class="arrow-btn" aria-label="Rolar para a seção Sobre Nós">
-                        <svg viewBox="0 0 24 24" width="24" height="24">
-                            <path fill="currentColor" d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
-                        </svg>
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- SEÇÃO 2: A NOIVA -->
-        <section id="noiva" class="sticky-section" style="z-index: 2;">
-            <div class="section-content couple-section">
-                <div class="couple-grid">
-                    <div class="couple-info">
-                        <span class="section-tag">A Noiva</span>
-                        <h2 class="couple-name">Stefany</h2>
-                        <div class="accent-bar"></div>
-                        <p class="couple-text">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras interdum pretium nunc, in semper dui porta sit amet. Morbi sodales vulputate purus, nec lacinia lorem accumsan eget. Phasellus et lorem hendrerit, molestie libero et, feugiat ipsum. 
-                        </p>
-                        <p class="couple-text">
-                            Sed rhoncus facilisis dolor ac bibendum. Aliquam elementum, leo ac convallis sollicitudin, magna lorem imperdiet turpis, at accumsan augue eros vel libero. Curabitur vel egestas nisi, in dictum sapien.
-                        </p>
-                    </div>
-                    <div class="couple-collage">
-                        <div class="collage-item placeholder-img p1">
-                            <span class="placeholder-icon">
-                                <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </span>
-                        </div>
-                        <div class="collage-item placeholder-img p2">
-                            <span class="placeholder-icon">
-                                <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </span>
-                        </div>
-                        <div class="collage-item placeholder-img p3">
-                            <span class="placeholder-icon">
-                                <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SEÇÃO 3: O NOIVO -->
-        <section id="noivo" class="sticky-section" style="z-index: 3;">
-            <div class="section-content couple-section">
-                <div class="couple-grid mirror">
-                    <div class="couple-info">
-                        <span class="section-tag">O Noivo</span>
-                        <h2 class="couple-name">Wesley</h2>
-                        <div class="accent-bar"></div>
-                        <p class="couple-text">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vel convallis diam. Sed accumsan arcu sed mi tristique facilisis. Nam facilisis a elit vitae convallis. Curabitur sed nisl vitae est sodales sollicitudin ac eget lectus.
-                        </p>
-                        <p class="couple-text">
-                            Nulla facilisi. Suspendisse eu risus ut ex scelerisque convallis. Integer facilisis accumsan feugiat. Sed vitae lorem nec sem vulputate varius. In elementum diam et velit sollicitudin scelerisque.
-                        </p>
-                    </div>
-                    <div class="couple-collage">
-                        <div class="collage-item placeholder-img p1">
-                            <span class="placeholder-icon">
-                                <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </span>
-                        </div>
-                        <div class="collage-item placeholder-img p2">
-                            <span class="placeholder-icon">
-                                <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </span>
-                        </div>
-                        <div class="collage-item placeholder-img p3">
-                            <span class="placeholder-icon">
-                                <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5">
-                                    <path d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SEÇÃO 4: DETALHES -->
-        <section id="detalhes" class="sticky-section" style="z-index: 4;">
-            <div class="section-content details-section">
-                <div class="title-container">
-                    <span class="section-tag-center">Programação</span>
-                    <h2 class="section-title">Detalhes do Evento</h2>
-                    <div class="title-divider"></div>
-                </div>
-
-                <div class="details-grid">
-                    <!-- Cerimônia -->
-                    <div class="details-card">
-                        <div class="card-icon-container">
-                            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-.778.099-1.533.284-2.253" />
-                            </svg>
-                        </div>
-                        <h3>A Cerimônia</h3>
-                        <div class="card-info-item">
-                            <span class="info-label">Data</span>
-                            <span class="info-val">Sábado, 19 de Setembro de 2026</span>
-                        </div>
-                        <div class="card-info-item">
-                            <span class="info-label">Horário</span>
-                            <span class="info-val">Às 17:00 horas</span>
-                        </div>
-                        <div class="card-info-item">
-                            <span class="info-label">Local</span>
-                            <span class="info-val">Catedral de São Francisco das Flores</span>
-                            <span class="info-subval">Av. da Aliança, 1000 — Centro</span>
-                        </div>
-                        <button class="btn btn-outline show-map" data-map="cerimonia">Ver Localização</button>
-                    </div>
-
-                    <!-- Recepção -->
-                    <div class="details-card">
-                        <div class="card-icon-container">
-                            <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-                            </svg>
-                        </div>
-                        <h3>A Recepção</h3>
-                        <div class="card-info-item">
-                            <span class="info-label">Data</span>
-                            <span class="info-val">Sábado, 19 de Setembro de 2026</span>
-                        </div>
-                        <div class="card-info-item">
-                            <span class="info-label">Horário</span>
-                            <span class="info-val">Logo após a cerimônia (19:00h)</span>
-                        </div>
-                        <div class="card-info-item">
-                            <span class="info-label">Local</span>
-                            <span class="info-val">Espaço Jardins e Eventos</span>
-                            <span class="info-subval">Rua das Hortênsias, 250 — Alto da Colina</span>
-                        </div>
-                        <button class="btn btn-outline show-map" data-map="recepcao">Ver Localização</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SEÇÃO 5: RSVP -->
-        <section id="rsvp" class="sticky-section" style="z-index: 5;">
-            <div class="section-content rsvp-section">
-                <div class="title-container">
-                    <span class="section-tag-center">Confirmação</span>
-                    <h2 class="section-title">Confirme sua Presença</h2>
-                    <p class="section-subtitle">Por favor, confirme se você comparecerá ao nosso casamento até o dia 15 de Agosto de 2026.</p>
-                    <div class="title-divider"></div>
-                </div>
-
-                <div class="rsvp-card">
-                    <form id="rsvp-form" class="rsvp-form" novalidate>
-                        <div class="form-row">
-                            <div class="input-group">
-                                <label for="rsvp-name">Nome Completo</label>
-                                <input type="text" id="rsvp-name" name="name" placeholder="Digite seu nome completo" required>
-                                <span class="error-msg">Por favor, insira o seu nome completo.</span>
-                            </div>
-                        </div>
-                        <div class="form-row split">
-                            <div class="input-group">
-                                <label for="rsvp-email">E-mail</label>
-                                <input type="email" id="rsvp-email" name="email" placeholder="nome@exemplo.com" required>
-                                <span class="error-msg">Por favor, insira um e-mail válido.</span>
-                            </div>
-                            <div class="input-group">
-                                <label for="rsvp-guests">Nº de Acompanhantes</label>
-                                <select id="rsvp-guests" name="guests" required>
-                                    <option value="" disabled selected>Selecione...</option>
-                                    <option value="0">Não levarei acompanhante (0)</option>
-                                    <option value="1">1 Acompanhante</option>
-                                    <option value="2">2 Acompanhantes</option>
-                                    <option value="3">3 Acompanhantes</option>
-                                    <option value="4">4 Acompanhantes</option>
-                                </select>
-                                <span class="error-msg">Por favor, selecione uma opção.</span>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="input-group">
-                                <label for="rsvp-msg">Mensagem para os Noivos (Opcional)</label>
-                                <textarea id="rsvp-msg" name="message" rows="3" placeholder="Deixe um recado carinhoso para nós..."></textarea>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-solid w-100">
-                            <span>Confirmar Presença</span>
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </section>
-
-        <!-- SEÇÃO 6: PRESENTES -->
-        <section id="presentes" class="sticky-section" style="z-index: 6;">
-            <div class="section-content gifts-section">
-                <div class="title-container">
-                    <span class="section-tag-center">Lista de Casamento</span>
-                    <h2 class="section-title">Lista de Presentes</h2>
-                    <p class="section-subtitle">Sua presença é o nosso maior presente! Mas caso deseje nos presentear, selecionamos algumas opções simbólicas.</p>
-                    <div class="title-divider"></div>
-                </div>
-
-                <div class="gifts-grid">
-                    <!-- Presente 1 -->
-                    <div class="gift-card" data-id="1" data-name="Cota Jantar Romântico na Lua de Mel" data-price="R$ 150,00">
-                        <div class="gift-img-placeholder">
-                            <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8.25v-1.5m0 1.5c-1.355 0-2.697-.056-4.024-.166C6.845 7.91 6 6.992 6 5.923V5.25c0-1.243 1.007-2.25 2.25-2.25h7.5c1.243 0 2.25 1.007 2.25 2.25v.673c0 1.07-.845 1.986-1.976 2.06A48.47 48.47 0 0112 8.25zm0 0c1.355 0 2.697.056 4.024.166C17.155 8.51 18 9.428 18 10.497v.673c0 1.243-1.007 2.25-2.25 2.25h-7.5a2.25 2.25 0 01-2.25-2.25v-.673c0-1.07.845-1.986 1.976-2.06C9.303 8.306 10.645 8.25 12 8.25zm0 0v11.25m0 0h3m-3 0h-3" />
-                            </svg>
-                            <span class="tag-gift">Cota Simbólica</span>
-                        </div>
-                        <div class="gift-card-body">
-                            <h3>Jantar Romântico</h3>
-                            <p class="gift-desc">Um jantar especial para os recém-casados durante a lua de mel.</p>
-                            <span class="gift-price">R$ 150,00</span>
-                            <div class="gift-actions">
-                                <button class="btn btn-outline btn-sm action-reserve">Reservar</button>
-                                <button class="btn btn-solid btn-sm action-pix">Doar via Pix</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Presente 2 -->
-                    <div class="gift-card" data-id="2" data-name="Jogo de Panelas Antiaderentes" data-price="R$ 350,00">
-                        <div class="gift-img-placeholder">
-                            <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8.25v-1.5m0 1.5c-1.355 0-2.697-.056-4.024-.166C6.845 7.91 6 6.992 6 5.923V5.25c0-1.243 1.007-2.25 2.25-2.25h7.5c1.243 0 2.25 1.007 2.25 2.25v.673c0 1.07-.845 1.986-1.976 2.06A48.47 48.47 0 0112 8.25zm0 0c1.355 0 2.697.056 4.024.166C17.155 8.51 18 9.428 18 10.497v.673c0 1.243-1.007 2.25-2.25 2.25h-7.5a2.25 2.25 0 01-2.25-2.25v-.673c0-1.07.845-1.986 1.976-2.06C9.303 8.306 10.645 8.25 12 8.25zm0 0v11.25m0 0h3m-3 0h-3" />
-                            </svg>
-                            <span class="tag-gift">Casa</span>
-                        </div>
-                        <div class="gift-card-body">
-                            <h3>Jogo de Panelas</h3>
-                            <p class="gift-desc">Conjunto completo antiaderente para equipar nossa nova cozinha.</p>
-                            <span class="gift-price">R$ 350,00</span>
-                            <div class="gift-actions">
-                                <button class="btn btn-outline btn-sm action-reserve">Reservar</button>
-                                <button class="btn btn-solid btn-sm action-pix">Doar via Pix</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Presente 3 -->
-                    <div class="gift-card" data-id="3" data-name="Cafeteira Espresso Nespresso" data-price="R$ 500,00">
-                        <div class="gift-img-placeholder">
-                            <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8.25v-1.5m0 1.5c-1.355 0-2.697-.056-4.024-.166C6.845 7.91 6 6.992 6 5.923V5.25c0-1.243 1.007-2.25 2.25-2.25h7.5c1.243 0 2.25 1.007 2.25 2.25v.673c0 1.07-.845 1.986-1.976 2.06A48.47 48.47 0 0112 8.25zm0 0c1.355 0 2.697.056 4.024.166C17.155 8.51 18 9.428 18 10.497v.673c0 1.243-1.007 2.25-2.25 2.25h-7.5a2.25 2.25 0 01-2.25-2.25v-.673c0-1.07.845-1.986 1.976-2.06C9.303 8.306 10.645 8.25 12 8.25zm0 0v11.25m0 0h3m-3 0h-3" />
-                            </svg>
-                            <span class="tag-gift">Eletro</span>
-                        </div>
-                        <div class="gift-card-body">
-                            <h3>Cafeteira Espresso</h3>
-                            <p class="gift-desc">Para garantir nossos cafés da manhã com energia e aroma especiais.</p>
-                            <span class="gift-price">R$ 500,00</span>
-                            <div class="gift-actions">
-                                <button class="btn btn-outline btn-sm action-reserve">Reservar</button>
-                                <button class="btn btn-solid btn-sm action-pix">Doar via Pix</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Presente 4 -->
-                    <div class="gift-card" data-id="4" data-name="Cota Geral de Apoio aos Noivos" data-price="Qualquer valor">
-                        <div class="gift-img-placeholder">
-                            <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="1">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8.25v-1.5m0 1.5c-1.355 0-2.697-.056-4.024-.166C6.845 7.91 6 6.992 6 5.923V5.25c0-1.243 1.007-2.25 2.25-2.25h7.5c1.243 0 2.25 1.007 2.25 2.25v.673c0 1.07-.845 1.986-1.976 2.06A48.47 48.47 0 0112 8.25zm0 0c1.355 0 2.697.056 4.024.166C17.155 8.51 18 9.428 18 10.497v.673c0 1.243-1.007 2.25-2.25 2.25h-7.5a2.25 2.25 0 01-2.25-2.25v-.673c0-1.07.845-1.986 1.976-2.06C9.303 8.306 10.645 8.25 12 8.25zm0 0v11.25m0 0h3m-3 0h-3" />
-                            </svg>
-                            <span class="tag-gift">Livre</span>
-                        </div>
-                        <div class="gift-card-body">
-                            <h3>Cota Geral Lua de Mel</h3>
-                            <p class="gift-desc">Deseja contribuir com outro valor? Sinta-se à vontade para doar o quanto quiser.</p>
-                            <span class="gift-price">Valor Livre</span>
-                            <div class="gift-actions">
-                                <button class="btn btn-outline btn-sm action-reserve">Reservar</button>
-                                <button class="btn btn-solid btn-sm action-pix">Doar via Pix</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- MODAL 1: EXIBIR MAPA/LOCALIZAÇÃO -->
-    <div class="modal" id="map-modal" aria-hidden="true">
-        <div class="modal-backdrop"></div>
-        <div class="modal-wrapper">
-            <button class="modal-close-btn" aria-label="Fechar modal">&times;</button>
-            <div class="modal-content">
-                <h3 id="map-title" class="modal-heading">Localização</h3>
-                <div class="map-placeholder">
-                    <!-- Mapa Minimalista Vetorial / Simulação -->
-                    <div class="vector-map-sim">
-                        <div class="map-road main-road"></div>
-                        <div class="map-road cross-road"></div>
-                        <div class="map-pin-sim">
-                            <span class="pulse"></span>
-                            <span class="pin-head"></span>
-                        </div>
-                        <span class="map-label" id="map-address-label">Carregando endereço...</span>
-                    </div>
-                </div>
-                <div class="modal-body-desc">
-                    <p id="map-details-text">Para sua comodidade, você pode abrir o local diretamente no Google Maps.</p>
-                    <a href="https://maps.google.com" target="_blank" class="btn btn-solid w-100 link-google-maps" rel="noopener">Como Chegar (Google Maps)</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL 2: CONFIRMAÇÃO DE RESERVA DE PRESENTE -->
-    <div class="modal" id="reserve-modal" aria-hidden="true">
-        <div class="modal-backdrop"></div>
-        <div class="modal-wrapper">
-            <button class="modal-close-btn" aria-label="Fechar modal">&times;</button>
-            <div class="modal-content">
-                <h3 class="modal-heading">Reservar Presente</h3>
-                <p class="modal-desc">Você escolheu reservar o item: <strong id="reserve-item-name">Nome do Item</strong>. Esta ação avisa aos noivos que você escolheu este item da lista.</p>
-                <form id="reserve-form" class="modal-form" novalidate>
-                    <input type="hidden" id="reserve-item-id" name="item_id">
-                    <div class="input-group">
-                        <label for="reserve-guest-name">Seu Nome</label>
-                        <input type="text" id="reserve-guest-name" name="guest_name" placeholder="Digite seu nome para a reserva" required>
-                        <span class="error-msg">Precisamos do seu nome para concluir a reserva.</span>
-                    </div>
-                    <button type="submit" class="btn btn-solid w-100 m-t-20">Confirmar Reserva</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL 3: DOAÇÃO VIA PIX -->
-    <div class="modal" id="pix-modal" aria-hidden="true">
-        <div class="modal-backdrop"></div>
-        <div class="modal-wrapper">
-            <button class="modal-close-btn" aria-label="Fechar modal">&times;</button>
-            <div class="modal-content">
-                <h3 class="modal-heading">Presentear via Pix</h3>
-                <p class="modal-desc">Contribua de forma rápida e segura para o item: <strong id="pix-item-name">Nome do Item</strong> (<span id="pix-item-price">Preço</span>).</p>
-                
-                <div class="pix-qr-container">
-                    <!-- QR Code Placeholder (SVG) -->
-                    <svg viewBox="0 0 100 100" class="qr-code-svg" width="160" height="160">
-                        <rect width="100" height="100" fill="white" />
-                        <!-- QR Code Elements Simulating a Real QR Code pattern -->
-                        <path d="M5,5 h20 v20 h-20 z M5,10 h5 v5 h-5 z M20,5 v15 h-5 v-15 z M5,20 h15 v5 h-15 z" fill="black" />
-                        <path d="M75,5 h20 v20 h-20 z M75,10 h5 v5 h-5 z M90,5 v15 h-5 v-15 z M75,20 h15 v5 h-15 z" fill="black" />
-                        <path d="M5,75 h20 v20 h-20 z M5,80 h5 v5 h-5 z M20,75 v15 h-5 v-15 z M5,90 h15 v5 h-15 z" fill="black" />
-                        <!-- Center and random noise -->
-                        <path d="M35,15 h5 v5 h-5 z M45,5 h10 v5 h-10 z M60,10 h5 v10 h-5 z M35,25 h15 v5 h-15 z M55,30 h10 v5 h-10 z M45,40 h5 v15 h-5 z" fill="black" />
-                        <path d="M5,35 h5 v15 h-5 z M15,45 h10 v5 h-10 z M25,35 h5 v10 h-5 z M35,45 h15 v5 h-15 z M55,50 h10 v5 h-10 z" fill="black" />
-                        <path d="M35,60 h5 v5 h-5 z M45,70 h10 v5 h-10 z M65,65 h5 v15 h-5 z M85,35 h10 v5 h-10 z M75,45 h5 v10 h-5 z M85,55 h10 v15 h-10 z" fill="black" />
-                        <path d="M35,80 h5 v15 h-5 z M45,85 h10 v5 h-10 z M60,90 h15 v5 h-15 z M75,85 h20 v5 h-20 z" fill="black" />
-                    </svg>
-                    <span class="qr-description">Escaneie o QR Code acima no aplicativo do seu banco</span>
-                </div>
-
-                <div class="pix-key-container">
-                    <p class="pix-key-title">Ou copie a chave Pix Copia e Cola:</p>
-                    <div class="copy-input-row">
-                        <input type="text" id="pix-copy-key" value="00020101021126580014br.gov.bcb.pix0136wesleystefanycasamento2026simbolico5204000053039865802BR5925Wesley Stefany Casamento6009Sao Paulo62070503***6304E85B" readonly>
-                        <button class="btn btn-solid btn-copy" id="btn-copy-pix" aria-label="Copiar chave Pix">
-                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                            </svg>
-                            <span>Copiar</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL 4: SUCESSO GERAL -->
-    <div class="modal" id="success-modal" aria-hidden="true">
-        <div class="modal-backdrop"></div>
-        <div class="modal-wrapper">
-            <button class="modal-close-btn" aria-label="Fechar modal">&times;</button>
-            <div class="modal-content text-center">
-                <div class="success-icon-container">
-                    <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                </div>
-                <h3 class="modal-heading" id="success-modal-title">Confirmado!</h3>
-                <p class="modal-desc" id="success-modal-text">Sua confirmação foi registrada com sucesso. Obrigado por fazer parte deste dia!</p>
-                <button class="btn btn-solid w-100 modal-ok-btn">Entendido</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- TOAST NOTIFICATION (Feedback flutuante discreto) -->
-    <div class="toast" id="toast-notification" aria-live="polite">
-        <span id="toast-message">Copiado com sucesso!</span>
-    </div>
-
-    <!-- Script File -->
+    <!-- Script de lógica básica (Esvaziado para evitar erros de runtime do layout antigo) -->
     <script src="script.js"></script>
 </body>
 </html>
