@@ -1,27 +1,131 @@
 /* ==========================================================================
    SITE DE CASAMENTO: WESLEY & STEFANY
-   DESIGN SYSTEM, LAOUT E EFEITOS VISUAIS (Passo 1 - Fundação & Menu Editorial)
+   DESIGN SYSTEM, LAYOUT E EFEITOS VISUAIS
+   Passo 1 — Menu Horizontal Fixo, Mobile-First, Tipografia Montserrat Local
    ========================================================================== */
 
-/* 1. FUNDAÇÃO CSS & DESIGN SYSTEM */
-:root {
-    /* Paleta de Cores Estrita e Editorial */
-    --color-bg-white: #ffffff;          /* Fundo Branco Puro */
-    --color-text-dark: #1a1a1a;         /* Textos/Sombras em Grafite Escuro */
-    --color-accent-blue: #0f2d59;       /* Destaques em Azul Nobre */
-    --color-gray-muted: #707070;        /* Texto secundário e links inativos */
-    --color-line-delicate: rgba(26, 26, 26, 0.15); /* Linha decorativa fina */
-    
-    /* Tipografia de Revista */
-    --font-serif: 'Cormorant Garamond', Georgia, serif; /* Serifada elegante para monogramas e títulos */
-    --font-sans: 'Montserrat', Arial, sans-serif;       /* Sans-serif limpa e moderna para menus e textos */
-    
-    /* Configurações de Transição */
-    --transition-editorial: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+/* --------------------------------------------------------------------------
+   0. FONTES LOCAIS — @font-face (Montserrat, pasta FONTs/montserrat/)
+   -------------------------------------------------------------------------- */
+@font-face {
+    font-family: 'Montserrat';
+    src: url('FONTs/montserrat/Montserrat-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
 }
 
-/* Reset Global */
-* {
+@font-face {
+    font-family: 'Montserrat';
+    src: url('FONTs/montserrat/Montserrat-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('FONTs/montserrat/Montserrat-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('FONTs/montserrat/Montserrat-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('FONTs/montserrat/Montserrat-ExtraBold.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('FONTs/montserrat/Montserrat-Black.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('FONTs/montserrat/Montserrat-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('FONTs/montserrat/Montserrat-ExtraLight.ttf') format('truetype');
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('FONTs/montserrat/Montserrat-Thin.ttf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('FONTs/montserrat/Montserrat-Italic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('FONTs/montserrat/Montserrat-ExtraBoldItalic.ttf') format('truetype');
+    font-weight: 800;
+    font-style: italic;
+    font-display: swap;
+}
+
+
+/* --------------------------------------------------------------------------
+   1. DESIGN SYSTEM — VARIÁVEIS CSS
+   -------------------------------------------------------------------------- */
+:root {
+    /* Paleta de Cores */
+    --color-bg-white:       #ffffff;
+    --color-text-dark:      #1a1a1a;
+    --color-accent-blue:    #0f2d59;           /* Azul Nobre / Navy */
+    --color-gray-muted:     #707070;
+    --color-line-delicate:  rgba(26, 26, 26, 0.15);
+
+    /* Tipografia */
+    --font-serif: 'Cormorant Garamond', Georgia, serif;
+    --font-sans:  'Montserrat', Arial, sans-serif; /* Fonte local carregada via @font-face */
+
+    /* Transições */
+    --transition-editorial: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    /* Layout do Menu */
+    --nav-height: 72px;
+    --nav-padding-x: 40px;
+}
+
+
+/* --------------------------------------------------------------------------
+   2. RESET GLOBAL
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -40,200 +144,157 @@ body {
     min-height: 100%;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-/* 2. MENU LATERAL EDITORIAL (DESKTOP) */
+
+/* --------------------------------------------------------------------------
+   3. MENU HORIZONTAL FIXO NO TOPO (Mobile-First)
+   -------------------------------------------------------------------------- */
 .editorial-nav {
     position: fixed;
-    left: 0;
     top: 0;
-    width: 100px;
-    height: 100vh;
-    background-color: transparent; /* Aproveitando o espaço negativo (sem fundo sólido) */
+    left: 0;
+    width: 100%;
+    height: var(--nav-height);
     z-index: 1000;
+
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    flex-direction: row;
     align-items: center;
-    padding: 60px 0;
-    pointer-events: none; /* Permite cliques nos elementos abaixo da barra de navegação transparente */
+    justify-content: space-between;
+
+    padding: 0 var(--nav-padding-x);
+    background-color: transparent; /* Flutua sem fundo sólido */
+    pointer-events: auto;
 }
 
-/* 3. LOGOTIPO DO MENU */
+
+/* --------------------------------------------------------------------------
+   4. LOGOTIPO (SVG)
+   -------------------------------------------------------------------------- */
 .nav-logo {
     display: flex;
-    flex-direction: column;
     align-items: center;
     text-decoration: none;
-    color: var(--color-text-dark);
-    font-family: var(--font-serif);
-    font-size: 2.2rem;
-    font-weight: 300;
-    line-height: 0.85;
-    letter-spacing: -0.05em;
-    pointer-events: auto; /* Reativa cliques para o logotipo */
+    flex-shrink: 0; /* Impede que a logo seja comprimida */
     transition: var(--transition-editorial);
 }
 
 .nav-logo:hover {
-    color: var(--color-accent-blue);
-    transform: translateY(-2px);
+    opacity: 0.75;
+    transform: translateY(-1px);
 }
 
-.nav-logo .logo-w {
+/* Tamanho da imagem SVG — proporcional ao layout da imagem de referência */
+.logo-img {
+    height: 44px;       /* Altura principal que define a proporção */
+    width: auto;        /* Largura automática para manter o aspect ratio */
     display: block;
+    object-fit: contain;
 }
 
-.nav-logo .logo-s {
-    display: block;
-    margin-left: 0.2em; /* Assimetria elegante típica de design editorial */
-}
 
-/* 4. ITENS DE NAVEGAÇÃO */
+/* --------------------------------------------------------------------------
+   5. LISTA DE LINKS (horizontal, alinhados à direita)
+   -------------------------------------------------------------------------- */
 .nav-links {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    gap: 70px; /* Amplo espaçamento vertical para valorizar o espaço negativo */
-    pointer-events: auto; /* Reativa cliques para os links */
+    gap: 48px; /* Espaçamento generoso entre os itens, respeitando o respiro da imagem */
 }
 
-.nav-item-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-}
 
+/* --------------------------------------------------------------------------
+   6. LINKS INDIVIDUAIS — Tipografia & Sublinhado
+   -------------------------------------------------------------------------- */
 .nav-link {
-    writing-mode: vertical-rl;
-    transform: rotate(180deg); /* Rotaciona o texto em 90 graus, lendo de baixo para cima */
+    /* Família e peso */
     font-family: var(--font-sans);
-    font-size: 0.72rem;
-    font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 0.25em;
-    color: var(--color-gray-muted);
+    font-weight: 800;                       /* ExtraBold — peso bem destacado */
+    font-size: 0.78rem;                     /* Tamanho contido e elegante */
+    text-transform: uppercase;              /* Letras MAIÚSCULAS */
+    letter-spacing: 0.08em;                /* Espaçamento entre letras — ar premium */
+
+    /* Cor */
+    color: var(--color-accent-blue);        /* Azul Nobre #0f2d59 */
+
+    /* Remoção de decorações padrão do browser */
     text-decoration: none;
-    padding: 10px 0;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+
+    /* Linha decorativa: borda inferior espessa com respiro */
+    border-bottom: 3px solid var(--color-accent-blue);
+    padding-bottom: 5px; /* Distância entre o texto e a linha — replicando o respiro da imagem */
+
+    /* Transição suave */
     transition: var(--transition-editorial);
+
+    /* Alinhamento */
+    display: inline-block;
+    white-space: nowrap;
 }
 
 .nav-link:hover {
-    color: var(--color-accent-blue);
-    letter-spacing: 0.32em; /* Expansão sutil de espaçamento na interação */
+    opacity: 0.65;
+    transform: translateY(-1px);
+    border-bottom-color: var(--color-accent-blue);
 }
 
-/* Linha decorativa fina e delicada acompanhando cada item */
-.decor-line {
-    display: block;
-    width: 1px;
-    height: 40px;
-    background-color: var(--color-line-delicate);
-    margin-top: 10px;
-    transition: var(--transition-editorial);
-}
 
-.nav-item-wrapper:hover .decor-line {
-    height: 60px; /* A linha expande levemente no hover, criando uma micro-interação elegante */
-    background-color: var(--color-accent-blue);
-}
-
-/* Ícone de interrogação com tooltip no RSVP */
-.rsvp-tooltip {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: 14px;
-    height: 14px;
-    border: 1px solid var(--color-line-delicate);
-    border-radius: 50%;
-    font-size: 0.65rem;
-    font-family: var(--font-serif);
-    color: var(--color-gray-muted);
-    cursor: help;
-    transition: var(--transition-editorial);
-    vertical-align: middle;
-}
-
-.nav-link:hover .rsvp-tooltip {
-    border-color: var(--color-accent-blue);
-    color: var(--color-accent-blue);
-    background-color: rgba(15, 45, 89, 0.05);
-}
-
-/* 5. CONTAINER PRINCIPAL (MAIN VAZIO) */
+/* --------------------------------------------------------------------------
+   7. CONTEÚDO PRINCIPAL
+   -------------------------------------------------------------------------- */
 main {
-    margin-left: 100px; /* Deixa o espaço para a barra lateral fixa no desktop */
+    /* Afasta o conteúdo do menu fixo no topo */
+    padding-top: var(--nav-height);
     min-height: 100vh;
-    transition: var(--transition-editorial);
 }
 
-/* 6. RESPONSIVIDADE INICIAL (MOBILE) */
+
+/* --------------------------------------------------------------------------
+   8. RESPONSIVIDADE — Ajustes para telas menores
+   -------------------------------------------------------------------------- */
+
+/* Tablet / Mobile médio */
 @media (max-width: 768px) {
-    .editorial-nav {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: auto;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        padding: 20px 25px;
-        background-color: transparent; /* Flutuando levemente sem fundo sólido */
-        pointer-events: auto; /* Habilita eventos em toda a barra no mobile */
+    :root {
+        --nav-height: 60px;
+        --nav-padding-x: 20px;
     }
-    
-    .nav-logo {
-        flex-direction: row;
-        align-items: baseline;
-        font-size: 1.8rem;
-        line-height: 1;
+
+    .logo-img {
+        height: 36px;
     }
-    
-    .nav-logo .logo-s {
-        margin-left: 0.05em; /* Reduz espaçamento no mobile */
-    }
-    
+
     .nav-links {
-        flex-direction: row;
-        gap: 20px; /* Espaçamento horizontal confortável */
+        gap: 20px;
     }
-    
-    .nav-item-wrapper {
-        flex-direction: row;
-        align-items: center;
-    }
-    
+
     .nav-link {
-        writing-mode: horizontal-tb; /* Perde a rotação de 90 graus no celular */
-        transform: none;
-        padding: 5px 0;
         font-size: 0.68rem;
-        letter-spacing: 0.15em;
+        letter-spacing: 0.06em;
+        padding-bottom: 4px;
+        border-bottom-width: 2.5px;
     }
-    
-    .nav-link:hover {
-        letter-spacing: 0.2em;
+}
+
+/* Mobile pequeno */
+@media (max-width: 480px) {
+    :root {
+        --nav-padding-x: 14px;
     }
-    
-    .rsvp-tooltip {
-        width: 12px;
-        height: 12px;
+
+    .logo-img {
+        height: 30px;
+    }
+
+    .nav-links {
+        gap: 12px;
+    }
+
+    .nav-link {
         font-size: 0.6rem;
-    }
-    
-    /* Oculta as linhas decorativas no mobile para manter a leveza e evitar poluição */
-    .decor-line {
-        display: none;
-    }
-    
-    main {
-        margin-left: 0; /* Remove a margem lateral no mobile */
-        padding-top: 80px; /* Abre espaço para o menu do topo */
+        letter-spacing: 0.04em;
     }
 }
