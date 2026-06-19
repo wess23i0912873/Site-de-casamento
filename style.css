@@ -1,98 +1,67 @@
 /* ==========================================================================
    SITE DE CASAMENTO: WESLEY & STEFANY
    DESIGN SYSTEM, LAYOUT E EFEITOS VISUAIS
-   Passo 1 — Menu Horizontal Fixo, Mobile-First, Tipografia Montserrat Local
+   Passo 1 — Menu Horizontal | Passo 2 — Intro Cinematográfica (Revisão Final)
    ========================================================================== */
+
 
 /* --------------------------------------------------------------------------
    0. FONTES LOCAIS — @font-face (Montserrat, pasta FONTs/montserrat/)
    -------------------------------------------------------------------------- */
 @font-face {
     font-family: 'Montserrat';
-    src: url('FONTs/montserrat/Montserrat-Regular.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
+    src: url('FONTs/montserrat/Montserrat-Thin.ttf') format('truetype');
+    font-weight: 100; font-style: normal; font-display: swap;
 }
-
-@font-face {
-    font-family: 'Montserrat';
-    src: url('FONTs/montserrat/Montserrat-Medium.ttf') format('truetype');
-    font-weight: 500;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Montserrat';
-    src: url('FONTs/montserrat/Montserrat-SemiBold.ttf') format('truetype');
-    font-weight: 600;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Montserrat';
-    src: url('FONTs/montserrat/Montserrat-Bold.ttf') format('truetype');
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Montserrat';
-    src: url('FONTs/montserrat/Montserrat-ExtraBold.ttf') format('truetype');
-    font-weight: 800;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Montserrat';
-    src: url('FONTs/montserrat/Montserrat-Black.ttf') format('truetype');
-    font-weight: 900;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Montserrat';
-    src: url('FONTs/montserrat/Montserrat-Light.ttf') format('truetype');
-    font-weight: 300;
-    font-style: normal;
-    font-display: swap;
-}
-
 @font-face {
     font-family: 'Montserrat';
     src: url('FONTs/montserrat/Montserrat-ExtraLight.ttf') format('truetype');
-    font-weight: 200;
-    font-style: normal;
-    font-display: swap;
+    font-weight: 200; font-style: normal; font-display: swap;
 }
-
 @font-face {
     font-family: 'Montserrat';
-    src: url('FONTs/montserrat/Montserrat-Thin.ttf') format('truetype');
-    font-weight: 100;
-    font-style: normal;
-    font-display: swap;
+    src: url('FONTs/montserrat/Montserrat-Light.ttf') format('truetype');
+    font-weight: 300; font-style: normal; font-display: swap;
 }
-
+@font-face {
+    font-family: 'Montserrat';
+    src: url('FONTs/montserrat/Montserrat-Regular.ttf') format('truetype');
+    font-weight: 400; font-style: normal; font-display: swap;
+}
 @font-face {
     font-family: 'Montserrat';
     src: url('FONTs/montserrat/Montserrat-Italic.ttf') format('truetype');
-    font-weight: 400;
-    font-style: italic;
-    font-display: swap;
+    font-weight: 400; font-style: italic; font-display: swap;
 }
-
+@font-face {
+    font-family: 'Montserrat';
+    src: url('FONTs/montserrat/Montserrat-Medium.ttf') format('truetype');
+    font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+    font-family: 'Montserrat';
+    src: url('FONTs/montserrat/Montserrat-SemiBold.ttf') format('truetype');
+    font-weight: 600; font-style: normal; font-display: swap;
+}
+@font-face {
+    font-family: 'Montserrat';
+    src: url('FONTs/montserrat/Montserrat-Bold.ttf') format('truetype');
+    font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+    font-family: 'Montserrat';
+    src: url('FONTs/montserrat/Montserrat-ExtraBold.ttf') format('truetype');
+    font-weight: 800; font-style: normal; font-display: swap;
+}
 @font-face {
     font-family: 'Montserrat';
     src: url('FONTs/montserrat/Montserrat-ExtraBoldItalic.ttf') format('truetype');
-    font-weight: 800;
-    font-style: italic;
-    font-display: swap;
+    font-weight: 800; font-style: italic; font-display: swap;
+}
+@font-face {
+    font-family: 'Montserrat';
+    src: url('FONTs/montserrat/Montserrat-Black.ttf') format('truetype');
+    font-weight: 900; font-style: normal; font-display: swap;
 }
 
 
@@ -101,21 +70,21 @@
    -------------------------------------------------------------------------- */
 :root {
     /* Paleta de Cores */
-    --color-bg-white:       #ffffff;
-    --color-text-dark:      #1a1a1a;
-    --color-accent-blue:    #0f2d59;           /* Azul Nobre / Navy */
-    --color-gray-muted:     #707070;
-    --color-line-delicate:  rgba(26, 26, 26, 0.15);
+    --color-bg-white:      #ffffff;
+    --color-text-dark:     #1a1a1a;
+    --color-accent-blue:   #0f2d59;
+    --color-gray-muted:    #707070;
+    --color-line-delicate: rgba(26, 26, 26, 0.15);
 
     /* Tipografia */
     --font-serif: 'Cormorant Garamond', Georgia, serif;
-    --font-sans:  'Montserrat', Arial, sans-serif; /* Fonte local carregada via @font-face */
+    --font-sans:  'Montserrat', Arial, sans-serif;
 
-    /* Transições */
+    /* Transições do menu */
     --transition-editorial: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
     /* Layout do Menu */
-    --nav-height: 72px;
+    --nav-height:    72px;
     --nav-padding-x: 40px;
 }
 
@@ -123,21 +92,16 @@
 /* --------------------------------------------------------------------------
    2. RESET GLOBAL
    -------------------------------------------------------------------------- */
-*,
-*::before,
-*::after {
+*, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-html {
-    scroll-behavior: smooth;
-    height: 100%;
-}
+html { scroll-behavior: smooth; height: 100%; }
 
 body {
-    background-color: var(--color-bg-white);
+    background-color: #0a0a0a; /* Fundo escuro padrão — evita flash branco */
     color: var(--color-text-dark);
     font-family: var(--font-sans);
     line-height: 1.6;
@@ -147,9 +111,167 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PASSO 2 — HERO SECTION & INTRO SCREEN
+   ══════════════════════════════════════════════════════════════════════════ */
 
 /* --------------------------------------------------------------------------
-   3. MENU HORIZONTAL FIXO NO TOPO (Mobile-First)
+   3. HERO SECTION — Fundo fixo com a foto do casal
+
+   SOLUÇÃO DEFINITIVA DO FUNDO:
+   • position: fixed + inset: 0  → ancora na viewport, ignorando overflow
+   • background-image            → caminho direto, sem depender de <img>
+   • background-size: cover      → preenche SEMPRE sem distorção
+   • background-position: center → centraliza em qualquer proporção de tela
+   • z-index: 1                  → fica na base, visível atrás de tudo
+   -------------------------------------------------------------------------- */
+#hero {
+    position: fixed;
+    inset: 0;                                      /* top/right/bottom/left = 0 */
+    min-height: 100vh;
+    width: 100%;
+    background-image: url('IMAGENS/FOTOS/intro-static.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #0a0a0a;                     /* fallback enquanto carrega */
+    z-index: 1;                                    /* base da pilha */
+}
+
+
+/* --------------------------------------------------------------------------
+   4. INTRO SCREEN — Overlay fixo e semi-transparente SOBRE o Hero
+
+   z-index: 9999 → garante ficar acima de absolutamente tudo
+   background-color: rgba(0,0,0,0.9) → 90% opaco, deixa foto aparecer sutilmente
+   -------------------------------------------------------------------------- */
+#intro-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background-color: rgba(0, 0, 0, 0.9);
+
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+
+/* --------------------------------------------------------------------------
+   5. LOGO NA INTRO — Centralizada e branca
+   -------------------------------------------------------------------------- */
+#intro-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 80px;
+    width: auto;
+    filter: brightness(0) invert(1); /* SVG dark → branco no fundo escuro */
+    opacity: 0;                       /* estado inicial: invisível */
+}
+
+
+/* --------------------------------------------------------------------------
+   6. CONTAINERS DE TEXTO DA INTRO
+   #intro-texts-wrapper: container flex que posiciona ambas as saudações
+   em ~28% do topo. Os filhos (.intro-text) empilham verticalmente com gap.
+   -------------------------------------------------------------------------- */
+#intro-texts-wrapper {
+    position: absolute;
+    top: 28%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 85%;
+    max-width: 440px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;                        /* espaço elegante entre T1 e T2 */
+    pointer-events: none;
+    text-align: center;
+}
+
+.intro-text {
+    width: 100%;                      /* herda a largura do wrapper */
+    opacity: 0;                       /* estado inicial: invisível */
+}
+
+
+/* --------------------------------------------------------------------------
+   7. TIPOGRAFIA DAS SAUDAÇÕES — Serif Elegante (Cormorant Garamond)
+   -------------------------------------------------------------------------- */
+.greeting-title {
+    font-family: var(--font-serif);
+    font-size: clamp(3rem, 11vw, 5rem);
+    font-weight: 400;
+    font-style: italic;
+    color: #ffffff;
+    line-height: 1.05;
+    margin-bottom: 0.3em;
+    letter-spacing: -0.01em;
+}
+
+.greeting-sub {
+    font-family: var(--font-serif);
+    font-size: clamp(1.05rem, 4vw, 1.4rem);
+    font-weight: 400;
+    font-style: italic;
+    color: #ffffff;
+    line-height: 1.55;
+    letter-spacing: 0.01em;
+}
+
+
+/* --------------------------------------------------------------------------
+   8. CLASSES DE ANIMAÇÃO — Controladas pelo JavaScript
+
+   .fade-in  → torna o elemento visível com transição de 1.5s
+   .fade-out → oculta o elemento com transição de 1.5s
+
+   !important garante que essas classes sempre vencem sobre
+   a opacity:0 base dos seletores #intro-logo e .intro-text,
+   independente de especificidade.
+   -------------------------------------------------------------------------- */
+
+.fade-in {
+    opacity: 1 !important;
+    transition: opacity 1.5s ease !important;
+}
+
+.fade-out {
+    opacity: 0 !important;
+    transition: opacity 1.5s ease !important;
+    pointer-events: none;
+}
+
+
+/* --------------------------------------------------------------------------
+   9. CLASSES DE ESTADO DO MENU
+   -------------------------------------------------------------------------- */
+
+/* Menu oculto durante a intro; JS remove .nav-hidden ao encerrar */
+#main-nav.nav-hidden {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: opacity 0.8s ease !important;
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PASSO 1 — MENU HORIZONTAL FIXO NO TOPO (Mobile-First)
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* --------------------------------------------------------------------------
+   10. MENU NAV
    -------------------------------------------------------------------------- */
 .editorial-nav {
     position: fixed;
@@ -157,7 +279,7 @@ body {
     left: 0;
     width: 100%;
     height: var(--nav-height);
-    z-index: 1000;
+    z-index: 10000;            /* Acima de tudo, inclusive da intro (9999) */
 
     display: flex;
     flex-direction: row;
@@ -165,136 +287,106 @@ body {
     justify-content: space-between;
 
     padding: 0 var(--nav-padding-x);
-    background-color: transparent; /* Flutua sem fundo sólido */
+    background-color: transparent;
     pointer-events: auto;
+    transition: opacity 0.8s ease;
 }
 
 
 /* --------------------------------------------------------------------------
-   4. LOGOTIPO (SVG)
+   11. LOGOTIPO DO MENU (SVG)
    -------------------------------------------------------------------------- */
 .nav-logo {
     display: flex;
     align-items: center;
     text-decoration: none;
-    flex-shrink: 0; /* Impede que a logo seja comprimida */
+    flex-shrink: 0;
     transition: var(--transition-editorial);
 }
 
 .nav-logo:hover {
-    opacity: 0.75;
+    opacity: 0.70;
     transform: translateY(-1px);
 }
 
-/* Tamanho da imagem SVG — proporcional ao layout da imagem de referência */
 .logo-img {
-    height: 44px;       /* Altura principal que define a proporção */
-    width: auto;        /* Largura automática para manter o aspect ratio */
+    height: 44px;
+    width: auto;
     display: block;
     object-fit: contain;
 }
 
 
 /* --------------------------------------------------------------------------
-   5. LISTA DE LINKS (horizontal, alinhados à direita)
+   12. LINKS DO MENU
    -------------------------------------------------------------------------- */
 .nav-links {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 48px; /* Espaçamento generoso entre os itens, respeitando o respiro da imagem */
+    gap: 48px;
 }
 
-
-/* --------------------------------------------------------------------------
-   6. LINKS INDIVIDUAIS — Tipografia & Sublinhado
-   -------------------------------------------------------------------------- */
 .nav-link {
-    /* Família e peso */
     font-family: var(--font-sans);
-    font-weight: 800;                       /* ExtraBold — peso bem destacado */
-    font-size: 0.78rem;                     /* Tamanho contido e elegante */
-    text-transform: uppercase;              /* Letras MAIÚSCULAS */
-    letter-spacing: 0.08em;                /* Espaçamento entre letras — ar premium */
+    font-weight: 800;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
 
-    /* Cor */
-    color: var(--color-accent-blue);        /* Azul Nobre #0f2d59 */
-
-    /* Remoção de decorações padrão do browser */
+    color: var(--color-accent-blue);
     text-decoration: none;
 
-    /* Linha decorativa: borda inferior espessa com respiro */
     border-bottom: 3px solid var(--color-accent-blue);
-    padding-bottom: 5px; /* Distância entre o texto e a linha — replicando o respiro da imagem */
+    padding-bottom: 5px;
 
-    /* Transição suave */
-    transition: var(--transition-editorial);
-
-    /* Alinhamento */
     display: inline-block;
     white-space: nowrap;
+    transition: var(--transition-editorial);
 }
 
 .nav-link:hover {
-    opacity: 0.65;
+    opacity: 0.60;
     transform: translateY(-1px);
-    border-bottom-color: var(--color-accent-blue);
 }
 
 
 /* --------------------------------------------------------------------------
-   7. CONTEÚDO PRINCIPAL
+   13. CONTEÚDO PRINCIPAL
    -------------------------------------------------------------------------- */
 main {
-    /* Afasta o conteúdo do menu fixo no topo */
+    position: relative;
+    z-index: 2;              /* Acima do hero fixo (z-index:1) */
     padding-top: var(--nav-height);
     min-height: 100vh;
+    background-color: transparent;
 }
 
+/* ══════════════════════════════════════════════════════════════════════════
+   RESPONSIVIDADE
+   ══════════════════════════════════════════════════════════════════════════ */
 
-/* --------------------------------------------------------------------------
-   8. RESPONSIVIDADE — Ajustes para telas menores
-   -------------------------------------------------------------------------- */
-
-/* Tablet / Mobile médio */
 @media (max-width: 768px) {
     :root {
-        --nav-height: 60px;
+        --nav-height:    60px;
         --nav-padding-x: 20px;
     }
 
-    .logo-img {
-        height: 36px;
-    }
+    .logo-img   { height: 36px; }
+    .nav-links  { gap: 20px; }
+    .nav-link   { font-size: 0.68rem; letter-spacing: 0.06em; padding-bottom: 4px; border-bottom-width: 2.5px; }
 
-    .nav-links {
-        gap: 20px;
-    }
-
-    .nav-link {
-        font-size: 0.68rem;
-        letter-spacing: 0.06em;
-        padding-bottom: 4px;
-        border-bottom-width: 2.5px;
-    }
+    #intro-logo { height: 65px; }
+    #intro-texts-wrapper { top: 25%; width: 88%; }
 }
 
-/* Mobile pequeno */
 @media (max-width: 480px) {
-    :root {
-        --nav-padding-x: 14px;
-    }
+    :root { --nav-padding-x: 14px; }
 
-    .logo-img {
-        height: 30px;
-    }
+    .logo-img  { height: 30px; }
+    .nav-links { gap: 12px; }
+    .nav-link  { font-size: 0.60rem; letter-spacing: 0.04em; }
 
-    .nav-links {
-        gap: 12px;
-    }
-
-    .nav-link {
-        font-size: 0.6rem;
-        letter-spacing: 0.04em;
-    }
+    #intro-logo { height: 55px; }
+    #intro-texts-wrapper { top: 22%; width: 90%; }
 }
