@@ -48,11 +48,31 @@
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════════════
-         HERO SECTION — Fundo com a foto do casal (revelado após intro)
-         Ocupa 100vh; imagem usa object-fit: cover para não distorcer.
+         PASSO 3 — HERO CAROUSEL + LOGO DECORATIVO
+         Container fixo: z-index:1 (atrás da intro, atrás do menu).
+         Carrossel automático inicia APENAS após o término da intro.
          ═══════════════════════════════════════════════════════════════════ -->
-    <!-- Hero: fundo gerenciado via CSS background-image no #hero (position:fixed, z-index:1) -->
-    <section id="hero" aria-label="Foto de capa do casal"></section>
+    <div id="hero-carousel-container" aria-hidden="true">
+
+        <!-- Slides do carrossel (7 fotos reais) -->
+        <div id="hero-carousel">
+            <div class="hero-slide active"><img src="IMAGENS/FOTOS/hero-1.jpg" alt="" draggable="false"></div>
+            <div class="hero-slide"><img src="IMAGENS/FOTOS/hero-2.jpg" alt="" draggable="false"></div>
+            <div class="hero-slide"><img src="IMAGENS/FOTOS/hero-3.jpg" alt="" draggable="false"></div>
+            <div class="hero-slide"><img src="IMAGENS/FOTOS/hero-4.jpg" alt="" draggable="false"></div>
+            <div class="hero-slide"><img src="IMAGENS/FOTOS/hero-5.jpg" alt="" draggable="false"></div>
+            <div class="hero-slide"><img src="IMAGENS/FOTOS/hero-6.jpg" alt="" draggable="false"></div>
+            <div class="hero-slide"><img src="IMAGENS/FOTOS/hero-7.jpg" alt="" draggable="false"></div>
+        </div>
+
+        <!-- Logo decorativo grande — aparece com fade-in ao fim da intro -->
+        <img
+            src="IMAGENS/logo-wesley-stefany-hero.svg"
+            alt="Wesley &amp; Stefany"
+            class="hero-logo-reveal"
+        >
+
+    </div>
 
     <!-- ═══════════════════════════════════════════════════════════════════
          PASSO 1 — MENU HORIZONTAL FIXO NO TOPO

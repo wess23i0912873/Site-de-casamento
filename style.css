@@ -124,26 +124,72 @@ body {
    ══════════════════════════════════════════════════════════════════════════ */
 
 /* --------------------------------------------------------------------------
-   3. HERO SECTION — Fundo fixo com a foto do casal
+   3. HERO CAROUSEL — Container fixo + slides de foto em cross-fade
 
-   SOLUÇÃO DEFINITIVA DO FUNDO:
-   • position: fixed + inset: 0  → ancora na viewport, ignorando overflow
-   • background-image            → caminho direto, sem depender de <img>
-   • background-size: cover      → preenche SEMPRE sem distorção
-   • background-position: center → centraliza em qualquer proporção de tela
-   • z-index: 1                  → fica na base, visível atrás de tudo
+   z-index stack:
+     1  → #hero-carousel-container  (base, atrás de tudo)
+     2  → .hero-logo-reveal         (logo decorativo, acima das fotos)
+     10000 → #main-nav              (menu, acima de tudo)
    -------------------------------------------------------------------------- */
-#hero {
+#hero-carousel-container {
     position: fixed;
-    inset: 0;                                      /* top/right/bottom/left = 0 */
-    min-height: 100vh;
+    inset: 0;
     width: 100%;
-    background-image: url('IMAGENS/FOTOS/intro-static.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-color: #0a0a0a;                     /* fallback enquanto carrega */
-    z-index: 1;                                    /* base da pilha */
+    height: 100vh;
+    background-color: #0a0a0a;   /* fallback / fundo durante transição */
+    z-index: 1;
+    overflow: hidden;
+}
+
+/* Camada de slides — ocupa todo o container */
+#hero-carousel {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+/* Cada slide fica empilhado absolutamente; apenas o .active é visível */
+.hero-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 1.2s ease-in-out;  /* cross-fade suave entre fotos */
+}
+
+.hero-slide.active {
+    opacity: 1;
+}
+
+/* Imagem dentro do slide: cobre 100% sem distorção em qualquer tela */
+.hero-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Logo decorativo grande — centralizado sobre o carrossel
+   Inicia invisível (opacity:0); JS adiciona .visible ao fim da intro */
+.hero-logo-reveal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: clamp(200px, 55vw, 520px);   /* responsivo: mobile → desktop */
+    max-height: 75vh;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+    z-index: 2;                          /* acima das fotos, abaixo do menu */
+    opacity: 0;
+    transition: opacity 1.8s ease;       /* aparece suavemente com o reveal */
+}
+
+.hero-logo-reveal.visible {
+    opacity: 1;
 }
 
 
