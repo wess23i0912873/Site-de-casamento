@@ -71,7 +71,7 @@
 :root {
     /* Paleta de Cores */
     --color-bg-white:      #ffffff;
-    --color-text-dark:     #1a1a1a;
+    --color-text-dark:     #081024; /* Azul navy muito escuro para alto contraste */
     --color-accent-blue:   #0f2d59;
     --color-gray-muted:    #707070;
     --color-line-delicate: rgba(26, 26, 26, 0.15);
@@ -98,24 +98,16 @@
     padding: 0;
 }
 
-html { scroll-behavior: smooth; height: 100%; }
+html { scroll-behavior: smooth !important; }
 
 body {
     background-color: #0a0a0a; /* Fundo escuro padrão — evita flash branco */
     color: var(--color-text-dark);
     font-family: var(--font-sans);
     line-height: 1.6;
-    min-height: 100%;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-}
-
-@media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-        transition-duration: 0.01ms !important;
-        animation-duration: 0.01ms !important;
-    }
 }
 
 
@@ -399,13 +391,402 @@ body {
 
 /* --------------------------------------------------------------------------
    13. CONTEÚDO PRINCIPAL
+   O main começa APÓS o hero (100vh de margem) para que o hero fixo
+   fique visível atrás. As seções têm fundo sólido para cobrir o hero.
    -------------------------------------------------------------------------- */
 main {
     position: relative;
-    z-index: 2;              /* Acima do hero fixo (z-index:1) */
-    padding-top: var(--nav-height);
-    min-height: 100vh;
+    z-index: 3;                         /* acima do hero (z-index:1) */
+    margin-top: 100vh;                  /* empurra o conteúdo para abaixo do hero fixo */
     background-color: transparent;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PASSO 4 — SEÇÕES DE CONTEÚDO: SOBRE, NOIVA, NOIVO
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* --------------------------------------------------------------------------
+   VARIÁVEIS DE SEÇÃO
+   -------------------------------------------------------------------------- */
+:root {
+    --section-padding:   80px 0;
+    --section-padding-x: clamp(20px, 5vw, 80px);
+    --mosaic-gap:        6px;        /* gap entre fotos do mosaico */
+    --text-max-width:    640px;
+    --texture-url:       url('IMAGENS/textura-fundo.png');
+    --texture-size:      180px;
+    --texture-opacity:   rgba(255, 255, 255, 0.4);
+}
+
+/* --------------------------------------------------------------------------
+   14. BASE DAS SEÇÕES — Efeito Cortina
+
+   #sobre é a primeira seção. Com position:relative + z-index:10 e
+   fundo branco sólido, ela SOBE como uma cortina suave sobre o hero
+   fixo (z-index:1) conforme o usuário rola. Não há transparncia nem
+   pulos rústicos — apenas o branco cobrindo o carrossel de foto.
+   -------------------------------------------------------------------------- */
+#sobre {
+    position: relative;
+    z-index: 2;
+    background-color: #ffffff;
+    background-image: linear-gradient(var(--texture-opacity), var(--texture-opacity)), var(--texture-url);
+    background-repeat: repeat;
+    background-size: auto, var(--texture-size);
+    padding-top: 100px;
+    padding-bottom: 80px;
+    padding-left:  var(--section-padding-x);
+    padding-right: var(--section-padding-x);
+    box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.10);
+}
+
+#sobre-noiva,
+#sobre-noivo {
+    position: relative;
+    z-index: 10;
+    background-color: #ffffff;
+    background-image: linear-gradient(var(--texture-opacity), var(--texture-opacity)), var(--texture-url);
+    background-repeat: repeat;
+    background-size: auto, var(--texture-size);
+    border-top: 1px solid rgba(26, 26, 26, 0.10);
+    padding: var(--section-padding);
+    padding-left:  var(--section-padding-x);
+    padding-right: var(--section-padding-x);
+}
+
+/* --------------------------------------------------------------------------
+   15. ANIMAÇÃO DE REVEAL (IntersectionObserver)
+   Elementos com .reveal-block ficam invisíveis até entrar na viewport.
+   JS adiciona .is-visible para disparar o fade-in.
+   -------------------------------------------------------------------------- */
+.reveal-block {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.85s ease, transform 0.85s ease;
+}
+
+.reveal-block.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Staggered Animations para galerias */
+.stagger-container {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+}
+
+/* Define os itens internos com estado inicial invisível */
+.stagger-container .foto-item,
+.stagger-container .noiva-foto,
+.stagger-container .noivo-foto {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+/* Transição quando o container ganha is-visible */
+.stagger-container.is-visible .foto-item,
+.stagger-container.is-visible .noiva-foto,
+.stagger-container.is-visible .noivo-foto {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Delays escalonados para o efeito flutuante (stagger) */
+.stagger-container.is-visible .foto-item:nth-child(1),
+.stagger-container.is-visible .noiva-foto:nth-child(1),
+.stagger-container.is-visible .noivo-foto:nth-child(1) { transition-delay: 0.1s; }
+
+.stagger-container.is-visible .foto-item:nth-child(2),
+.stagger-container.is-visible .noiva-foto:nth-child(2),
+.stagger-container.is-visible .noivo-foto:nth-child(2) { transition-delay: 0.25s; }
+
+.stagger-container.is-visible .foto-item:nth-child(3),
+.stagger-container.is-visible .noiva-foto:nth-child(3),
+.stagger-container.is-visible .noivo-foto:nth-child(3) { transition-delay: 0.4s; }
+
+.stagger-container.is-visible .foto-item:nth-child(4) { transition-delay: 0.55s; }
+.stagger-container.is-visible .foto-item:nth-child(5) { transition-delay: 0.7s; }
+
+/* --------------------------------------------------------------------------
+   16. MOSAICO COLAGEM — Seção Sobre (5 fotos)
+
+   Grade de 5 colunas × 13 linhas de 60px = 780px de altura total.
+   Coordenadas exatas por foto (sistema cabalista-equilibrado):
+
+     foto-1 (portrait grande) : col 1-4 / row 2-8
+     foto-2 (portrait menor)  : col 4-6 / row 1-6
+     foto-3 (portrait)        : col 2-4 / row 8-12
+     foto-4 (portrait)        : col 4-6 / row 6-11
+     foto-5 (wide)            : col 2-6 / row 11-14
+
+   z-index: 20 → sempre visível acima de qualquer texto sticky (z-index:10).
+   CANTOS RETOS: border-radius:0 e clip-path:none em tudo.
+   -------------------------------------------------------------------------- */
+
+/* Container externo */
+.sobre-fotos-overlay {
+    position: relative;
+    z-index: 20;
+    width: 100%;
+    margin-bottom: 60px;
+}
+
+/* Grade principal: 2 colunas simétricas */
+.sobre-fotos-inner {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Cada célula de foto */
+.foto-item {
+    overflow: hidden;
+    background-color: #d4d0cb;
+    border-radius: 0 !important;
+    clip-path: none !important;
+    aspect-ratio: 4 / 5;            /* altura visível mesmo sem imagem */
+}
+
+/* Imagem dentro da célula */
+.foto-item img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 0 !important;
+    clip-path: none !important;
+}
+
+/* Posições no grid: fluxo automático 2 por linha */
+/* Fotos 1-4 fluem naturalmente em 2 colunas sem row explícito */
+.foto-1, .foto-2, .foto-3, .foto-4 { grid-column: auto; grid-row: auto; }
+
+/* Foto 5: centralizada, ocupa as 2 colunas na última linha */
+.foto-5 {
+    grid-column: 1 / -1;
+    aspect-ratio: 16 / 6;            /* wide: proporção panorâmica */
+    margin-top: 0;
+}
+
+/* --------------------------------------------------------------------------
+   17. TEXTO DA SEÇÃO SOBRE
+   -------------------------------------------------------------------------- */
+.sobre-texto-bloco {
+    max-width: 600px;             /* coluna de leitura elegante */
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+    padding-top: 32px;
+}
+
+/* Frase de abertura — destaque editorial */
+.sobre-text__body--destaque {
+    font-family: var(--font-serif);
+    font-size: clamp(1.35rem, 4vw, 1.85rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--color-text-dark);
+    line-height: 1.25;
+    letter-spacing: 0.01em;
+    margin-bottom: 28px;
+}
+
+/* Parágrafos do corpo — leitura fluida e espaçada */
+.sobre-text__body {
+    font-family: var(--font-serif);
+    font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--color-text-dark);
+    line-height: 1.9;
+    letter-spacing: 0.01em;
+    margin-bottom: 18px;
+}
+
+/* Assinatura — discreta, separada do corpo */
+.sobre-text__assinatura {
+    font-family: var(--font-serif);
+    font-size: clamp(0.82rem, 2vw, 0.95rem);
+    font-weight: 300;
+    font-style: italic;
+    color: rgba(8, 16, 36, 0.75); /* Navy escuro com leve transparência */
+    line-height: 1.6;
+    letter-spacing: 0.03em;
+    margin-top: 28px;
+    margin-bottom: 0;
+}
+
+/* --------------------------------------------------------------------------
+   18. MOSAICO DOS PERFIS (Noiva / Noivo — 3 fotos)
+   Grade: 1 foto grande à esquerda + 2 empilhadas à direita
+   -------------------------------------------------------------------------- */
+.perfil-mosaic {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    grid-template-rows: 1fr 1fr;
+    gap: var(--mosaic-gap);
+    margin-bottom: 44px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Foto principal: ocupa as 2 linhas da coluna esquerda */
+.perfil-mosaic__item--main {
+    grid-row: 1 / 3;
+}
+
+/* REGRA CRÍTICA: cantos retos em todos os itens e imagens dos perfis */
+.perfil-mosaic__item,
+.perfil-mosaic__item img {
+    border-radius: 0 !important;
+}
+
+.perfil-mosaic__item {
+    overflow: hidden;
+    background-color: #c8c8c8;
+    aspect-ratio: 3 / 4;
+}
+
+.perfil-mosaic__item--main {
+    aspect-ratio: 2 / 3;
+}
+
+.perfil-mosaic__item img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+}
+
+/* --------------------------------------------------------------------------
+   19. IDENTIDADE DO PERFIL — Logo SVG com o nome
+   -------------------------------------------------------------------------- */
+.perfil-identidade {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.perfil-nome-logo {
+    height: clamp(48px, 12vw, 90px);
+    width: auto;
+    display: inline-block;
+}
+
+/* --------------------------------------------------------------------------
+   20. BIOGRAFIA DO PERFIL
+   -------------------------------------------------------------------------- */
+.perfil-bio {
+    max-width: var(--text-max-width);
+    margin: 0 auto;
+    text-align: center;
+}
+
+.perfil-bio__texto {
+    font-family: var(--font-serif);
+    font-size: clamp(0.98rem, 2.8vw, 1.2rem);
+    font-weight: 400;
+    color: var(--color-text-dark);
+    line-height: 1.85;
+    letter-spacing: 0.01em;
+}
+
+/* --------------------------------------------------------------------------
+   21. GRID NOIVA — Seção #sobre-noiva
+   Layout assimétrico: foto grande (1.5fr) + 2 menores empilhadas (1fr).
+   Placeholders vermelhos garantem visibilidade enquanto as fotos não chegam.
+   -------------------------------------------------------------------------- */
+.noiva-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto 52px auto;
+}
+
+/* Foto grande: ocupa as 2 linhas da coluna esquerda */
+.bride-v1 {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+}
+
+/* Fotos menores: coluna direita, linha 1 e linha 2 */
+.bride-s1 { grid-column: 2; grid-row: 1; }
+.bride-s2 { grid-column: 2; grid-row: 2; }
+
+/* Tamanhos mínimos e placeholder vermelho visível */
+.noiva-foto {
+    overflow: hidden;
+    background-color: #c0392b;        /* vermelho placeholder */
+    border-radius: 0 !important;
+    clip-path: none !important;
+}
+
+.bride-v1 { min-height: 500px; }     /* portrait grande */
+.bride-s1,
+.bride-s2 { min-height: 230px; }     /* quadradas menores */
+
+/* Imagem preenche o container sem distorção */
+.noiva-foto img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    border-radius: 0 !important;
+    clip-path: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   22. GRID NOIVO — Seção #sobre-noivo
+   Mesmo layout assimétrico da noiva: foto grande (1.5fr) + 2 menores (1fr).
+   -------------------------------------------------------------------------- */
+.noivo-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto 52px auto;
+}
+
+/* Foto grande: ocupa as 2 linhas da coluna esquerda */
+.groom-1 {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    min-height: 500px;
+}
+
+/* Fotos menores: coluna direita */
+.groom-2 { grid-column: 2; grid-row: 1; min-height: 230px; }
+.groom-3 { grid-column: 2; grid-row: 2; min-height: 230px; }
+
+/* Placeholder vermelho + cantos retos */
+.noivo-foto {
+    overflow: hidden;
+    background-color: #c0392b;
+    border-radius: 0 !important;
+    clip-path: none !important;
+}
+
+/* Imagem preenche o container sem distorção */
+.noivo-foto img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    border-radius: 0 !important;
+    clip-path: none !important;
 }
 
 /* ══════════════════════════════════════════════════════════════════════════

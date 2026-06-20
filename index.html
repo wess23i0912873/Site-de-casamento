@@ -81,13 +81,13 @@
     <nav class="editorial-nav" id="main-nav" aria-label="Navegação principal">
 
         <!-- Logo SVG no canto esquerdo -->
-        <a href="#" class="nav-logo" aria-label="Ir para o início">
+        <a href="#hero-carousel-container" class="nav-logo" aria-label="Ir para o início" data-scroll="top">
             <img src="IMAGENS/logo ws.svg" alt="Logotipo W&amp;S" class="logo-img">
         </a>
 
         <!-- Links horizontais alinhados à direita -->
         <div class="nav-links">
-            <a href="#sobre-nos" class="nav-link">Sobre Nós</a>
+            <a href="#sobre-noiva" class="nav-link">Sobre Nós</a>
             <a href="#detalhes" class="nav-link">Detalhes</a>
             <a href="#rsvp" class="nav-link">RSVP</a>
             <a href="#presentes" class="nav-link">Presentes</a>
@@ -95,8 +95,157 @@
 
     </nav>
 
-    <!-- Conteúdo Principal (seções futuras serão adicionadas aqui) -->
-    <main id="main-content"></main>
+    <!-- Conteúdo Principal -->
+    <main id="main-content">
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             SEÇÃO SOBRE — Mosaico com 5 fotos + texto de boas-vindas
+             ═══════════════════════════════════════════════════════════════ -->
+        <section id="sobre" aria-label="Sobre o casal">
+
+            <!-- Mosaico colagem (grade caótica equilibrada conforme imagens de referência) -->
+            <div class="sobre-fotos-overlay reveal-block stagger-container">
+                <div class="sobre-fotos-inner">
+                    <div class="foto-item foto-1">
+                        <img src="IMAGENS/FOTOS/Sobrepostas/sobre-v1.jpg" alt="Foto do casal 1">
+                    </div>
+                    <div class="foto-item foto-2">
+                        <img src="IMAGENS/FOTOS/Sobrepostas/sobre-v2.jpg" alt="Foto do casal 2">
+                    </div>
+                    <div class="foto-item foto-3">
+                        <img src="IMAGENS/FOTOS/Sobrepostas/sobre-v3.jpg" alt="Foto do casal 3">
+                    </div>
+                    <div class="foto-item foto-4">
+                        <img src="IMAGENS/FOTOS/Sobrepostas/sobre-v4.jpg" alt="Foto do casal 4">
+                    </div>
+                    <div class="foto-item foto-5">
+                        <img src="IMAGENS/FOTOS/Sobrepostas/sobre-v5.jpg" alt="Foto do casal 5">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Texto de introdução — conforme imagem de referência -->
+            <div class="sobre-texto-bloco reveal-block">
+
+                <p class="sobre-text__body sobre-text__body--destaque">
+                    É uma alegria imensa ter você por aqui!
+                </p>
+
+                <p class="sobre-text__body">
+                    Criamos este espaço para dividir com vocês os detalhes do nosso
+                    grande dia. Se você recebeu este link, é porque faz parte da nossa
+                    história e a sua presença é fundamental para deixar a nossa
+                    celebração completa.
+                </p>
+
+                <p class="sobre-text__body">
+                    A vida de todo mundo é super ocupada, a gente sabe, mas a nossa
+                    aposta é que além de comemorar este momento cercados de amor,
+                    sorrisos e das pessoas que sempre nos apoiaram.
+                </p>
+
+                <p class="sobre-text__body">
+                    Aproveitem o site para se programar e não esqueçam de confirmar
+                    a presença!
+                </p>
+
+                <p class="sobre-text__assinatura">
+                    — com todo o nosso carinho, Wesley e Stefany
+                </p>
+
+            </div>
+
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             SEÇÃO NOIVA — Mosaico 3 fotos + logo nome + bio
+             ═══════════════════════════════════════════════════════════════ -->
+        <section id="sobre-noiva" aria-label="Sobre a noiva Stefany">
+
+            <!-- Grid assimétrico 1+2: foto grande à esquerda, 2 menores à direita -->
+            <div class="noiva-grid reveal-block stagger-container">
+
+                <!-- Foto vertical grande (coluna esquerda, abrange 2 linhas) -->
+                <div class="noiva-foto bride-v1">
+                    <img src="IMAGENS/FOTOS/NOIVA/bride-v1.jpg" alt="Foto da noiva Stefany">
+                </div>
+
+                <!-- Foto quadrada superior direita -->
+                <div class="noiva-foto bride-s1">
+                    <img src="IMAGENS/FOTOS/NOIVA/bride-s1.jpg" alt="Foto da noiva Stefany">
+                </div>
+
+                <!-- Foto quadrada inferior direita -->
+                <div class="noiva-foto bride-s2">
+                    <img src="IMAGENS/FOTOS/NOIVA/bride-s2.jpg" alt="Foto da noiva Stefany">
+                </div>
+
+            </div>
+
+            <!-- Logo com o nome da noiva -->
+            <div class="perfil-identidade reveal-block">
+                <img src="IMAGENS/nome-stefany.svg" alt="Stefany" class="perfil-nome-logo">
+            </div>
+
+            <!-- Biografia de Stefany -->
+            <div class="perfil-bio reveal-block">
+                <p class="perfil-bio__texto">
+                    Nascida em 2007 no Felizardo, nossa amada Stefany sempre demonstrou
+                    uma determinação contagiante. Após concluir o ensino médio, iniciou
+                    um novo e desafiador capítulo em sua vida. Movida pelo sonho de
+                    justiça e igualdade, ingressou na prestigiada faculdade de Direito
+                    da UFCG em Sousa, na Paraíba. Essa jornada exigiu coragem; ela se
+                    mudou e começou a morar sozinha em Sousa para se dedicar integralmente
+                    aos estudos. Hoje, brilha como uma futura advogada, pronta para
+                    construir sua história com muito amor e sabedoria ao nosso lado.
+                </p>
+            </div>
+
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             SEÇÃO NOIVO — Mosaico 3 fotos + logo nome + bio
+             ═══════════════════════════════════════════════════════════════ -->
+        <section id="sobre-noivo" aria-label="Sobre o noivo Wesley">
+
+            <!-- Grid assimétrico 1+2: foto grande à esquerda, 2 menores à direita -->
+            <div class="noivo-grid reveal-block stagger-container">
+
+                <!-- Foto vertical grande (coluna esquerda, abrange 2 linhas) -->
+                <div class="noivo-foto groom-1">
+                    <img src="IMAGENS/FOTOS/NOIVO/groom-1.jpg" alt="Foto do noivo Wesley">
+                </div>
+
+                <!-- Foto menor superior direita -->
+                <div class="noivo-foto groom-2">
+                    <img src="IMAGENS/FOTOS/NOIVO/groom-2.jpg" alt="Foto do noivo Wesley">
+                </div>
+
+                <!-- Foto menor inferior direita -->
+                <div class="noivo-foto groom-3">
+                    <img src="IMAGENS/FOTOS/NOIVO/groom-3.jpg" alt="Foto do noivo Wesley">
+                </div>
+
+            </div>
+
+            <!-- Logo com o nome do noivo -->
+            <div class="perfil-identidade reveal-block">
+                <img src="IMAGENS/nome-wesley.svg" alt="Wesley" class="perfil-nome-logo">
+            </div>
+
+            <!-- Biografia de Wesley -->
+            <div class="perfil-bio reveal-block">
+                <p class="perfil-bio__texto">
+                    Nasci em Icó, em 2006, e cresci aprendendo que amor de verdade
+                    se cuida com atenção e presença. Stefany chegou na minha vida
+                    e transformou tudo — ela é meu lar, meu parceiro de vida e
+                    a razão pela qual este dia é o mais feliz que já vivi.
+                </p>
+            </div>
+
+        </section>
+
+    </main>
 
     <!-- Script de animação e lógica -->
     <script src="script.js"></script>

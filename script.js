@@ -1,4 +1,10 @@
 /* ==========================================================================
+   TRAVA DE SCROLL — Força o site a iniciar sempre no topo após F5/reload
+   ========================================================================== */
+if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
+window.scrollTo(0, 0);
+
+/* ==========================================================================
    SITE DE CASAMENTO: WESLEY & STEFANY
    LÓGICA DA INTRODUÇÃO CINEMATOGRÁFICA + MOTOR DO CARROSSEL HERO (Passo 3)
    ==========================================================================
@@ -196,5 +202,103 @@
   document.body.style.overflow = 'hidden'; // Bloqueia scroll durante a intro
   mainNav.classList.add('nav-hidden');     // Oculta o menu durante a intro
   runPhase(0);                             // Dispara a Fase 0 (Logo)
+
+})();
+
+/* ==========================================================================
+   MOTOR DE REVEAL BLINDADO — IntersectionObserver
+   ========================================================================== */
+(function initReveal() {
+  'use strict';
+
+  var blocks = document.querySelectorAll('.reveal-block');
+  if (blocks.length === 0) return;
+
+  // Fallback imediato se não houver suporte
+  if (!('IntersectionObserver' in window)) {
+    blocks.forEach(function (el) { el.classList.add('is-visible'); });
+    return;
+  }
+
+  // Configuração agressiva: threshold 0 garante disparo imediato 
+  // rootMargin negativo garante que a animação só ocorre quando o bloco já entrou um pouco na tela
+  var observer = new IntersectionObserver(function (entries, obs) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        obs.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0,
+    rootMargin: '0px 0px -50px 0px'
+  });
+
+  blocks.forEach(function (el) {
+    // Se o elemento já estiver visível por acaso no topo, força a classe
+    var rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      el.classList.add('is-visible');
+    } else {
+      observer.observe(el);
+    }
+  });
+})();
+
+/* ==========================================================================
+   ROLAGEM SUAVE CUSTOMIZADA (Motor Matemático Infalível)
+   ========================================================================== */
+(function initSmoothScroll() {
+  'use strict';
+
+  // Função de interpolação matemática (Ease In Out Cubic)
+  function easeInOutCubic(t, b, c, d) {
+    t /= d / 2;
+    if (t < 1) return c / 2 * t * t * t + b;
+    t -= 2;
+    return c / 2 * (t * t * t + 2) + b;
+  }
+
+  function smoothScrollTo(targetPosition, duration) {
+    var startPosition = window.pageYOffset;
+    var distance = targetPosition - startPosition;
+    var startTime = null;
+
+    function animation(currentTime) {
+      if (startTime === null) startTime = currentTime;
+      var timeElapsed = currentTime - startTime;
+      var run = easeInOutCubic(timeElapsed, startPosition, distance, duration);
+      window.scrollTo(0, run);
+      if (timeElapsed < duration) {
+        requestAnimationFrame(animation);
+      }
+    }
+    requestAnimationFrame(animation);
+  }
+
+  document.addEventListener('click', function (e) {
+    var link = e.target.closest('a[href]');
+    if (!link) return;
+
+    var href = link.getAttribute('href');
+    
+    // Logo "WS" volta ao topo
+    if (link.dataset.scroll === 'top' || href === '#' || href === '#hero-carousel-container') {
+      e.preventDefault();
+      smoothScrollTo(0, 800); // 800ms de duração
+      return;
+    }
+
+    // Navegação interna
+    if (href && href.startsWith('#') && href.length > 1) {
+      var targetEl = document.querySelector(href);
+      if (targetEl) {
+        e.preventDefault();
+        // Pega a posição exata do elemento menos uma margem de segurança do menu superior
+        var targetPosition = targetEl.getBoundingClientRect().top + window.pageYOffset - 80;
+        smoothScrollTo(targetPosition, 800);
+      }
+    }
+  });
 
 })();
