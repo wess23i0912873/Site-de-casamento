@@ -208,7 +208,9 @@ window.scrollTo(0, 0);
 /* ==========================================================================
    MOTOR DE REVEAL BLINDADO — IntersectionObserver
    ========================================================================== */
-(function initReveal() {
+(function initReveal_wrapper() {
+  // Tornar initReveal acessível globalmente para o window.onload chamar depois
+  window.initReveal = function() {
   'use strict';
 
   var blocks = document.querySelectorAll('.reveal-block');
@@ -243,6 +245,7 @@ window.scrollTo(0, 0);
       observer.observe(el);
     }
   });
+  };
 })();
 
 /* ==========================================================================
@@ -398,6 +401,16 @@ window.scrollTo(0, 0);
   var slides = track.querySelectorAll('.padrinhos-slide');
   var prevBtn = document.querySelector('.padrinhos-btn.prev');
   var nextBtn = document.querySelector('.padrinhos-btn.next');
+
+  // Bloqueio do context menu (Salvar Imagem) no mobile (long-press)
+  slides.forEach(function(slide) {
+      var img = slide.querySelector('img');
+      if (img) {
+          img.addEventListener('contextmenu', function(e) {
+              e.preventDefault();
+          });
+      }
+  });
   var progressBars = document.querySelectorAll('.padrinhos-timeline .timeline-progress');
   var textContainer = document.querySelector('.padrinhos-content');
   
@@ -560,18 +573,72 @@ function initRSVP() {
         
         const formContainer = document.getElementById('rsvp-form-container');
         const sucessoMsg = document.getElementById('rsvp-sucesso');
+        const submitBtn = rsvpForm.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerText;
         
-        // Transição suave para desaparecer o formulário e exibir a mensagem de sucesso
-        formContainer.style.transition = 'opacity 0.4s ease';
-        formContainer.style.opacity = '0';
+        // Estado de carregamento
+        submitBtn.innerText = 'Enviando...';
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.7';
         
-        setTimeout(() => {
-            formContainer.style.display = 'none';
-            sucessoMsg.style.display = 'block';
-        }, 400);
+        // Captura e formata os dados para o padrão nativo da web
+        const formData = new FormData(rsvpForm);
+        const dataParams = new URLSearchParams(formData);
+
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwPB6eqiozVrqDzwX0IVbCuNnZu43XMOwGy3mVwOCZdweQ87JFFBipjbsk8LYKGtDxf/exec';
+
+        // Disparo da requisição
+        fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors', // Mantemos para evitar o bloqueio no redirecionamento do Google
+            body: dataParams
+        })
+        .then(() => {
+            // Transição visual de sucesso
+            const formBox = document.querySelector('#rsvp-form-container');
+            const successBox = document.querySelector('#rsvp-sucesso');
+            
+            if (formBox && successBox) {
+                formBox.style.transition = 'opacity 0.4s ease';
+                formBox.style.opacity = '0';
+                setTimeout(() => {
+                    formBox.style.display = 'none';
+                    successBox.style.display = 'block';
+                    successBox.style.opacity = '1';
+                }, 300);
+            }
+        })
+        .catch(error => {
+            console.error('Erro no envio:', error);
+            alert('Erro ao confirmar presença. Por favor, tente novamente.');
+            resetBtn();
+        });
+
+        function resetBtn() {
+            submitBtn.innerText = originalBtnText;
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = '1';
+        }
     });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
     initRSVP();
+});
+
+/* ==========================================================================
+   PRELOADER & INICIALIZAÇÃO DE ANIMAÇÕES DE SCROLL
+   ========================================================================== */
+window.addEventListener('load', function() {
+    var preloader = document.getElementById('preloader');
+    if (preloader) {
+        preloader.classList.add('hide');
+        setTimeout(function() {
+            preloader.style.display = 'none';
+            // Só inicializa a animação de scroll quando o preloader some
+            if (typeof window.initReveal === 'function') window.initReveal();
+        }, 800); // 800ms combina com o transition do CSS
+    } else {
+        if (typeof window.initReveal === 'function') window.initReveal();
+    }
 });

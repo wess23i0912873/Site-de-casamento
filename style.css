@@ -96,6 +96,7 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    -webkit-tap-highlight-color: transparent;
 }
 
 html { scroll-behavior: smooth !important; }
@@ -108,6 +109,41 @@ body {
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================================================
+   PRELOADER
+   ========================================================================== */
+#preloader {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--color-text-dark); /* Navy profundo */
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.8s ease;
+}
+
+#preloader.hide {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.spinner {
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    font-style: italic;
+    color: #ffffff;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.3; transform: scale(0.95); }
+    50% { opacity: 1; transform: scale(1.05); }
+    100% { opacity: 0.3; transform: scale(0.95); }
 }
 
 
@@ -187,7 +223,10 @@ body {
     max-height: 75vh;
     object-fit: contain;
     pointer-events: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
     user-select: none;
+    -webkit-user-drag: none;
     z-index: 2;                          /* acima das fotos, abaixo do menu */
     opacity: 0;
     transition: opacity 1.8s ease;       /* aparece suavemente com o reveal */
@@ -365,6 +404,10 @@ body {
     width: auto;
     display: block;
     object-fit: contain;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
 }
 
 
@@ -394,6 +437,10 @@ body {
     display: inline-block;
     white-space: nowrap;
     transition: var(--transition-editorial);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
 }
 
 .nav-link:hover {
@@ -693,6 +740,10 @@ main {
     height: clamp(48px, 12vw, 90px);
     width: auto;
     display: inline-block;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
 }
 
 /* --------------------------------------------------------------------------
@@ -847,6 +898,10 @@ main {
     height: 100%;
     object-fit: cover;
     object-position: center top;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
 }
 
 /* 2. Camada de Máscara (Overlay) */
@@ -1508,6 +1563,25 @@ details[open] .utilidade-summary {
 
     #intro-logo { height: 65px; }
     #intro-texts-wrapper { top: 25%; width: 88%; }
+
+    /* SINGLE ROW COUNTDOWN */
+    .cronometro-container {
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        gap: 5px;
+    }
+    .cronometro-box {
+        padding: 10px 5px;
+        min-width: 0;
+        flex: 1;
+    }
+    .cronometro-numero {
+        font-size: 1.4rem;
+    }
+    .cronometro-legenda {
+        font-size: 0.55rem;
+        letter-spacing: 0.05em;
+    }
 }
 
 @media (max-width: 480px) {
