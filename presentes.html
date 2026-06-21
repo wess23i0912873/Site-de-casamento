@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lista de presentes de casamento oficial de Wesley &amp; Stefany.">
+    <title>Wesley &amp; Stefany — Lista de Presentes</title>
+
+    <!-- Google Fonts: Cormorant Garamond e Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- CSS File -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PRELOADER
+         ═══════════════════════════════════════════════════════════════════ -->
+    <div id="preloader" style="background-color: rgba(0, 0, 0, 0.9);">
+        <img src="IMAGENS/WIS.svg" alt="W&amp;S" class="preloader-logo">
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         HERO CAROUSEL + BACKGROUND FIXO
+         ═══════════════════════════════════════════════════════════════════ -->
+    <div id="hero-carousel-container" class="bg-carousel" aria-hidden="true">
+        <div id="hero-carousel">
+            <div class="hero-slide active"><img src="IMAGENS/FOTOS/hero-1.jpg" alt="" draggable="false" style="object-fit: cover; width: 100%; height: 100%;"></div>
+            <div class="hero-slide"><img src="IMAGENS/FOTOS/hero-2.jpg" alt="" draggable="false" style="object-fit: cover; width: 100%; height: 100%;"></div>
+            <div class="hero-slide"><img src="IMAGENS/FOTOS/hero-3.jpg" alt="" draggable="false" style="object-fit: cover; width: 100%; height: 100%;"></div>
+            <div class="hero-slide"><img src="IMAGENS/FOTOS/hero-4.jpg" alt="" draggable="false" style="object-fit: cover; width: 100%; height: 100%;"></div>
+            <div class="hero-slide"><img src="IMAGENS/FOTOS/hero-5.jpg" alt="" draggable="false" style="object-fit: cover; width: 100%; height: 100%;"></div>
+            <div class="hero-slide"><img src="IMAGENS/FOTOS/hero-6.jpg" alt="" draggable="false" style="object-fit: cover; width: 100%; height: 100%;"></div>
+            <div class="hero-slide"><img src="IMAGENS/FOTOS/hero-7.jpg" alt="" draggable="false" style="object-fit: cover; width: 100%; height: 100%;"></div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         HERO TEXT OVERLAY — Boas Vindas
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section id="hero-text-overlay">
+        <div class="presentes-hero-text">
+            <h1 class="hero-greeting-title">O Início do Nosso Lar</h1>
+            <p class="hero-greeting-sub">
+                O nosso melhor presente é ter você celebrando este novo capítulo conosco. Para os que desejam nos abençoar com algo a mais, organizamos esta lista com muito amor. Fiquem à vontade e recebam a nossa imensa gratidão.
+            </p>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         MAIN CONTENT — Camada Liquid Glass
+         ═══════════════════════════════════════════════════════════════════ -->
+    <main id="main-content">
+        <section class="presentes-liquid-layer">
+            
+            <!-- FILTRO DE CÔMODOS (DROPDOWN) -->
+            <div class="presentes-filter-dropdown-container">
+                <button id="btn-toggle-filtro" class="btn-filtro-main">Filtros ▼</button>
+                <div id="filtro-opcoes" class="dropdown-content hidden">
+                    <button class="btn-filtro active" data-filter="all">Todos</button>
+                    <button class="btn-filtro" data-filter="Cozinha">Cozinha</button>
+                    <button class="btn-filtro" data-filter="Quarto">Quarto</button>
+                    <button class="btn-filtro" data-filter="Sala">Sala</button>
+                    <button class="btn-filtro" data-filter="Banheiro">Banheiro</button>
+                    <button class="btn-filtro" data-filter="Lavanderia">Lavanderia</button>
+                </div>
+            </div>
+
+            <!-- GRID DE PRESENTES -->
+            <div class="presentes-grid">
+
+                <!-- CARD 1 -->
+                <div class="presente-card" data-room="Cozinha">
+                    <div class="presente-img-wrapper">
+                        <!-- Imagem placeholder elegante, se não tiver imagem real -->
+                        <div class="presente-img-placeholder">
+                            <span>Imagem do Presente</span>
+                        </div>
+                    </div>
+                    <div class="presente-info">
+                        <h3 class="presente-nome">Faqueiro Inox 72 Peças</h3>
+                        <p class="presente-preco">R$ 250,00</p>
+                        
+                        <div class="presente-actions">
+                            <div class="action-btn-group">
+                                <button class="btn-acao btn-pix btn-presentear">Presentear</button>
+                                <span class="tooltip-icon tooltip-mini" data-tooltip="pix">?</span>
+                                <div class="tooltip-box">Ao escolher o Pix, você envia o valor para que os noivos comprem o item por conta própria.</div>
+                            </div>
+                            <div class="action-btn-group">
+                                <button class="btn-acao btn-reservar">Reservar</button>
+                                <span class="tooltip-icon tooltip-mini" data-tooltip="reservar">?</span>
+                                <div class="tooltip-box">Ao clicar em reservar, você sinaliza aos noivos que entregará este presente físico pessoalmente.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 2 -->
+                <div class="presente-card" data-room="Quarto">
+                    <div class="presente-img-wrapper">
+                        <div class="presente-img-placeholder">
+                            <span>Imagem do Presente</span>
+                        </div>
+                    </div>
+                    <div class="presente-info">
+                        <h3 class="presente-nome">Jogo de Cama Algodão Egípcio</h3>
+                        <p class="presente-preco">R$ 400,00</p>
+                        
+                        <div class="presente-actions">
+                            <div class="action-btn-group">
+                                <button class="btn-acao btn-pix btn-presentear">Presentear</button>
+                                <span class="tooltip-icon tooltip-mini" data-tooltip="pix">?</span>
+                                <div class="tooltip-box">Ao escolher o Pix, você envia o valor para que os noivos comprem o item por conta própria.</div>
+                            </div>
+                            <div class="action-btn-group">
+                                <button class="btn-acao btn-reservar">Reservar</button>
+                                <span class="tooltip-icon tooltip-mini" data-tooltip="reservar">?</span>
+                                <div class="tooltip-box">Ao clicar em reservar, você sinaliza aos noivos que entregará este presente físico pessoalmente.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CARD 3 -->
+                <div class="presente-card" data-room="Sala">
+                    <div class="presente-img-wrapper">
+                        <div class="presente-img-placeholder">
+                            <span>Imagem do Presente</span>
+                        </div>
+                    </div>
+                    <div class="presente-info">
+                        <h3 class="presente-nome">Tapete Sala de Estar</h3>
+                        <p class="presente-preco">R$ 300,00</p>
+                        
+                        <div class="presente-actions">
+                            <div class="action-btn-group">
+                                <button class="btn-acao btn-pix btn-presentear">Presentear</button>
+                                <span class="tooltip-icon tooltip-mini" data-tooltip="pix">?</span>
+                                <div class="tooltip-box">Ao escolher o Pix, você envia o valor para que os noivos comprem o item por conta própria.</div>
+                            </div>
+                            <div class="action-btn-group">
+                                <button class="btn-acao btn-reservar">Reservar</button>
+                                <span class="tooltip-icon tooltip-mini" data-tooltip="reservar">?</span>
+                                <div class="tooltip-box">Ao clicar em reservar, você sinaliza aos noivos que entregará este presente físico pessoalmente.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+            <!-- Botão Voltar -->
+            <div class="back-btn-wrapper reveal-block" style="margin-top: 60px; margin-bottom: 60px; text-align: center;">
+                <a href="index.html" class="btn-liquid-light">Voltar para o início</a>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         MODAL PRESENTEAR (PIX)
+         ═══════════════════════════════════════════════════════════════════ -->
+    <div id="modal-presentear" class="modal-liquid-dark hidden">
+        <div class="modal-content">
+            <button class="modal-close" id="btn-close-modal">✕</button>
+            
+            <div id="pix-step-1">
+                <div class="modal-header">
+                    <div class="modal-img-wrapper">
+                        <!-- Placeholder dinamico -->
+                        <div class="modal-mini-img-placeholder" id="modal-item-img-placeholder">
+                            <span style="font-size: 0.6rem; color:#888;">Item</span>
+                        </div>
+                        <img id="modal-item-img" src="" alt="Item" class="modal-mini-img hidden">
+                    </div>
+                    <div class="modal-item-details">
+                        <h3 id="modal-item-nome">Nome do Item</h3>
+                        <p id="modal-item-preco">R$ 0,00</p>
+                    </div>
+                </div>
+
+                <div class="modal-info-box">
+                    Ao escolher o Pix, você envia o valor para que os noivos comprem o item por conta própria.
+                </div>
+
+                <div id="modal-form-area">
+                    <div class="form-group">
+                        <label for="pix-nome">Nome Completo *</label>
+                        <input type="text" id="pix-nome" placeholder="Digite seu nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pix-telefone">Telefone *</label>
+                        <input type="tel" id="pix-telefone" placeholder="(11) 99999-9999" required>
+                    </div>
+                    <div class="form-group form-group-checkbox">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="pix-aceite">
+                            <span>Li e concordo com os termos da doação</span>
+                        </label>
+                    </div>
+                    
+                    <button id="btn-fazer-pix" class="btn-acao btn-pix" disabled>Gerar Pix</button>
+                </div>
+            </div>
+
+            <div id="pix-step-2" style="display: none;">
+                <div style="text-align: center; padding: 10px 0;">
+                    <p style="text-align:center; font-size: 0.9rem; margin-bottom: 8px; font-family: var(--font-sans); color: var(--color-gray-muted);">Copie a chave Pix abaixo:</p>
+                    <div class="pix-key-box" style="margin-bottom: 24px; margin-top: 0;">
+                        <span id="pix-key-text">telefone-ou-email@pix.com</span>
+                        <button id="btn-copy-pix">Copiar</button>
+                    </div>
+                    
+                    <p style="text-align:center; font-weight:600; margin-bottom:12px; font-family: var(--font-sans); color: #111;">Ou escaneie o QR Code:</p>
+                    <div class="fake-qr-code">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=TESTE_PIX_CASAMENTO" alt="QR Code Pix" style="width:150px; height:150px; display:block; margin: 0 auto; border-radius: 8px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         MODAL RESERVAR (Físico)
+         ═══════════════════════════════════════════════════════════════════ -->
+    <div id="modal-reservar" class="modal-liquid-dark hidden">
+        <div class="modal-content">
+            <button class="modal-close" id="btn-close-modal-reservar">✕</button>
+            
+            <div id="reserva-step-1">
+                <div class="modal-header">
+                    <div class="modal-img-wrapper">
+                        <!-- Placeholder dinamico -->
+                        <div class="modal-mini-img-placeholder" id="modal-item-img-placeholder-reservar">
+                            <span style="font-size: 0.6rem; color:#888;">Item</span>
+                        </div>
+                        <img id="modal-item-img-reservar" src="" alt="Item" class="modal-mini-img hidden">
+                    </div>
+                    <div class="modal-item-details">
+                        <h3 id="modal-item-nome-reservar">Nome do Item</h3>
+                        <p id="modal-item-preco-reservar">R$ 0,00</p>
+                    </div>
+                </div>
+
+                <div class="modal-info-box">
+                    Ao reservar, você sinaliza para os noivos que dará este presente fisicamente a eles.
+                </div>
+
+                <div id="modal-form-area-reservar">
+                    <div class="form-group">
+                        <label for="reserva-nome">Nome Completo *</label>
+                        <input type="text" id="reserva-nome" placeholder="Digite seu nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reserva-telefone">Telefone *</label>
+                        <input type="tel" id="reserva-telefone" placeholder="(11) 99999-9999" required>
+                    </div>
+                    <div class="form-group form-group-checkbox">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="reserva-aceite">
+                            <span>Li e concordo com os termos da reserva</span>
+                        </label>
+                    </div>
+                    
+                    <button id="btn-confirmar-reserva" class="btn-acao btn-reservar-submit" disabled>Reservar Produto</button>
+                </div>
+            </div>
+
+            <div id="reserva-step-2" style="display: none;">
+                <div style="text-align: center; padding: 20px 0;">
+                    <div style="font-size: 3rem; color: #28a745; margin-bottom: 16px;">✓</div>
+                    <h3 style="font-family: var(--font-sans); color: var(--color-text-dark); margin-bottom: 12px; font-weight: 700;">Reserva Confirmada!</h3>
+                    <p style="font-family: var(--font-sans); color: var(--color-gray-muted); font-size: 0.95rem; line-height: 1.5;">
+                        Obrigado por reservar! Entendemos que você entregará este item fisicamente.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script de animação e lógica global -->
+    <script src="script.js"></script>
+</body>
+</html>

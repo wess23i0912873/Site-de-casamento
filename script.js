@@ -26,6 +26,8 @@ window.scrollTo(0, 0);
 
   /* ── Elementos ─────────────────────────────────────────────────────────── */
   const introScreen = document.getElementById('intro-screen');
+  if (!introScreen) return;
+
   const introLogo   = document.getElementById('intro-logo');
   const text1       = document.getElementById('intro-text-1');
   const text2       = document.getElementById('intro-text-2');
@@ -640,5 +642,326 @@ window.addEventListener('load', function() {
         }, 800); // 800ms combina com o transition do CSS
     } else {
         if (typeof window.initReveal === 'function') window.initReveal();
+    }
+});
+
+/* ==========================================================================
+   LÓGICA DA PÁGINA DE PRESENTES (presentes.html)
+   ========================================================================== */
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. Lógica do Dropdown Filtro de Cômodos
+    const btnToggleFiltro = document.getElementById('btn-toggle-filtro');
+    const filtroOpcoes = document.getElementById('filtro-opcoes');
+    const filterBtns = document.querySelectorAll('.btn-filtro');
+    const cards = document.querySelectorAll('.presente-card');
+
+    if (btnToggleFiltro && filtroOpcoes) {
+        btnToggleFiltro.addEventListener('click', function(e) {
+            e.stopPropagation();
+            filtroOpcoes.classList.toggle('hidden');
+        });
+
+        // Fechar dropdown ao clicar fora
+        document.body.addEventListener('click', function() {
+            if (!filtroOpcoes.classList.contains('hidden')) {
+                filtroOpcoes.classList.add('hidden');
+            }
+        });
+
+        // Lógica de Filtragem
+        if (filterBtns.length > 0 && cards.length > 0) {
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Evitar que feche imediatamente
+                    // Remove active de todos
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    // Adiciona no clicado
+                    this.classList.add('active');
+                    // Oculta dropdown
+                    filtroOpcoes.classList.add('hidden');
+
+                    const filterValue = this.getAttribute('data-filter');
+
+                    // Atualiza o texto do botão principal (opcional, mas bom pra UX)
+                    btnToggleFiltro.innerText = `Filtros: ${this.innerText} ▼`;
+
+                    cards.forEach(card => {
+                        if (filterValue === 'all') {
+                            card.classList.remove('hidden');
+                        } else {
+                            if (card.getAttribute('data-room') === filterValue) {
+                                card.classList.remove('hidden');
+                            } else {
+                                card.classList.add('hidden');
+                            }
+                        }
+                    });
+                });
+            });
+        }
+    }
+
+    // 2. Lógica dos Tooltips (com click fora para fechar)
+    const tooltips = document.querySelectorAll('.tooltip-icon');
+    
+    if (tooltips.length > 0) {
+        tooltips.forEach(icon => {
+            icon.addEventListener('click', function(e) {
+                e.stopPropagation(); // Evita fechar imediatamente pelo body
+                const box = this.nextElementSibling;
+                
+                // Fecha todos os outros antes de abrir este
+                document.querySelectorAll('.tooltip-box').forEach(b => {
+                    if (b !== box) b.classList.remove('show');
+                });
+
+                box.classList.toggle('show');
+            });
+        });
+
+        // Fechar tooltip ao clicar fora
+        document.body.addEventListener('click', function() {
+            document.querySelectorAll('.tooltip-box.show').forEach(b => {
+                b.classList.remove('show');
+            });
+        });
+
+        // Fechar tooltip ao rolar a página para não bugar o scroll
+        window.addEventListener('scroll', function() {
+            document.querySelectorAll('.tooltip-box.show').forEach(b => {
+                b.classList.remove('show');
+            });
+        }, { passive: true });
+    }
+
+    // 3. Lógica do Modal Presentear (Pix)
+    const btnsPresentear = document.querySelectorAll('.btn-presentear');
+    const modalPresentear = document.getElementById('modal-presentear');
+    const btnCloseModal = document.getElementById('btn-close-modal');
+    
+    // Elementos do Modal
+    const modalItemNome = document.getElementById('modal-item-nome');
+    const modalItemPreco = document.getElementById('modal-item-preco');
+    const modalItemImg = document.getElementById('modal-item-img');
+    const modalImgPlaceholder = document.getElementById('modal-item-img-placeholder');
+    
+    // Formulário e Fake QR
+    const inputPixNome = document.getElementById('pix-nome');
+    const inputPixTelefone = document.getElementById('pix-telefone');
+    const inputPixAceite = document.getElementById('pix-aceite');
+    const btnFazerPix = document.getElementById('btn-fazer-pix');
+
+    if (modalPresentear && btnsPresentear.length > 0) {
+        // Abrir Modal
+        btnsPresentear.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Buscar dados no Card PAI
+                const card = this.closest('.presente-card');
+                const nome = card.querySelector('.presente-nome').innerText;
+                const preco = card.querySelector('.presente-preco').innerText;
+                const imgElem = card.querySelector('.presente-img-wrapper img');
+                
+                // Injetar dados no Modal
+                modalItemNome.innerText = nome;
+                modalItemPreco.innerText = preco;
+
+                if (imgElem && imgElem.src) {
+                    modalItemImg.src = imgElem.src;
+                    modalItemImg.classList.remove('hidden');
+                    modalImgPlaceholder.classList.add('hidden');
+                } else {
+                    modalItemImg.classList.add('hidden');
+                    modalImgPlaceholder.classList.remove('hidden');
+                }
+
+                // Resetar estados do Form/QR
+                inputPixNome.value = '';
+                inputPixTelefone.value = '';
+                if (inputPixAceite) inputPixAceite.checked = false;
+                btnFazerPix.disabled = true;
+                
+                const step1 = document.getElementById('pix-step-1');
+                const step2 = document.getElementById('pix-step-2');
+                if (step1) step1.style.display = 'block';
+                if (step2) step2.style.display = 'none';
+
+                // Mostrar Modal
+                modalPresentear.classList.remove('hidden');
+            });
+        });
+
+        // Fechar Modal
+        const fecharModal = () => {
+            modalPresentear.classList.add('hidden');
+            
+            const step1 = document.getElementById('pix-step-1');
+            const step2 = document.getElementById('pix-step-2');
+            if (step1) step1.style.display = 'block';
+            if (step2) step2.style.display = 'none';
+        };
+
+        if (btnCloseModal) btnCloseModal.addEventListener('click', fecharModal);
+        
+        // Fechar clicando fora do modal-content
+        modalPresentear.addEventListener('click', function(e) {
+            if (e.target === this) fecharModal();
+        });
+
+        // Lógica de Validação do Formulário
+        const validarFormularioPix = () => {
+            const nomeLen = inputPixNome.value.trim().length;
+            const telLen = inputPixTelefone.value.trim().length;
+            const isChecked = inputPixAceite ? inputPixAceite.checked : false;
+            
+            if (nomeLen > 0 && telLen > 0 && isChecked) {
+                btnFazerPix.disabled = false;
+            } else {
+                btnFazerPix.disabled = true;
+            }
+        };
+
+        if (inputPixNome && inputPixTelefone) {
+            inputPixNome.addEventListener('input', validarFormularioPix);
+            inputPixTelefone.addEventListener('input', validarFormularioPix);
+        }
+        if (inputPixAceite) {
+            inputPixAceite.addEventListener('change', validarFormularioPix);
+        }
+
+        // Simular fluxo de PIX
+        if (btnFazerPix) {
+            btnFazerPix.addEventListener('click', function() {
+                // Esconder form, revelar QR Code fake
+                const step1 = document.getElementById('pix-step-1');
+                const step2 = document.getElementById('pix-step-2');
+                if (step1) step1.style.display = 'none';
+                if (step2) step2.style.display = 'block';
+            });
+        }
+        
+        // Copiar Chave Pix
+        const btnCopyPix = document.getElementById('btn-copy-pix');
+        const pixKeyText = document.getElementById('pix-key-text');
+        
+        if (btnCopyPix && pixKeyText) {
+            btnCopyPix.addEventListener('click', function() {
+                navigator.clipboard.writeText(pixKeyText.innerText).then(() => {
+                    const textoOriginal = btnCopyPix.innerText;
+                    btnCopyPix.innerText = 'Copiado!';
+                    btnCopyPix.style.backgroundColor = '#28a745';
+                    
+                    setTimeout(() => {
+                        btnCopyPix.innerText = textoOriginal;
+                        btnCopyPix.style.backgroundColor = '';
+                    }, 2000);
+                });
+            });
+        }
+    }
+
+    // 4. Lógica do Modal Reservar (Físico)
+    const btnsReservar = document.querySelectorAll('.btn-reservar:not(.btn-reservar-submit)');
+    const modalReservar = document.getElementById('modal-reservar');
+    const btnCloseModalReservar = document.getElementById('btn-close-modal-reservar');
+    
+    // Elementos do Modal Reservar
+    const modalItemNomeReservar = document.getElementById('modal-item-nome-reservar');
+    const modalItemPrecoReservar = document.getElementById('modal-item-preco-reservar');
+    const modalItemImgReservar = document.getElementById('modal-item-img-reservar');
+    const modalImgPlaceholderReservar = document.getElementById('modal-item-img-placeholder-reservar');
+    
+    // Formulário Reservar
+    const inputReservaNome = document.getElementById('reserva-nome');
+    const inputReservaTelefone = document.getElementById('reserva-telefone');
+    const inputReservaAceite = document.getElementById('reserva-aceite');
+    const btnConfirmarReserva = document.getElementById('btn-confirmar-reserva');
+    const modalFormAreaReservar = document.getElementById('modal-form-area-reservar');
+    const modalReservaSucesso = document.getElementById('modal-reserva-sucesso');
+
+    if (modalReservar && btnsReservar.length > 0) {
+        // Abrir Modal
+        btnsReservar.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                // Previne abrir se for o botão de submit dentro do modal
+                if (this.classList.contains('btn-reservar-submit')) return;
+
+                const card = this.closest('.presente-card');
+                if(!card) return;
+                
+                const nome = card.querySelector('.presente-nome').innerText;
+                const preco = card.querySelector('.presente-preco').innerText;
+                const imgElem = card.querySelector('.presente-img-wrapper img');
+                
+                modalItemNomeReservar.innerText = nome;
+                modalItemPrecoReservar.innerText = preco;
+
+                if (imgElem && imgElem.src) {
+                    modalItemImgReservar.src = imgElem.src;
+                    modalItemImgReservar.classList.remove('hidden');
+                    modalImgPlaceholderReservar.classList.add('hidden');
+                } else {
+                    modalItemImgReservar.classList.add('hidden');
+                    modalImgPlaceholderReservar.classList.remove('hidden');
+                }
+
+                inputReservaNome.value = '';
+                inputReservaTelefone.value = '';
+                if(inputReservaAceite) inputReservaAceite.checked = false;
+                btnConfirmarReserva.disabled = true;
+                
+                // Reset DOM Separation
+                const step1 = document.getElementById('reserva-step-1');
+                const step2 = document.getElementById('reserva-step-2');
+                if (step1) step1.style.display = 'block';
+                if (step2) step2.style.display = 'none';
+
+                modalReservar.classList.remove('hidden');
+            });
+        });
+
+        const fecharModalReservar = () => {
+            modalReservar.classList.add('hidden');
+            
+            // Clean up em fechar também garante
+            const step1 = document.getElementById('reserva-step-1');
+            const step2 = document.getElementById('reserva-step-2');
+            if (step1) step1.style.display = 'block';
+            if (step2) step2.style.display = 'none';
+        };
+
+        if (btnCloseModalReservar) btnCloseModalReservar.addEventListener('click', fecharModalReservar);
+        
+        modalReservar.addEventListener('click', function(e) {
+            if (e.target === this) fecharModalReservar();
+        });
+
+        const validarFormularioReserva = () => {
+            const nomeLen = inputReservaNome.value.trim().length;
+            const telLen = inputReservaTelefone.value.trim().length;
+            const isChecked = inputReservaAceite ? inputReservaAceite.checked : false;
+            
+            if (nomeLen > 0 && telLen > 0 && isChecked) {
+                btnConfirmarReserva.disabled = false;
+            } else {
+                btnConfirmarReserva.disabled = true;
+            }
+        };
+
+        if (inputReservaNome && inputReservaTelefone) {
+            inputReservaNome.addEventListener('input', validarFormularioReserva);
+            inputReservaTelefone.addEventListener('input', validarFormularioReserva);
+        }
+        if (inputReservaAceite) {
+            inputReservaAceite.addEventListener('change', validarFormularioReserva);
+        }
+
+        if (btnConfirmarReserva) {
+            btnConfirmarReserva.addEventListener('click', function() {
+                const step1 = document.getElementById('reserva-step-1');
+                const step2 = document.getElementById('reserva-step-2');
+                if (step1) step1.style.display = 'none';
+                if (step2) step2.style.display = 'block';
+            });
+        }
     }
 });

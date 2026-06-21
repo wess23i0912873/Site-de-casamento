@@ -15,19 +15,14 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- ═══════════════════════════════════════════════════════════════════
-         PRELOADER
-         ═══════════════════════════════════════════════════════════════════ -->
-    <div id="preloader">
-        <div class="spinner">W&amp;S</div>
-    </div>
+
 
 
     <!-- ═══════════════════════════════════════════════════════════════════
          PASSO 2 — INTRO SCREEN (Preloader Cinematográfico)
          Overlay fixo, semi-transparente, sobre o Hero.
          ═══════════════════════════════════════════════════════════════════ -->
-    <div id="intro-screen" role="presentation" aria-hidden="true">
+    <div id="intro-screen" role="presentation" aria-hidden="true" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 99999; background-color: rgba(0, 0, 0, 0.9);">
 
         <!-- Logo revelada no início -->
         <img
@@ -63,13 +58,13 @@
 
         <!-- Slides do carrossel (7 fotos reais) -->
         <div id="hero-carousel">
-            <div class="hero-slide active"><img src="IMAGENS/FOTOS/hero-1.jpg" alt="" draggable="false"></div>
-            <div class="hero-slide"><img src="IMAGENS/FOTOS/hero-2.jpg" alt="" draggable="false"></div>
-            <div class="hero-slide"><img src="IMAGENS/FOTOS/hero-3.jpg" alt="" draggable="false"></div>
-            <div class="hero-slide"><img src="IMAGENS/FOTOS/hero-4.jpg" alt="" draggable="false"></div>
-            <div class="hero-slide"><img src="IMAGENS/FOTOS/hero-5.jpg" alt="" draggable="false"></div>
-            <div class="hero-slide"><img src="IMAGENS/FOTOS/hero-6.jpg" alt="" draggable="false"></div>
-            <div class="hero-slide"><img src="IMAGENS/FOTOS/hero-7.jpg" alt="" draggable="false"></div>
+            <div class="hero-slide active"><img src="IMAGENS/FOTOS/hero-1.jpg" alt="" draggable="false" style="object-fit: cover; width: 100%; height: 100%;"></div>
+            <div class="hero-slide"><img src="IMAGENS/FOTOS/hero-2.jpg" alt="" draggable="false" style="object-fit: cover; width: 100%; height: 100%;"></div>
+            <div class="hero-slide"><img src="IMAGENS/FOTOS/hero-3.jpg" alt="" draggable="false" style="object-fit: cover; width: 100%; height: 100%;"></div>
+            <div class="hero-slide"><img src="IMAGENS/FOTOS/hero-4.jpg" alt="" draggable="false" style="object-fit: cover; width: 100%; height: 100%;"></div>
+            <div class="hero-slide"><img src="IMAGENS/FOTOS/hero-5.jpg" alt="" draggable="false" style="object-fit: cover; width: 100%; height: 100%;"></div>
+            <div class="hero-slide"><img src="IMAGENS/FOTOS/hero-6.jpg" alt="" draggable="false" style="object-fit: cover; width: 100%; height: 100%;"></div>
+            <div class="hero-slide"><img src="IMAGENS/FOTOS/hero-7.jpg" alt="" draggable="false" style="object-fit: cover; width: 100%; height: 100%;"></div>
         </div>
 
     </div>
@@ -90,7 +85,7 @@
             <a href="#sobre-noiva" class="nav-link">Sobre Nós</a>
             <a href="#detalhes" class="nav-link">Detalhes</a>
             <a href="#rsvp" class="nav-link">RSVP</a>
-            <a href="#presentes" class="nav-link">Presentes</a>
+            <a href="#presentes-chamada" class="nav-link">Presentes</a>
         </div>
 
     </nav>
@@ -101,7 +96,7 @@
         <!-- ═══════════════════════════════════════════════════════════════
              HERO TEXT OVERLAY — Camada isolada para rolar junto com a página
              ═══════════════════════════════════════════════════════════════ -->
-        <section id="hero-text-overlay">
+        <section id="index-hero-overlay">
             <!-- Logo decorativo grande — aparece com fade-in ao fim da intro -->
             <img
                 src="IMAGENS/logo-wesley-stefany-hero.svg"
@@ -483,6 +478,19 @@
                         <p class="sucesso-texto">Agradecemos de coração. Nos vemos lá!</p>
                     </div>
 
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             SEÇÃO CHAMADA LISTA DE PRESENTES (id="presentes-chamada")
+             ═══════════════════════════════════════════════════════════════ -->
+        <section id="presentes-chamada" class="reveal-block" aria-label="Lista de Presentes">
+            <div class="presentes-chamada-container">
+                <h2 class="presentes-chamada-titulo">Lista de Presentes</h2>
+                <p class="presentes-chamada-subtitulo">Preparamos uma lista de presentes com muito carinho para quem desejar nos presentear.</p>
+                <div class="presentes-btn-wrapper">
+                    <a href="presentes.html" target="_blank" class="btn-liquid-light">Presenteie-nos aqui</a>
                 </div>
             </div>
         </section>

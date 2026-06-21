@@ -132,15 +132,15 @@ body {
     pointer-events: none;
 }
 
-.spinner {
-    font-family: var(--font-serif);
-    font-size: 3rem;
-    font-style: italic;
-    color: #ffffff;
-    animation: pulse 1.5s infinite;
+.preloader-logo {
+    width: clamp(140px, 35vw, 240px);
+    height: auto;
+    display: block;
+    filter: brightness(0) invert(1);
+    animation: preloaderPulse 2s infinite ease-in-out;
 }
 
-@keyframes pulse {
+@keyframes preloaderPulse {
     0% { opacity: 0.3; transform: scale(0.95); }
     50% { opacity: 1; transform: scale(1.05); }
     100% { opacity: 0.3; transform: scale(0.95); }
@@ -159,18 +159,32 @@ body {
      2  → .hero-logo-reveal         (logo decorativo, acima das fotos)
      10000 → #main-nav              (menu, acima de tudo)
    -------------------------------------------------------------------------- */
-#hero-carousel-container {
+#hero-carousel-container,
+.bg-carousel {
     position: fixed;
     inset: 0;
     width: 100%;
     height: 100vh;
     background-color: #0a0a0a;   /* fallback / fundo durante transição */
-    z-index: -10;
+    z-index: -1;
     overflow: hidden;
     pointer-events: none;
 }
 
 #hero-text-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    pointer-events: none; /* Permite clique passar através */
+}
+
+#index-hero-overlay {
     position: relative;
     height: 100vh;
     width: 100%;
@@ -180,6 +194,7 @@ body {
     justify-content: center;
     z-index: 2;
     pointer-events: none; /* Permite clique passar através */
+    overflow: hidden;
 }
 
 /* Camada de slides — ocupa todo o container */
@@ -1547,6 +1562,193 @@ details[open] .utilidade-summary {
     to { opacity: 1; transform: translateY(0); }
 }
 
+
+/* ══════════════════════════════════════════════════════════════════════════
+   LISTA DE PRESENTES (CHAMADA) — Seção #presentes-chamada
+   ══════════════════════════════════════════════════════════════════════════ */
+#presentes-chamada {
+    position: relative;
+    z-index: 10;
+    background-color: #ffffff;
+    background-image: linear-gradient(var(--texture-opacity), var(--texture-opacity)), var(--texture-url);
+    background-repeat: repeat;
+    background-size: auto, var(--texture-size);
+    border-top: 1px solid rgba(26, 26, 26, 0.10);
+    padding: 120px var(--section-padding-x);
+    text-align: center;
+    box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.05);
+}
+
+.presentes-chamada-container {
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.presentes-chamada-titulo {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--color-text-dark);
+    margin-bottom: 5px;
+    letter-spacing: 0.02em;
+    
+    /* Bloqueio de seleção e contexto */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.presentes-chamada-subtitulo {
+    font-family: var(--font-serif);
+    font-size: clamp(1rem, 3vw, 1.25rem);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--color-text-dark);
+    opacity: 0.85;
+    line-height: 1.5;
+    margin-bottom: 25px;
+    
+    /* Bloqueio de seleção e contexto */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.presentes-btn-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Liquid Glass Button - Light Background */
+.btn-liquid-light {
+    display: inline-block;
+    padding: 18px 48px;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--color-text-dark);
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(8, 16, 36, 0.18);
+    border-radius: 50px;
+    box-shadow: 
+        0 4px 30px rgba(0, 0, 0, 0.02),
+        inset 0 1px 1px rgba(255, 255, 255, 0.7),
+        inset 0 -1px 2px rgba(8, 16, 36, 0.08);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
+    position: relative;
+    
+    /* Bloqueio do tap highlight azul e seleção */
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.btn-liquid-light:hover {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: rgba(8, 16, 36, 0.35);
+    transform: translateY(-3px);
+    box-shadow: 
+        0 8px 30px rgba(8, 16, 36, 0.08),
+        inset 0 1px 1px rgba(255, 255, 255, 0.9),
+        inset 0 -1px 2px rgba(8, 16, 36, 0.12);
+}
+
+.btn-liquid-light:active {
+    transform: translateY(-1px);
+    box-shadow: 
+        0 4px 15px rgba(8, 16, 36, 0.05),
+        inset 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   PÁGINA DE PRESENTES (presentes.html)
+   ══════════════════════════════════════════════════════════════════════════ */
+.presentes-page-wrapper {
+    min-height: 100vh;
+    width: 100vw;
+    background-color: #ffffff;
+    background-image: linear-gradient(var(--texture-opacity), var(--texture-opacity)), var(--texture-url);
+    background-repeat: repeat;
+    background-size: auto, var(--texture-size);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px var(--section-padding-x);
+    box-sizing: border-box;
+}
+
+.presentes-page-container {
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
+/* Liquid Glass Escuro (Dark Liquid Glass) */
+.liquid-glass-dark {
+    background: rgba(8, 16, 36, 0.9); /* Translucent navy */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 24px;
+    padding: 60px 40px;
+    box-shadow: 
+        0 20px 50px rgba(0, 0, 0, 0.15),
+        inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    width: 100%;
+    box-sizing: border-box;
+    
+    /* Bloqueio de seleção e contexto */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.presentes-titulo-principal {
+    font-family: var(--font-serif);
+    font-size: clamp(2.2rem, 6vw, 3.2rem);
+    font-weight: 300;
+    font-style: italic;
+    color: #ffffff;
+    margin-bottom: 20px;
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+}
+
+.presentes-subtitulo-principal {
+    font-family: var(--font-sans);
+    font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.7;
+    margin: 0;
+}
+
+.back-btn-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+
 /* ══════════════════════════════════════════════════════════════════════════
    RESPONSIVIDADE
    ══════════════════════════════════════════════════════════════════════════ */
@@ -1563,6 +1765,16 @@ details[open] .utilidade-summary {
 
     #intro-logo { height: 65px; }
     #intro-texts-wrapper { top: 25%; width: 88%; }
+
+    .btn-liquid-light {
+        padding: 15px 36px;
+        font-size: 0.85rem;
+        letter-spacing: 0.12em;
+    }
+
+    .liquid-glass-dark {
+        padding: 40px 25px;
+    }
 
     /* SINGLE ROW COUNTDOWN */
     .cronometro-container {
@@ -1593,4 +1805,669 @@ details[open] .utilidade-summary {
 
     #intro-logo { height: 55px; }
     #intro-texts-wrapper { top: 22%; width: 90%; }
+}
+
+/* ==========================================================================
+   PÁGINA DE PRESENTES (presentes.html)
+   ========================================================================== */
+
+
+
+.presentes-hero-text {
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 20px;
+}
+
+/* Camada Liquid Glass Master */
+.presentes-liquid-layer {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    background: rgba(255, 255, 255, 0.15); /* Fundo claro translúcido */
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 80px 20px;
+    box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.1);
+}
+
+/* Barra de Filtro */
+.presentes-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 50px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btn-filtro {
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text-dark);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.btn-filtro:hover, .btn-filtro.active {
+    background: #ffffff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Grid de Presentes */
+.presentes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Ocultar cards via JS */
+.presente-card.hidden {
+    display: none;
+}
+
+/* Card Individual (Dark Liquid Glass) */
+.presente-card {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.presente-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Imagens (e bloqueio de seleção mobile) */
+.presente-img-wrapper {
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+}
+
+.presente-img-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: #e2e2e2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+.presente-img-placeholder span {
+    font-family: var(--font-sans);
+    color: #888;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.presente-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    pointer-events: none;
+}
+
+/* Info do Presente */
+.presente-info {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.presente-nome {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 300;
+    color: #ffffff;
+    margin-bottom: 8px;
+    line-height: 1.3;
+    letter-spacing: 0.02em;
+}
+
+.presente-preco {
+    font-family: var(--font-sans);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #a3c2f0;
+    margin-bottom: 12px;
+}
+
+.presente-desc {
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    color: var(--color-gray-muted);
+    line-height: 1.5;
+    margin-bottom: 24px;
+    flex-grow: 1;
+}
+
+/* Ações / Botões */
+.presente-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.action-btn-group {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    gap: 8px;
+}
+
+.btn-acao {
+    flex-grow: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.btn-pix {
+    background-color: var(--color-accent-blue);
+    color: #fff;
+}
+.btn-pix:hover { background-color: #0c2346; }
+
+.btn-reservar {
+    background-color: transparent;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+.btn-reservar:hover {
+    background-color: #ffffff;
+    color: var(--color-text-dark);
+}
+
+/* Tooltip (Ícone e Caixa) */
+.tooltip-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: auto;
+    background: rgba(8, 16, 36, 0.08);
+    border-radius: 8px;
+    color: var(--color-text-dark);
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.3s ease;
+}
+.tooltip-icon:hover {
+    background: rgba(8, 16, 36, 0.15);
+}
+
+.tooltip-box {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    right: 0;
+    width: 250px;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 8px;
+    padding: 12px 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    color: var(--color-gray-muted);
+    line-height: 1.4;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+}
+
+/* Setinha do balão */
+.tooltip-box::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    right: 16px;
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    border-right: 1px solid rgba(0,0,0,0.1);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    transform: rotate(45deg);
+}
+
+.tooltip-box.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+/* Ajustes Mobile Severos */
+@media (max-width: 768px) {
+    .presentes-grid {
+        grid-template-columns: 1fr; /* 1 Coluna cravada no mobile */
+        gap: 24px;
+    }
+    
+    .presentes-filter-bar {
+        gap: 8px;
+        margin-bottom: 30px;
+    }
+    
+    .btn-filtro {
+        padding: 8px 16px;
+        font-size: 0.75rem;
+    }
+    
+    .action-btn-group {
+        flex-direction: row; /* Mantem lado a lado */
+    }
+}
+
+/* ==========================================================================
+   REFATORAÇÃO PRESENTES (Dropdown, Modal Pix, Tooltip menor)
+   ========================================================================== */
+
+/* Dropdown Filtro */
+.presentes-filter-dropdown-container {
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 50px;
+}
+
+.btn-filtro-main {
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 8px 24px;
+    border-radius: 30px;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text-dark);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.btn-filtro-main:hover {
+    background: #ffffff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-content {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    min-width: 220px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    border-radius: 16px;
+    padding: 12px;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    opacity: 1;
+    pointer-events: auto;
+    transition: all 0.3s ease;
+}
+
+.dropdown-content.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -10px);
+}
+
+/* Redução sutil do Tooltip Icon */
+.tooltip-mini {
+    width: auto !important;
+    height: auto !important;
+    background: transparent !important;
+    font-size: 0.9rem !important;
+    color: rgba(255,255,255,0.6) !important;
+    border-radius: 0 !important;
+    padding: 0 8px !important;
+    flex-shrink: 0;
+}
+.tooltip-mini:hover {
+    background: transparent !important;
+    color: #fff !important;
+}
+
+/* Modal Presentear (Liquid Glass Escuro) */
+.modal-liquid-dark {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    pointer-events: auto;
+    transition: all 0.4s ease;
+    padding: 20px;
+}
+
+.modal-liquid-dark.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.modal-content {
+    position: relative;
+    background: #ffffff;
+    width: 100%;
+    max-width: 560px;
+    border-radius: 20px;
+    padding: 40px 36px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: scale(1);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-liquid-dark.hidden .modal-content {
+    transform: scale(0.95);
+}
+
+.modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--color-gray-muted);
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.modal-close:hover {
+    color: var(--color-text-dark);
+}
+
+/* Modal Header (Miniatura e Título) */
+.modal-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.modal-img-wrapper {
+    width: 90px;
+    height: 90px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #f0f0f0;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-mini-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.modal-item-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-item-details h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--color-text-dark);
+    margin-bottom: 4px;
+    line-height: 1.1;
+}
+
+.modal-item-details p {
+    font-family: var(--font-sans);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-accent-blue);
+}
+
+/* Modal Info Box */
+.modal-info-box {
+    background: rgba(15, 45, 89, 0.05);
+    border: 1px solid rgba(15, 45, 89, 0.15);
+    border-radius: 8px;
+    padding: 12px;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    color: var(--color-text-dark);
+    line-height: 1.5;
+    margin-bottom: 28px;
+    text-align: center;
+}
+
+/* Modal Formulário */
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-gray-muted);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 8px;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: var(--color-text-dark);
+    transition: all 0.3s ease;
+    background: #fafafa;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--color-accent-blue);
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(15, 45, 89, 0.1);
+}
+
+#btn-fazer-pix {
+    width: 100%;
+    margin-top: 16px;
+    padding: 18px;
+    font-size: 1rem;
+}
+
+#btn-fazer-pix:disabled {
+    background: #c8c8c8;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* QR area oculta por padrão com display:none (não apenas hidden) */
+#modal-qr-area {
+    display: none;
+}
+#modal-qr-area.visible {
+    display: block;
+}
+
+/* Modal QR Code Fake */
+.fake-qr-code {
+    background: #fff;
+    padding: 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(0,0,0,0.1);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    display: inline-block;
+}
+
+.pix-key-box {
+    display: flex;
+    align-items: center;
+    background: #f5f5f5;
+    border-radius: 8px;
+    padding: 8px 8px 8px 16px;
+    margin-top: 8px;
+}
+
+#pix-key-text {
+    flex-grow: 1;
+    font-family: monospace;
+    font-size: 0.9rem;
+    color: var(--color-text-dark);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#btn-copy-pix {
+    background: var(--color-accent-blue);
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+#btn-copy-pix:hover {
+    background: #0c2346;
+}
+
+/* Correções para o Checkbox de Aceite */
+.form-group-checkbox {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.checkbox-label {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    margin: 0;
+    border: 2px solid var(--color-accent-blue);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: none; /* Remove bugs de hover */
+    flex-shrink: 0;
+}
+
+.checkbox-label input[type="checkbox"]:focus {
+    box-shadow: none;
+    border-color: var(--color-accent-blue);
+}
+
+.checkbox-label span {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    color: var(--color-gray-muted);
+    line-height: 1.4;
+    text-transform: none;
+    font-weight: 500;
+}
+
+/* Hero Text Overlay Custom Styles */
+.hero-greeting-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    color: #ffffff !important;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    margin-bottom: 20px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.hero-greeting-sub {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    font-size: clamp(1rem, 3vw, 1.25rem);
+    color: #ffffff !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
