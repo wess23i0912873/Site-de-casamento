@@ -302,3 +302,276 @@ window.scrollTo(0, 0);
   });
 
 })();
+
+/* ==========================================================================
+   CONTAGEM REGRESSIVA (COUNTDOWN)
+   ========================================================================== */
+(function initCountdown() {
+  'use strict';
+
+  var elMeses = document.getElementById('countdown-meses');
+  var elDias = document.getElementById('countdown-dias');
+  var elHoras = document.getElementById('countdown-horas');
+  var elMinutos = document.getElementById('countdown-minutos');
+
+  if (!elMeses || !elDias || !elHoras || !elMinutos) return;
+
+  // Alvo: 10 de outubro de 2026, 16:00:00
+  var target = new Date("2026-10-10T16:00:00");
+
+  function updateCountdown() {
+    var currentDate = new Date();
+    var distance = target.getTime() - currentDate.getTime();
+
+    if (distance < 0) {
+      elMeses.innerText = "00";
+      elDias.innerText = "00";
+      elHoras.innerText = "00";
+      elMinutos.innerText = "00";
+      return;
+    }
+
+    var months = (target.getFullYear() - currentDate.getFullYear()) * 12 + (target.getMonth() - currentDate.getMonth());
+    var days = target.getDate() - currentDate.getDate();
+    
+    if (days < 0) {
+        months--;
+        var tempDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0); // last day of current month
+        days += tempDate.getDate();
+    }
+    
+    var hours = target.getHours() - currentDate.getHours();
+    if (hours < 0) {
+        days--;
+        hours += 24;
+    }
+    
+    var minutes = target.getMinutes() - currentDate.getMinutes();
+    if (minutes < 0) {
+        hours--;
+        minutes += 60;
+    }
+
+    if (days < 0) { // borrow from months again se days ficou negativo
+        months--;
+        var tempDate2 = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+        days += tempDate2.getDate();
+    }
+
+    // Formatação
+    elMeses.innerText = months < 10 ? "0" + months : months;
+    elDias.innerText = days < 10 ? "0" + days : days;
+    elHoras.innerText = hours < 10 ? "0" + hours : hours;
+    elMinutos.innerText = minutes < 10 ? "0" + minutes : minutes;
+  }
+
+  // Atualiza a cada segundo
+  setInterval(updateCountdown, 1000);
+  updateCountdown(); // chamada inicial
+})();
+
+/* ==========================================================================
+   CARROSSEL DETALHES DO CASAMENTO (CAMADA DE FUNDO)
+   ========================================================================== */
+(function initDetalhesCarousel() {
+  'use strict';
+  var slides = document.querySelectorAll('.detalhes-slide');
+  if (slides.length === 0) return;
+  
+  var currentSlide = 0;
+  
+  // Transição cross-fade a cada 5 segundos
+  setInterval(function() {
+    slides[currentSlide].classList.remove('active');
+    currentSlide = (currentSlide + 1) % slides.length;
+    slides[currentSlide].classList.add('active');
+  }, 5000);
+})();
+
+/* ==========================================================================
+   CARROSSEL PADRINHOS (STORIES STYLE)
+   ========================================================================== */
+(function initPadrinhosCarousel() {
+  'use strict';
+  var track = document.getElementById('padrinhosTrack');
+  if (!track) return;
+  var slides = track.querySelectorAll('.padrinhos-slide');
+  var prevBtn = document.querySelector('.padrinhos-btn.prev');
+  var nextBtn = document.querySelector('.padrinhos-btn.next');
+  var progressBars = document.querySelectorAll('.padrinhos-timeline .timeline-progress');
+  var textContainer = document.querySelector('.padrinhos-content');
+  
+  if (slides.length === 0 || progressBars.length === 0) return;
+  
+  var currentSlide = 0;
+  var timerId = null;
+  var holdTimer = null;
+  var startTime = 0;
+  var duration = 3000; // 3 segundos
+  var remainingTime = duration;
+  var isPaused = false;
+  var isHolding = false;
+
+  function updateSlide(newIndex) {
+    if (newIndex < 0) newIndex = slides.length - 1;
+    if (newIndex >= slides.length) newIndex = 0;
+    
+    slides[currentSlide].classList.remove('active');
+    currentSlide = newIndex;
+    slides[currentSlide].classList.add('active');
+    
+    progressBars.forEach(function(bar, index) {
+      bar.classList.remove('filling');
+      bar.classList.remove('completed');
+      bar.classList.remove('paused');
+      
+      if (index < currentSlide) {
+        bar.classList.add('completed');
+      } else if (index === currentSlide) {
+        // Força reflow
+        void bar.offsetWidth;
+        bar.classList.add('filling');
+      }
+    });
+    
+    resetTimer();
+  }
+  
+  function nextSlide() {
+    remainingTime = duration;
+    updateSlide(currentSlide + 1);
+  }
+  
+  function prevSlide() {
+    remainingTime = duration;
+    updateSlide(currentSlide - 1);
+  }
+  
+  function startTimer() {
+    if (isPaused) return;
+    startTime = Date.now();
+    timerId = setTimeout(function() {
+      nextSlide();
+    }, remainingTime);
+  }
+
+  function pauseTimer() {
+    if (isPaused) return;
+    isPaused = true;
+    clearTimeout(timerId);
+    remainingTime -= (Date.now() - startTime);
+    progressBars[currentSlide].classList.add('paused');
+  }
+
+  function resumeTimer() {
+    if (!isPaused) return;
+    isPaused = false;
+    progressBars[currentSlide].classList.remove('paused');
+    startTimer();
+  }
+
+  function resetTimer() {
+    clearTimeout(timerId);
+    remainingTime = duration;
+    isPaused = false;
+    startTimer();
+  }
+  
+  if (prevBtn) prevBtn.addEventListener('click', function(e) { e.stopPropagation(); prevSlide(); });
+  if (nextBtn) nextBtn.addEventListener('click', function(e) { e.stopPropagation(); nextSlide(); });
+  
+  // Interações Pointer (Touch/Mouse)
+  var touchStartX = 0;
+  var touchEndX = 0;
+
+  function handlePointerDown(e) {
+    if (e.target.closest('.padrinhos-btn')) return; // ignora botões laterais
+    isHolding = true;
+    pauseTimer();
+    
+    holdTimer = setTimeout(function() {
+      if (isHolding && textContainer) {
+        textContainer.classList.add('hide-text');
+      }
+    }, 1000);
+  }
+
+  function handlePointerUp() {
+    isHolding = false;
+    clearTimeout(holdTimer);
+    if (textContainer) {
+      textContainer.classList.remove('hide-text');
+    }
+    resumeTimer();
+  }
+  
+  track.addEventListener('touchstart', function(e) {
+    touchStartX = e.changedTouches[0].screenX;
+    handlePointerDown(e);
+  }, { passive: true });
+  
+  track.addEventListener('touchend', function(e) {
+    touchEndX = e.changedTouches[0].screenX;
+    handlePointerUp();
+    handleSwipe();
+  }, { passive: true });
+
+  track.addEventListener('touchcancel', handlePointerUp, { passive: true });
+
+  track.addEventListener('mousedown', function(e) {
+    touchStartX = e.screenX;
+    handlePointerDown(e);
+  });
+
+  track.addEventListener('mouseup', function(e) {
+    touchEndX = e.screenX;
+    handlePointerUp();
+    handleSwipe();
+  });
+
+  track.addEventListener('mouseleave', handlePointerUp);
+  
+  function handleSwipe() {
+    var threshold = 40; 
+    if (touchEndX < touchStartX - threshold) {
+      remainingTime = duration;
+      nextSlide();
+    }
+    if (touchEndX > touchStartX + threshold) {
+      remainingTime = duration;
+      prevSlide();
+    }
+  }
+  
+  // Inicializa
+  remainingTime = duration;
+  updateSlide(0);
+})();
+
+/* ══════════════════════════════════════════════════════════════════════════
+   6. LÓGICA DO FORMULÁRIO RSVP
+   ══════════════════════════════════════════════════════════════════════════ */
+function initRSVP() {
+    const rsvpForm = document.getElementById('rsvpForm');
+    if (!rsvpForm) return;
+
+    rsvpForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formContainer = document.getElementById('rsvp-form-container');
+        const sucessoMsg = document.getElementById('rsvp-sucesso');
+        
+        // Transição suave para desaparecer o formulário e exibir a mensagem de sucesso
+        formContainer.style.transition = 'opacity 0.4s ease';
+        formContainer.style.opacity = '0';
+        
+        setTimeout(() => {
+            formContainer.style.display = 'none';
+            sucessoMsg.style.display = 'block';
+        }, 400);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    initRSVP();
+});

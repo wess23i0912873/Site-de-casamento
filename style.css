@@ -129,8 +129,21 @@ body {
     width: 100%;
     height: 100vh;
     background-color: #0a0a0a;   /* fallback / fundo durante transição */
-    z-index: 1;
+    z-index: -10;
     overflow: hidden;
+    pointer-events: none;
+}
+
+#hero-text-overlay {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    margin-top: -100vh; /* Puxa para cima para cobrir o buraco deixado pelo main */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    pointer-events: none; /* Permite clique passar através */
 }
 
 /* Camada de slides — ocupa todo o container */
@@ -441,7 +454,8 @@ main {
 }
 
 #sobre-noiva,
-#sobre-noivo {
+#sobre-noivo,
+#padrinhos {
     position: relative;
     z-index: 10;
     background-color: #ffffff;
@@ -592,7 +606,7 @@ main {
     font-size: clamp(1.35rem, 4vw, 1.85rem);
     font-weight: 300;
     font-style: italic;
-    color: var(--color-text-dark);
+    color: #050a14; /* Azul navy super escuro / quase preto */
     line-height: 1.25;
     letter-spacing: 0.01em;
     margin-bottom: 28px;
@@ -604,7 +618,7 @@ main {
     font-size: clamp(0.9rem, 2.5vw, 1.05rem);
     font-weight: 400;
     font-style: italic;
-    color: var(--color-text-dark);
+    color: #050a14; /* Azul navy super escuro / quase preto */
     line-height: 1.9;
     letter-spacing: 0.01em;
     margin-bottom: 18px;
@@ -787,6 +801,695 @@ main {
     object-position: center top;
     border-radius: 0 !important;
     clip-path: none !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   24. HOMENAGEM AOS PADRINHOS — Seção #padrinhos
+   ══════════════════════════════════════════════════════════════════════════ */
+#padrinhos {
+    position: relative;
+    padding: 80px 20px;
+    z-index: 10;
+}
+
+.padrinhos-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.padrinhos-card {
+    position: relative;
+    width: 100%;
+    max-width: 450px;
+    aspect-ratio: 4 / 5;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+}
+
+/* 1. Camada de Imagens (Fundo) */
+.padrinhos-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.6s ease-in-out;
+    z-index: 1;
+}
+
+.padrinhos-slide.active {
+    opacity: 1;
+}
+
+.padrinhos-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+}
+
+/* 2. Camada de Máscara (Overlay) */
+.padrinhos-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.8) 100%);
+    pointer-events: none; /* Deixa interações passarem pro card */
+}
+
+/* 3. Camada UI - Timeline */
+.padrinhos-timeline {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    display: flex;
+    gap: 5px;
+    z-index: 3;
+}
+
+.timeline-bar {
+    flex: 1;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.timeline-progress {
+    height: 100%;
+    width: 0%;
+    background: #ffffff;
+}
+
+/* Transição de enchimento */
+@keyframes fillTimeline {
+    from { width: 0%; }
+    to { width: 100%; }
+}
+
+.timeline-progress.filling {
+    animation: fillTimeline 3s linear forwards;
+}
+
+.timeline-progress.paused {
+    animation-play-state: paused;
+}
+
+.timeline-progress.completed {
+    width: 100%;
+}
+
+/* 4. Camada UI - Controles Laterais */
+.padrinhos-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 3;
+    background: transparent;
+    color: #ffffff;
+    border: none;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 300;
+    cursor: pointer;
+    opacity: 0.15;
+    transition: opacity 0.3s ease;
+}
+
+.padrinhos-btn:hover {
+    opacity: 0.8;
+}
+
+.padrinhos-btn.prev {
+    left: 10px;
+}
+
+.padrinhos-btn.next {
+    right: 10px;
+}
+
+/* 5. Camada UI - Textos */
+.padrinhos-content {
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    width: 100%;
+    padding: 0 25px;
+    z-index: 3;
+    text-align: center;
+    pointer-events: none; /* Não bloqueia o swipe */
+    opacity: 1; /* Instant restore */
+}
+
+.padrinhos-content.hide-text {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.padrinhos-titulo {
+    font-family: var(--font-serif);
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
+    font-weight: 300;
+    color: #ffffff;
+    letter-spacing: 0.1em;
+    margin-bottom: 15px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+.padrinhos-texto {
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.95);
+    line-height: 1.6;
+    margin: 0;
+    text-shadow: 0 1px 5px rgba(0,0,0,0.5);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   23. DETALHES DO CASAMENTO — Seção #detalhes
+   ══════════════════════════════════════════════════════════════════════════ */
+#detalhes {
+    position: relative;
+    padding: 80px 20px;
+    z-index: 10;
+    background-color: transparent;
+}
+
+/* 1. Camada de Fundo (Carousel Fixo Global) */
+.detalhes-bg-carousel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -10; /* Fica atrás de absolutamente todas as camadas do site */
+    pointer-events: none;
+    filter: blur(3px);
+    object-fit: cover;
+}
+
+.detalhes-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 2s ease-in-out;
+}
+
+.detalhes-slide.active {
+    opacity: 1;
+}
+
+.detalhes-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* 2. Camada de Frente (Glassmorphism Z-index 2) */
+.detalhes-glass-layer {
+    position: relative;
+    z-index: 2;
+    background: rgba(26, 26, 26, 0.7);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 60px 30px;
+    max-width: 900px;
+    margin: 0 auto;
+    color: #ffffff;
+}
+
+.detalhes-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* 1. Bloco de Dia e Hora */
+.detalhes-grid {
+    max-width: 600px;
+    margin: 0 auto 60px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.detalhes-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.detalhes-label {
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 6vw, 3.5rem);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1;
+}
+
+.detalhes-value {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+}
+
+.detalhes-date, .detalhes-time {
+    font-family: var(--font-sans);
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+}
+
+.detalhes-month {
+    font-family: var(--font-serif);
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    font-style: italic;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 4px;
+    text-align: right;
+}
+
+/* 2. Bloco do Cronômetro */
+.cronometro-bloco {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.cronometro-titulo {
+    font-family: var(--font-serif);
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 300;
+    font-style: italic;
+    margin-bottom: 25px;
+}
+
+.cronometro-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.cronometro-box {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 15px 20px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.2);
+    min-width: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cronometro-numero {
+    font-family: var(--font-serif);
+    font-size: 2.2rem;
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 5px;
+}
+
+.cronometro-legenda {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* 3. Bloco do Local e Mapa */
+.local-bloco {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.local-titulo {
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 6vw, 3.5rem);
+    font-weight: 300;
+    font-style: italic;
+    margin-bottom: 15px;
+}
+
+.local-sub1 {
+    font-family: var(--font-sans);
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    margin-bottom: 0;
+}
+
+.local-sub2 {
+    font-family: var(--font-serif);
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 2px;
+    margin-bottom: 25px;
+}
+
+.mapa-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.mapa-container iframe {
+    display: block;
+}
+
+/* 4. ÁREA DE UTILIDADE (Accordions) */
+.utilidade-bloco {
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.utilidade-accordion {
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: transparent;
+}
+
+.utilidade-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    color: #ffffff;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.3s ease;
+    list-style: none; /* remove padrão */
+}
+
+/* Remove default triangle */
+.utilidade-summary::-webkit-details-marker {
+    display: none;
+}
+
+.utilidade-summary:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+.accordion-icon {
+    font-size: 1.5rem;
+    font-weight: 300;
+    transition: transform 0.3s ease;
+}
+
+details[open] .accordion-icon {
+    transform: rotate(45deg);
+}
+
+details[open] .utilidade-summary {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-color: transparent;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.utilidade-content {
+    padding: 20px 24px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-top: none;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.85);
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.utilidade-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: #ffffff;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-style: normal;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transition: opacity 0.3s ease;
+}
+
+.utilidade-link:hover {
+    opacity: 0.7;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   25. RSVP (Confirmação de Presença) — Seção #rsvp
+   ══════════════════════════════════════════════════════════════════════════ */
+#rsvp {
+    margin-top: 100px;
+    padding: 80px 20px;
+    background-color: transparent; /* Permite ver o fundo fixo (Hero) */
+    position: relative;
+    z-index: 10;
+}
+
+.rsvp-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.rsvp-card {
+    background: rgba(26, 26, 26, 0.7);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 50px 40px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    color: #ffffff;
+}
+
+.rsvp-titulo {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 300;
+    text-align: center;
+    margin-bottom: 15px;
+    color: #ffffff;
+}
+
+.rsvp-subtitulo {
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 300;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 40px;
+    line-height: 1.5;
+}
+
+.rsvp-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+
+@media (max-width: 600px) {
+    .form-row {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .rsvp-card {
+        padding: 40px 25px;
+    }
+}
+
+.rsvp-form label {
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 0.05em;
+}
+
+.rsvp-form input[type="text"],
+.rsvp-form input[type="email"],
+.rsvp-form input[type="tel"],
+.rsvp-form select,
+.rsvp-form textarea {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 14px 16px;
+    color: #ffffff;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.rsvp-form input::placeholder,
+.rsvp-form textarea::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.rsvp-form input:focus,
+.rsvp-form select:focus,
+.rsvp-form textarea:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.rsvp-form select option {
+    background: #1a1a1a;
+    color: #ffffff;
+}
+
+/* Radio Customizado */
+.radio-label-title {
+    margin-bottom: 4px;
+}
+
+.radio-group {
+    display: flex;
+    gap: 20px;
+    margin-top: 5px;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.radio-label input[type="radio"] {
+    display: none;
+}
+
+.radio-custom {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.radio-label input[type="radio"]:checked + .radio-custom {
+    border-color: #ffffff;
+}
+
+.radio-label input[type="radio"]:checked + .radio-custom::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background: #ffffff;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.rsvp-form textarea {
+    resize: vertical;
+}
+
+.rsvp-btn {
+    margin-top: 15px;
+    background: #ffffff;
+    color: #1a1a1a;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.rsvp-btn:hover {
+    background: #e6e6e6;
+    transform: translateY(-2px);
+}
+
+.rsvp-btn:active {
+    transform: translateY(0);
+}
+
+/* Estado de Sucesso */
+.rsvp-sucesso-msg {
+    text-align: center;
+    padding: 40px 0;
+    animation: fadeIn 0.8s ease forwards;
+}
+
+.sucesso-icon {
+    width: 64px;
+    height: 64px;
+    color: #4CAF50;
+    margin-bottom: 20px;
+}
+
+.sucesso-titulo {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    font-weight: 300;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.sucesso-texto {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
