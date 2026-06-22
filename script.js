@@ -760,7 +760,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const id = item.ID;
             const nome = item.Nome;
             const valor = item.Valor;
-            const imagem = item.Imagem;
+            let imagem = item.Imagem;
+            if (imagem) {
+                imagem = imagem.trim().replace(/\\/g, '/');
+            }
             const status = item.Status || 'Disponível';
             
             let room = item.Comodo ?? item.comodo ?? item.Cômodo ?? item.cômodo ?? item.Categoria ?? item.categoria;
