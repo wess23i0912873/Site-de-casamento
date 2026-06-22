@@ -683,7 +683,38 @@ document.addEventListener('DOMContentLoaded', function() {
         return 'Cozinha'; // Padrão
     }
 
-    // 3. Função para carregar a lista de presentes da API
+    // 3. Função Auxiliar para Requisições JSONP
+    function fetchJSONP(url) {
+        return new Promise((resolve, reject) => {
+            const callbackName = 'jsonpCallback_' + Math.round(Math.random() * 1000000);
+            
+            window[callbackName] = function(data) {
+                cleanup();
+                resolve(data);
+            };
+
+            const script = document.createElement('script');
+            script.id = 'jsonp_' + callbackName;
+            script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + callbackName;
+            
+            script.onerror = function() {
+                cleanup();
+                reject(new Error('Erro ao carregar o script JSONP.'));
+            };
+
+            function cleanup() {
+                delete window[callbackName];
+                const scriptNode = document.getElementById(script.id);
+                if (scriptNode) {
+                    scriptNode.remove();
+                }
+            }
+
+            document.body.appendChild(script);
+        });
+    }
+
+    // 4. Função para carregar a lista de presentes da API via JSONP
     async function carregarPresentes() {
         container.innerHTML = `
             <div style="grid-column: 1 / -1; text-align: center; padding: 60px 40px; color: #ffffff; font-family: var(--font-sans); font-size: 1.1rem; letter-spacing: 0.05em; background: rgba(0, 0, 0, 0.2); border-radius: 28px; border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);">
@@ -696,11 +727,7 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
 
         try {
-            const response = await fetch(API_URL);
-            if (!response.ok) {
-                throw new Error('Erro na resposta do servidor.');
-            }
-            const data = await response.json();
+            const data = await fetchJSONP(API_URL);
             
             if (Array.isArray(data)) {
                 presentesData = data;
