@@ -646,14 +646,153 @@ window.addEventListener('load', function() {
 });
 
 /* ==========================================================================
-   LÓGICA DA PÁGINA DE PRESENTES (presentes.html)
+   LÓGICA DA PÁGINA DE PRESENTES (presentes.html) — INTEGRAÇÃO COM GOOGLE APPS SCRIPT
    ========================================================================== */
 document.addEventListener('DOMContentLoaded', function() {
-    // 1. Lógica do Dropdown Filtro de Cômodos
+    const API_URL = 'https://script.google.com/macros/s/AKfycbwSOt56V8gjDFjttF01Uv3WcRdfeInWxoTjITK6dev_qFe3Bf3rsWX3jowz1GH-hY7M/exec';
+
+    const container = document.getElementById('produtos-container');
+    if (!container) return; // Só executa se estiver na página presentes.html
+
+    let presentesData = [];
+    let produtoSelecionado = null;
+    let operacaoSucesso = false;
+
+    // 1. Função de Formatação de Moeda
+    function formatarPreco(val) {
+        if (typeof val === 'number') {
+            return `R$ ${val.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        }
+        let strVal = String(val || '').trim();
+        if (strVal.includes('R$')) return strVal;
+        let num = parseFloat(strVal.replace(/[^\d,-]/g, '').replace(',', '.'));
+        if (!isNaN(num)) {
+            return `R$ ${num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        }
+        return strVal || 'R$ 0,00';
+    }
+
+    // 2. Adivinhação de Cômodo pelo Nome do Produto (Garante funcionamento dos filtros)
+    function guessRoomByName(name) {
+        const lowercaseName = String(name || '').toLowerCase();
+        if (lowercaseName.includes('cama') || lowercaseName.includes('lençol') || lowercaseName.includes('travesseiro') || lowercaseName.includes('quarto') || lowercaseName.includes('guarda-roupa') || lowercaseName.includes('colchão')) return 'Quarto';
+        if (lowercaseName.includes('panela') || lowercaseName.includes('prato') || lowercaseName.includes('copo') || lowercaseName.includes('faqueiro') || lowercaseName.includes('garfo') || lowercaseName.includes('faca') || lowercaseName.includes('liquidificador') || lowercaseName.includes('microondas') || lowercaseName.includes('cozinha') || lowercaseName.includes('cafeteira') || lowercaseName.includes('batedeira') || lowercaseName.includes('jantar') || lowercaseName.includes('talher') || lowercaseName.includes('frigideira')) return 'Cozinha';
+        if (lowercaseName.includes('sofa') || lowercaseName.includes('sofá') || lowercaseName.includes('tapete') || lowercaseName.includes('sala') || lowercaseName.includes('tv') || lowercaseName.includes('quadro') || lowercaseName.includes('poltrona') || lowercaseName.includes('painel') || lowercaseName.includes('mesa de centro')) return 'Sala';
+        if (lowercaseName.includes('banheiro') || lowercaseName.includes('toalha') || lowercaseName.includes('sabonete') || lowercaseName.includes('chuveiro') || lowercaseName.includes('box')) return 'Banheiro';
+        if (lowercaseName.includes('lavanderia') || lowercaseName.includes('máquina') || lowercaseName.includes('ferro') || lowercaseName.includes('varal') || lowercaseName.includes('tábua') || lowercaseName.includes('aspirador') || lowercaseName.includes('vassoura')) return 'Lavanderia';
+        return 'Cozinha'; // Padrão
+    }
+
+    // 3. Função para carregar a lista de presentes da API
+    async function carregarPresentes() {
+        container.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 60px 40px; color: #ffffff; font-family: var(--font-sans); font-size: 1.1rem; letter-spacing: 0.05em; background: rgba(0, 0, 0, 0.2); border-radius: 28px; border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);">
+                <div class="loader-spinner" style="border: 3px solid rgba(255, 255, 255, 0.1); border-radius: 50%; border-top: 3px solid var(--color-accent-blue); width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto 16px;"></div>
+                A carregar lista de presentes...
+            </div>
+            <style>
+                @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+            </style>
+        `;
+
+        try {
+            const response = await fetch(API_URL);
+            if (!response.ok) {
+                throw new Error('Erro na resposta do servidor.');
+            }
+            const data = await response.json();
+            
+            if (Array.isArray(data)) {
+                presentesData = data;
+                renderizarPresentes(presentesData);
+            } else {
+                throw new Error('API não retornou um array de dados.');
+            }
+        } catch (error) {
+            console.error(error);
+            container.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                    <p style="color: white; text-align: center;">Erro ao carregar a lista de presentes. Tentando conectar ao banco de dados...</p>
+                </div>
+            `;
+        }
+    }
+
+    // 4. Renderização Dinâmica dos Presentes
+    function renderizarPresentes(items) {
+        if (items.length === 0) {
+            container.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #fff; font-family: var(--font-sans);">
+                    Nenhum presente disponível no momento.
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = items.map(item => {
+            const id = item.ID;
+            const nome = item.Nome;
+            const valor = item.Valor;
+            const imagem = item.Imagem;
+            const status = item.Status || 'Disponível';
+            
+            let room = item.Comodo ?? item.comodo ?? item.Cômodo ?? item.cômodo ?? item.Categoria ?? item.categoria;
+            if (!room) {
+                room = guessRoomByName(nome);
+            }
+
+            const isDisponivel = String(status).trim().toLowerCase() === 'disponível' || String(status).trim().toLowerCase() === 'disponivel';
+            const precoFormatado = formatarPreco(valor);
+
+            let actionsHTML = '';
+            if (isDisponivel) {
+                actionsHTML = `
+                    <div class="action-btn-group">
+                        <button class="btn-acao btn-pix btn-presentear" data-id="${id}">Presentear</button>
+                        <span class="tooltip-icon tooltip-mini">?</span>
+                        <div class="tooltip-box">Ao escolher o Pix, você envia o valor para que os noivos comprem o item por conta própria.</div>
+                    </div>
+                    <div class="action-btn-group">
+                        <button class="btn-acao btn-reservar" data-id="${id}">Reservar</button>
+                        <span class="tooltip-icon tooltip-mini">?</span>
+                        <div class="tooltip-box">Ao clicar em reservar, você sinaliza aos noivos que entregará este presente físico pessoalmente.</div>
+                    </div>
+                `;
+            } else {
+                const label = String(status).trim().toLowerCase() === 'reservado' ? 'Reservado' : 'Já Presenteado';
+                actionsHTML = `
+                    <button class="btn-acao btn-indisponivel" disabled style="background-color: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.35); border: 1px solid rgba(255, 255, 255, 0.05); width: 100%; cursor: not-allowed; opacity: 0.6; padding: 12px; border-radius: 8px; font-weight: 700; text-transform: uppercase;">
+                        ${label}
+                    </button>
+                `;
+            }
+
+            const cardStyle = isDisponivel ? '' : 'style="opacity: 0.65;"';
+
+            return `
+                <div class="presente-card ${isDisponivel ? '' : 'indisponivel'}" data-room="${room}" ${cardStyle}>
+                    <div class="presente-img-wrapper">
+                        ${imagem ? `<img src="${imagem}" alt="${nome}" draggable="false">` : `
+                        <div class="presente-img-placeholder">
+                            <span>Imagem do Presente</span>
+                        </div>`}
+                    </div>
+                    <div class="presente-info">
+                        <h3 class="presente-nome">${nome}</h3>
+                        <p class="presente-preco">${precoFormatado}</p>
+                        <div class="presente-actions">
+                            ${actionsHTML}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    // 5. Lógica do Dropdown Filtro de Cômodos
     const btnToggleFiltro = document.getElementById('btn-toggle-filtro');
     const filtroOpcoes = document.getElementById('filtro-opcoes');
     const filterBtns = document.querySelectorAll('.btn-filtro');
-    const cards = document.querySelectorAll('.presente-card');
 
     if (btnToggleFiltro && filtroOpcoes) {
         btnToggleFiltro.addEventListener('click', function(e) {
@@ -668,23 +807,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Lógica de Filtragem
-        if (filterBtns.length > 0 && cards.length > 0) {
+        // Lógica de Filtragem (Mapeamento Dinâmico)
+        if (filterBtns.length > 0) {
             filterBtns.forEach(btn => {
                 btn.addEventListener('click', function(e) {
-                    e.stopPropagation(); // Evitar que feche imediatamente
-                    // Remove active de todos
+                    e.stopPropagation();
                     filterBtns.forEach(b => b.classList.remove('active'));
-                    // Adiciona no clicado
                     this.classList.add('active');
-                    // Oculta dropdown
                     filtroOpcoes.classList.add('hidden');
 
                     const filterValue = this.getAttribute('data-filter');
-
-                    // Atualiza o texto do botão principal (opcional, mas bom pra UX)
                     btnToggleFiltro.innerText = `Filtros: ${this.innerText} ▼`;
 
+                    const cards = document.querySelectorAll('.presente-card');
                     cards.forEach(card => {
                         if (filterValue === 'all') {
                             card.classList.remove('hidden');
@@ -701,72 +836,76 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 2. Lógica dos Tooltips (com click fora para fechar)
-    const tooltips = document.querySelectorAll('.tooltip-icon');
-    
-    if (tooltips.length > 0) {
-        tooltips.forEach(icon => {
-            icon.addEventListener('click', function(e) {
-                e.stopPropagation(); // Evita fechar imediatamente pelo body
-                const box = this.nextElementSibling;
-                
-                // Fecha todos os outros antes de abrir este
-                document.querySelectorAll('.tooltip-box').forEach(b => {
-                    if (b !== box) b.classList.remove('show');
-                });
+    // 6. Lógica dos Tooltips Dinâmicos (Event Delegation)
+    document.addEventListener('click', function(e) {
+        const tooltipIcon = e.target.closest('.tooltip-icon');
+        if (tooltipIcon) {
+            e.stopPropagation();
+            const box = tooltipIcon.nextElementSibling;
+            
+            // Fecha todos os outros tooltips
+            document.querySelectorAll('.tooltip-box').forEach(b => {
+                if (b !== box) b.classList.remove('show');
+            });
 
+            if (box) {
                 box.classList.toggle('show');
-            });
+            }
+            return;
+        }
+
+        // Fechar qualquer tooltip aberto ao clicar fora
+        document.querySelectorAll('.tooltip-box.show').forEach(b => {
+            b.classList.remove('show');
         });
+    });
 
-        // Fechar tooltip ao clicar fora
-        document.body.addEventListener('click', function() {
-            document.querySelectorAll('.tooltip-box.show').forEach(b => {
-                b.classList.remove('show');
-            });
+    window.addEventListener('scroll', function() {
+        document.querySelectorAll('.tooltip-box.show').forEach(b => {
+            b.classList.remove('show');
         });
+    }, { passive: true });
 
-        // Fechar tooltip ao rolar a página para não bugar o scroll
-        window.addEventListener('scroll', function() {
-            document.querySelectorAll('.tooltip-box.show').forEach(b => {
-                b.classList.remove('show');
-            });
-        }, { passive: true });
-    }
-
-    // 3. Lógica do Modal Presentear (Pix)
-    const btnsPresentear = document.querySelectorAll('.btn-presentear');
+    // 7. Modais (Elementos do DOM)
     const modalPresentear = document.getElementById('modal-presentear');
     const btnCloseModal = document.getElementById('btn-close-modal');
-    
-    // Elementos do Modal
     const modalItemNome = document.getElementById('modal-item-nome');
     const modalItemPreco = document.getElementById('modal-item-preco');
     const modalItemImg = document.getElementById('modal-item-img');
     const modalImgPlaceholder = document.getElementById('modal-item-img-placeholder');
-    
-    // Formulário e Fake QR
     const inputPixNome = document.getElementById('pix-nome');
     const inputPixTelefone = document.getElementById('pix-telefone');
     const inputPixAceite = document.getElementById('pix-aceite');
     const btnFazerPix = document.getElementById('btn-fazer-pix');
 
-    if (modalPresentear && btnsPresentear.length > 0) {
-        // Abrir Modal
-        btnsPresentear.forEach(btn => {
-            btn.addEventListener('click', function() {
-                // Buscar dados no Card PAI
-                const card = this.closest('.presente-card');
-                const nome = card.querySelector('.presente-nome').innerText;
-                const preco = card.querySelector('.presente-preco').innerText;
-                const imgElem = card.querySelector('.presente-img-wrapper img');
-                
-                // Injetar dados no Modal
-                modalItemNome.innerText = nome;
-                modalItemPreco.innerText = preco;
+    const modalReservar = document.getElementById('modal-reservar');
+    const btnCloseModalReservar = document.getElementById('btn-close-modal-reservar');
+    const modalItemNomeReservar = document.getElementById('modal-item-nome-reservar');
+    const modalItemPrecoReservar = document.getElementById('modal-item-preco-reservar');
+    const modalItemImgReservar = document.getElementById('modal-item-img-reservar');
+    const modalImgPlaceholderReservar = document.getElementById('modal-item-img-placeholder-reservar');
+    const inputReservaNome = document.getElementById('reserva-nome');
+    const inputReservaTelefone = document.getElementById('reserva-telefone');
+    const inputReservaAceite = document.getElementById('reserva-aceite');
+    const btnConfirmarReserva = document.getElementById('btn-confirmar-reserva');
 
-                if (imgElem && imgElem.src) {
-                    modalItemImg.src = imgElem.src;
+    // 8. Event Delegation para Abertura dos Modais
+    document.addEventListener('click', function(e) {
+        // Abertura Modal Presentear (Pix)
+        const btnPresentear = e.target.closest('.btn-presentear');
+        if (btnPresentear && modalPresentear) {
+            const id = btnPresentear.getAttribute('data-id');
+            const item = presentesData.find(p => String(p.ID) === String(id));
+            
+            if (item) {
+                produtoSelecionado = item;
+                
+                modalItemNome.innerText = item.Nome;
+                modalItemPreco.innerText = formatarPreco(item.Valor);
+
+                const imgUrl = item.Imagem;
+                if (imgUrl) {
+                    modalItemImg.src = imgUrl;
                     modalItemImg.classList.remove('hidden');
                     modalImgPlaceholder.classList.add('hidden');
                 } else {
@@ -774,7 +913,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     modalImgPlaceholder.classList.remove('hidden');
                 }
 
-                // Resetar estados do Form/QR
+                // Reset do Formulário do Modal
                 inputPixNome.value = '';
                 inputPixTelefone.value = '';
                 if (inputPixAceite) inputPixAceite.checked = false;
@@ -785,118 +924,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (step1) step1.style.display = 'block';
                 if (step2) step2.style.display = 'none';
 
-                // Mostrar Modal
                 modalPresentear.classList.remove('hidden');
-            });
-        });
-
-        // Fechar Modal
-        const fecharModal = () => {
-            modalPresentear.classList.add('hidden');
-            
-            const step1 = document.getElementById('pix-step-1');
-            const step2 = document.getElementById('pix-step-2');
-            if (step1) step1.style.display = 'block';
-            if (step2) step2.style.display = 'none';
-        };
-
-        if (btnCloseModal) btnCloseModal.addEventListener('click', fecharModal);
-        
-        // Fechar clicando fora do modal-content
-        modalPresentear.addEventListener('click', function(e) {
-            if (e.target === this) fecharModal();
-        });
-
-        // Lógica de Validação do Formulário
-        const validarFormularioPix = () => {
-            const nomeLen = inputPixNome.value.trim().length;
-            const telLen = inputPixTelefone.value.trim().length;
-            const isChecked = inputPixAceite ? inputPixAceite.checked : false;
-            
-            if (nomeLen > 0 && telLen > 0 && isChecked) {
-                btnFazerPix.disabled = false;
-            } else {
-                btnFazerPix.disabled = true;
             }
-        };
-
-        if (inputPixNome && inputPixTelefone) {
-            inputPixNome.addEventListener('input', validarFormularioPix);
-            inputPixTelefone.addEventListener('input', validarFormularioPix);
-        }
-        if (inputPixAceite) {
-            inputPixAceite.addEventListener('change', validarFormularioPix);
+            return;
         }
 
-        // Simular fluxo de PIX
-        if (btnFazerPix) {
-            btnFazerPix.addEventListener('click', function() {
-                // Esconder form, revelar QR Code fake
-                const step1 = document.getElementById('pix-step-1');
-                const step2 = document.getElementById('pix-step-2');
-                if (step1) step1.style.display = 'none';
-                if (step2) step2.style.display = 'block';
-            });
-        }
-        
-        // Copiar Chave Pix
-        const btnCopyPix = document.getElementById('btn-copy-pix');
-        const pixKeyText = document.getElementById('pix-key-text');
-        
-        if (btnCopyPix && pixKeyText) {
-            btnCopyPix.addEventListener('click', function() {
-                navigator.clipboard.writeText(pixKeyText.innerText).then(() => {
-                    const textoOriginal = btnCopyPix.innerText;
-                    btnCopyPix.innerText = 'Copiado!';
-                    btnCopyPix.style.backgroundColor = '#28a745';
-                    
-                    setTimeout(() => {
-                        btnCopyPix.innerText = textoOriginal;
-                        btnCopyPix.style.backgroundColor = '';
-                    }, 2000);
-                });
-            });
-        }
-    }
-
-    // 4. Lógica do Modal Reservar (Físico)
-    const btnsReservar = document.querySelectorAll('.btn-reservar:not(.btn-reservar-submit)');
-    const modalReservar = document.getElementById('modal-reservar');
-    const btnCloseModalReservar = document.getElementById('btn-close-modal-reservar');
-    
-    // Elementos do Modal Reservar
-    const modalItemNomeReservar = document.getElementById('modal-item-nome-reservar');
-    const modalItemPrecoReservar = document.getElementById('modal-item-preco-reservar');
-    const modalItemImgReservar = document.getElementById('modal-item-img-reservar');
-    const modalImgPlaceholderReservar = document.getElementById('modal-item-img-placeholder-reservar');
-    
-    // Formulário Reservar
-    const inputReservaNome = document.getElementById('reserva-nome');
-    const inputReservaTelefone = document.getElementById('reserva-telefone');
-    const inputReservaAceite = document.getElementById('reserva-aceite');
-    const btnConfirmarReserva = document.getElementById('btn-confirmar-reserva');
-    const modalFormAreaReservar = document.getElementById('modal-form-area-reservar');
-    const modalReservaSucesso = document.getElementById('modal-reserva-sucesso');
-
-    if (modalReservar && btnsReservar.length > 0) {
-        // Abrir Modal
-        btnsReservar.forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                // Previne abrir se for o botão de submit dentro do modal
-                if (this.classList.contains('btn-reservar-submit')) return;
-
-                const card = this.closest('.presente-card');
-                if(!card) return;
+        // Abertura Modal Reservar (Físico)
+        const btnReservar = e.target.closest('.btn-reservar:not(.btn-reservar-submit)');
+        if (btnReservar && modalReservar) {
+            const id = btnReservar.getAttribute('data-id');
+            const item = presentesData.find(p => String(p.ID) === String(id));
+            
+            if (item) {
+                produtoSelecionado = item;
                 
-                const nome = card.querySelector('.presente-nome').innerText;
-                const preco = card.querySelector('.presente-preco').innerText;
-                const imgElem = card.querySelector('.presente-img-wrapper img');
-                
-                modalItemNomeReservar.innerText = nome;
-                modalItemPrecoReservar.innerText = preco;
+                modalItemNomeReservar.innerText = item.Nome;
+                modalItemPrecoReservar.innerText = formatarPreco(item.Valor);
 
-                if (imgElem && imgElem.src) {
-                    modalItemImgReservar.src = imgElem.src;
+                const imgUrl = item.Imagem;
+                if (imgUrl) {
+                    modalItemImgReservar.src = imgUrl;
                     modalItemImgReservar.classList.remove('hidden');
                     modalImgPlaceholderReservar.classList.add('hidden');
                 } else {
@@ -904,64 +951,205 @@ document.addEventListener('DOMContentLoaded', function() {
                     modalImgPlaceholderReservar.classList.remove('hidden');
                 }
 
+                // Reset do Formulário do Modal
                 inputReservaNome.value = '';
                 inputReservaTelefone.value = '';
-                if(inputReservaAceite) inputReservaAceite.checked = false;
+                if (inputReservaAceite) inputReservaAceite.checked = false;
                 btnConfirmarReserva.disabled = true;
                 
-                // Reset DOM Separation
                 const step1 = document.getElementById('reserva-step-1');
                 const step2 = document.getElementById('reserva-step-2');
                 if (step1) step1.style.display = 'block';
                 if (step2) step2.style.display = 'none';
 
                 modalReservar.classList.remove('hidden');
-            });
-        });
+            }
+            return;
+        }
+    });
 
-        const fecharModalReservar = () => {
+    // 9. Lógica de Fechamento dos Modais (com atualização dinâmica)
+    const fecharModalPresentear = () => {
+        if (modalPresentear) {
+            modalPresentear.classList.add('hidden');
+            const step1 = document.getElementById('pix-step-1');
+            const step2 = document.getElementById('pix-step-2');
+            if (step1) step1.style.display = 'block';
+            if (step2) step2.style.display = 'none';
+
+            if (operacaoSucesso) {
+                operacaoSucesso = false;
+                carregarPresentes();
+            }
+        }
+    };
+
+    const fecharModalReservar = () => {
+        if (modalReservar) {
             modalReservar.classList.add('hidden');
-            
-            // Clean up em fechar também garante
             const step1 = document.getElementById('reserva-step-1');
             const step2 = document.getElementById('reserva-step-2');
             if (step1) step1.style.display = 'block';
             if (step2) step2.style.display = 'none';
-        };
 
-        if (btnCloseModalReservar) btnCloseModalReservar.addEventListener('click', fecharModalReservar);
-        
+            if (operacaoSucesso) {
+                operacaoSucesso = false;
+                carregarPresentes();
+            }
+        }
+    };
+
+    if (btnCloseModal) btnCloseModal.addEventListener('click', fecharModalPresentear);
+    if (modalPresentear) {
+        modalPresentear.addEventListener('click', function(e) {
+            if (e.target === this) fecharModalPresentear();
+        });
+    }
+
+    if (btnCloseModalReservar) btnCloseModalReservar.addEventListener('click', fecharModalReservar);
+    if (modalReservar) {
         modalReservar.addEventListener('click', function(e) {
             if (e.target === this) fecharModalReservar();
         });
+    }
 
-        const validarFormularioReserva = () => {
-            const nomeLen = inputReservaNome.value.trim().length;
-            const telLen = inputReservaTelefone.value.trim().length;
-            const isChecked = inputReservaAceite ? inputReservaAceite.checked : false;
-            
-            if (nomeLen > 0 && telLen > 0 && isChecked) {
-                btnConfirmarReserva.disabled = false;
-            } else {
-                btnConfirmarReserva.disabled = true;
+    // 10. Validações de Formulário em Tempo Real
+    const validarFormularioPix = () => {
+        const nomeLen = inputPixNome.value.trim().length;
+        const telLen = inputPixTelefone.value.trim().length;
+        const isChecked = inputPixAceite ? inputPixAceite.checked : false;
+        
+        btnFazerPix.disabled = !(nomeLen > 0 && telLen > 0 && isChecked);
+    };
+
+    if (inputPixNome && inputPixTelefone) {
+        inputPixNome.addEventListener('input', validarFormularioPix);
+        inputPixTelefone.addEventListener('input', validarFormularioPix);
+    }
+    if (inputPixAceite) {
+        inputPixAceite.addEventListener('change', validarFormularioPix);
+    }
+
+    const validarFormularioReserva = () => {
+        const nomeLen = inputReservaNome.value.trim().length;
+        const telLen = inputReservaTelefone.value.trim().length;
+        const isChecked = inputReservaAceite ? inputReservaAceite.checked : false;
+        
+        btnConfirmarReserva.disabled = !(nomeLen > 0 && telLen > 0 && isChecked);
+    };
+
+    if (inputReservaNome && inputReservaTelefone) {
+        inputReservaNome.addEventListener('input', validarFormularioReserva);
+        inputReservaTelefone.addEventListener('input', validarFormularioReserva);
+    }
+    if (inputReservaAceite) {
+        inputReservaAceite.addEventListener('change', validarFormularioReserva);
+    }
+
+    // 11. Envio dos Formulários dos Modais para a API (POST)
+    if (btnFazerPix) {
+        btnFazerPix.addEventListener('click', async function() {
+            if (!produtoSelecionado) return;
+
+            const idDoProduto = produtoSelecionado.ID;
+            const nomeDigitado = inputPixNome.value.trim();
+            const telefoneDigitado = inputPixTelefone.value.trim();
+
+            const originalText = btnFazerPix.innerText;
+            btnFazerPix.innerText = 'A carregar...';
+            btnFazerPix.disabled = true;
+
+            try {
+                // Requisição POST em modo no-cors para evitar falhas de preflight CORS com o Apps Script
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({
+                        id: idDoProduto,
+                        convidado: nomeDigitado,
+                        telefone: telefoneDigitado,
+                        formaEnvio: "Pix"
+                    })
+                });
+
+                // Transição para o QR Code (Sucesso)
+                operacaoSucesso = true;
+                const step1 = document.getElementById('pix-step-1');
+                const step2 = document.getElementById('pix-step-2');
+                if (step1) step1.style.display = 'none';
+                if (step2) step2.style.display = 'block';
+
+            } catch (error) {
+                console.error('Erro ao registrar presente (Pix):', error);
+                alert('Ocorreu um erro ao processar. Por favor, tente novamente.');
+            } finally {
+                btnFazerPix.innerText = originalText;
+                btnFazerPix.disabled = false;
             }
-        };
+        });
+    }
 
-        if (inputReservaNome && inputReservaTelefone) {
-            inputReservaNome.addEventListener('input', validarFormularioReserva);
-            inputReservaTelefone.addEventListener('input', validarFormularioReserva);
-        }
-        if (inputReservaAceite) {
-            inputReservaAceite.addEventListener('change', validarFormularioReserva);
-        }
+    if (btnConfirmarReserva) {
+        btnConfirmarReserva.addEventListener('click', async function() {
+            if (!produtoSelecionado) return;
 
-        if (btnConfirmarReserva) {
-            btnConfirmarReserva.addEventListener('click', function() {
+            const idDoProduto = produtoSelecionado.ID;
+            const nomeDigitado = inputReservaNome.value.trim();
+            const telefoneDigitado = inputReservaTelefone.value.trim();
+
+            const originalText = btnConfirmarReserva.innerText;
+            btnConfirmarReserva.innerText = 'A carregar...';
+            btnConfirmarReserva.disabled = true;
+
+            try {
+                // Requisição POST em modo no-cors para evitar falhas de preflight CORS com o Apps Script
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({
+                        id: idDoProduto,
+                        convidado: nomeDigitado,
+                        telefone: telefoneDigitado,
+                        formaEnvio: "Físico"
+                    })
+                });
+
+                // Transição para mensagem de sucesso
+                operacaoSucesso = true;
                 const step1 = document.getElementById('reserva-step-1');
                 const step2 = document.getElementById('reserva-step-2');
                 if (step1) step1.style.display = 'none';
                 if (step2) step2.style.display = 'block';
-            });
-        }
+
+            } catch (error) {
+                console.error('Erro ao registrar presente (Físico):', error);
+                alert('Ocorreu um erro ao processar a reserva. Por favor, tente novamente.');
+            } finally {
+                btnConfirmarReserva.innerText = originalText;
+                btnConfirmarReserva.disabled = false;
+            }
+        });
     }
+
+    // Copiar Chave Pix
+    const btnCopyPix = document.getElementById('btn-copy-pix');
+    const pixKeyText = document.getElementById('pix-key-text');
+    
+    if (btnCopyPix && pixKeyText) {
+        btnCopyPix.addEventListener('click', function() {
+            navigator.clipboard.writeText(pixKeyText.innerText).then(() => {
+                const textoOriginal = btnCopyPix.innerText;
+                btnCopyPix.innerText = 'Copiado!';
+                btnCopyPix.style.backgroundColor = '#28a745';
+                
+                setTimeout(() => {
+                    btnCopyPix.innerText = textoOriginal;
+                    btnCopyPix.style.backgroundColor = '';
+                }, 2000);
+            });
+        });
+    }
+
+    // 12. Execução Inicial
+    carregarPresentes();
 });
