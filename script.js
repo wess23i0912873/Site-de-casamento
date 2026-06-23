@@ -658,6 +658,55 @@ document.addEventListener('DOMContentLoaded', function() {
     let produtoSelecionado = null;
     let operacaoSucesso = false;
 
+    // Lista de imagens disponíveis localmente na pasta IMAGENS/PRESENTES/
+    const IMAGENS_DISPONIVEIS = [
+        "Air fryer.png",
+        "Batedeira.png",
+        "Conjunto de Mesa Cozinha.png",
+        "Fogão.jpg",
+        "Geladeira.png",
+        "Panela de arroz elétrica.png",
+        "armário de cozinha.png",
+        "liquidificador.jpg",
+        "microondas.png"
+    ];
+
+    // Função para encontrar a imagem correspondente pelo nome do produto
+    function acharImagemPorNome(nomeProduto) {
+        if (!nomeProduto) return null;
+        
+        const normalizar = (txt) => {
+            return txt.toLowerCase()
+                      .normalize("NFD")
+                      .replace(/[\u0300-\u036f]/g, "") // remove acentos
+                      .replace(/[^a-z0-9]/g, " ") // remove caracteres especiais
+                      .trim()
+                      .replace(/\s+/g, " ");
+        };
+
+        const nomeNorm = normalizar(nomeProduto);
+
+        // 1. Tenta correspondência exata do nome normalizado
+        for (const img of IMAGENS_DISPONIVEIS) {
+            const imgSemExt = img.substring(0, img.lastIndexOf('.'));
+            const imgNorm = normalizar(imgSemExt);
+            if (nomeNorm === imgNorm) {
+                return `IMAGENS/PRESENTES/${img}`;
+            }
+        }
+
+        // 2. Tenta correspondência parcial (ex: "Fogão 4 bocas" contém "fogao")
+        for (const img of IMAGENS_DISPONIVEIS) {
+            const imgSemExt = img.substring(0, img.lastIndexOf('.'));
+            const imgNorm = normalizar(imgSemExt);
+            if (nomeNorm.includes(imgNorm) || imgNorm.includes(nomeNorm)) {
+                return `IMAGENS/PRESENTES/${img}`;
+            }
+        }
+
+        return null;
+    }
+
     // 1. Função de Formatação de Moeda
     function formatarPreco(val) {
         if (typeof val === 'number') {
@@ -730,7 +779,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await fetchJSONP(API_URL);
             
             if (Array.isArray(data)) {
-                presentesData = data;
+                presentesData = data.map(item => {
+                    let imagem = item.Imagem;
+                    const temExtensaoValida = imagem && /\.(jpg|jpeg|png|webp|svg)$/i.test(imagem);
+                    if (temExtensaoValida) {
+                        item.Imagem = imagem.trim().replace(/\\/g, '/');
+                    } else {
+                        item.Imagem = acharImagemPorNome(item.Nome) || "";
+                    }
+                    return item;
+                });
                 renderizarPresentes(presentesData);
             } else {
                 throw new Error('API não retornou um array de dados.');
