@@ -128,7 +128,7 @@
                         </label>
                     </div>
                     
-                    <button id="btn-fazer-pix" class="btn-acao btn-pix" disabled>Gerar Pix</button>
+                    <button id="btn-fazer-pix" class="btn-acao btn-pix" disabled>Gerar Pix de Pagamento</button>
                 </div>
             </div>
 
@@ -142,9 +142,22 @@
                     
                     <p style="text-align:center; font-weight:600; margin-bottom:12px; font-family: var(--font-sans); color: #111;">Ou escaneie o QR Code:</p>
                     <div class="fake-qr-code">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=TESTE_PIX_CASAMENTO" alt="QR Code Pix" style="width:150px; height:150px; display:block; margin: 0 auto; border-radius: 8px;">
+                        <img id="pix-qr-img" src="" alt="QR Code Pix" style="width:150px; height:150px; display:block; margin: 0 auto; border-radius: 8px;">
                     </div>
+
+                    <p style="text-align:center; font-size: 0.85rem; margin-top: 20px; font-family: var(--font-sans); color: #28a745; font-weight: 600; animation: blink 1.5s infinite;">
+                        Aguardando confirmação do pagamento...
+                    </p>
                 </div>
+            </div>
+
+            <div id="pix-step-3" style="display: none; text-align: center; padding: 20px 0;">
+                <div style="font-size: 3.5rem; color: #28a745; margin-bottom: 16px; animation: scaleUp 0.5s ease;">🎉</div>
+                <h3 style="font-family: var(--font-sans); color: var(--color-text-dark); margin-bottom: 12px; font-weight: 700; font-size: 1.5rem;">Muito obrigado!</h3>
+                <p style="font-family: var(--font-sans); color: var(--color-gray-muted); font-size: 0.95rem; line-height: 1.5; max-width: 320px; margin: 0 auto 20px;">
+                    O valor do presente já está com os noivos.
+                </p>
+                <button id="btn-sucesso-fechar" class="btn-acao btn-pix" style="width: auto; padding: 12px 36px; display: inline-block; margin: 0 auto;">Fechar</button>
             </div>
         </div>
     </div>
