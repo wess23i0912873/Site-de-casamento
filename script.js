@@ -878,7 +878,20 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const isDisponivel = String(status).trim().toLowerCase() === 'disponível' || String(status).trim().toLowerCase() === 'disponivel';
+            const isReservado = String(status).trim().toLowerCase() === 'reservado';
             const precoFormatado = formatarPreco(valor);
+
+            let statusText = '';
+            let statusSub = '';
+            if (!isDisponivel) {
+                if (isReservado) {
+                    statusText = 'RESERVADO';
+                    statusSub = 'Alguém já reservou e irá entregar este item aos noivos.';
+                } else {
+                    statusText = 'ITEM INDISPONÍVEL';
+                    statusSub = 'Alguém já presenteou os noivos com este item.';
+                }
+            }
 
             let actionsHTML = '';
             if (isDisponivel) {
@@ -886,24 +899,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="action-btn-group">
                         <button class="btn-acao btn-pix btn-presentear" data-id="${id}">Presentear</button>
                         <span class="tooltip-icon tooltip-mini">?</span>
-                        <div class="tooltip-box">Ao escolher o Pix, você envia o valor para que os noivos comprem o item por conta própria.</div>
+                        <div class="tooltip-box">Ao escolher Presentear, você realizará o pagamento do valor do item via Pix diretamente aos noivos.</div>
                     </div>
                     <div class="action-btn-group">
                         <button class="btn-acao btn-reservar" data-id="${id}">Reservar</button>
                         <span class="tooltip-icon tooltip-mini">?</span>
-                        <div class="tooltip-box">Ao clicar em reservar, você sinaliza aos noivos que entregará este presente físico pessoalmente.</div>
+                        <div class="tooltip-box">Ao escolher Reservar, você se compromete a comprar e entregar este presente físico aos noivos.</div>
                     </div>
                 `;
             } else {
-                const label = String(status).trim().toLowerCase() === 'reservado' ? 'Reservado' : 'Já Presenteado';
-                actionsHTML = `
-                    <button class="btn-acao btn-indisponivel" disabled style="background-color: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.35); border: 1px solid rgba(255, 255, 255, 0.05); width: 100%; cursor: not-allowed; opacity: 0.6; padding: 12px; border-radius: 8px; font-weight: 700; text-transform: uppercase;">
-                        ${label}
-                    </button>
-                `;
+                // Esconde apenas os botões de ação originais quando o item está indisponível
+                actionsHTML = '';
             }
 
-            const cardStyle = isDisponivel ? '' : 'style="opacity: 0.65;"';
+            const cardStyle = isDisponivel ? '' : 'style="opacity: 0.6;"';
 
             return `
                 <div class="presente-card ${isDisponivel ? '' : 'indisponivel'}" data-room="${room}" ${cardStyle}>
@@ -912,6 +921,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="presente-img-placeholder">
                             <span>Imagem do Presente</span>
                         </div>`}
+                        ${!isDisponivel ? `
+                        <div class="presente-card-overlay-mask">
+                            <span class="badge-status">${statusText}</span>
+                            <span class="badge-sub">${statusSub}</span>
+                        </div>
+                        ` : ''}
                     </div>
                     <div class="presente-info">
                         <h3 class="presente-nome">${nome}</h3>
@@ -1204,12 +1219,20 @@ document.addEventListener('DOMContentLoaded', function() {
                         id: idDoProduto,
                         convidado: nomeDigitado,
                         telefone: telefoneDigitado,
-                        formaEnvio: "Pix"
+                        formaEnvio: "Pix",
+                        statusFinal: "Presenteado"
                     })
                 });
 
                 // Transição para o QR Code (Sucesso)
                 operacaoSucesso = true;
+                if (typeof confetti === 'function') {
+                    confetti({
+                        particleCount: 150,
+                        spread: 80,
+                        origin: { y: 0.6 }
+                    });
+                }
                 const step1 = document.getElementById('pix-step-1');
                 const step2 = document.getElementById('pix-step-2');
                 if (step1) step1.style.display = 'none';
@@ -1246,12 +1269,20 @@ document.addEventListener('DOMContentLoaded', function() {
                         id: idDoProduto,
                         convidado: nomeDigitado,
                         telefone: telefoneDigitado,
-                        formaEnvio: "Físico"
+                        formaEnvio: "Físico",
+                        statusFinal: "Reservado"
                     })
                 });
 
                 // Transição para mensagem de sucesso
                 operacaoSucesso = true;
+                if (typeof confetti === 'function') {
+                    confetti({
+                        particleCount: 150,
+                        spread: 80,
+                        origin: { y: 0.6 }
+                    });
+                }
                 const step1 = document.getElementById('reserva-step-1');
                 const step2 = document.getElementById('reserva-step-2');
                 if (step1) step1.style.display = 'none';
