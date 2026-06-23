@@ -732,11 +732,18 @@ document.addEventListener('DOMContentLoaded', function() {
         return 'Cozinha'; // Padrão
     }
 
-    // 3. Função Auxiliar para Requisições JSONP
-    function fetchJSONP(url) {
-        return new Promise((resolve, reject) => {
+    // 3. Função Auxiliar para Requisições JSONP com Timeout e Cache Buster
+    function fetchJSONP(url, timeoutMs) {
+        var ms = timeoutMs || 8000;
+        return new Promise(function(resolve, reject) {
             const callbackName = 'jsonpCallback_' + Math.round(Math.random() * 1000000);
             
+            // Define o timer de timeout para celulares antigos / falhas de rede silenciosas
+            const timeoutTimer = setTimeout(function() {
+                cleanup();
+                reject(new Error('Tempo limite excedido ao carregar os presentes (Timeout).'));
+            }, ms);
+
             window[callbackName] = function(data) {
                 cleanup();
                 resolve(data);
@@ -744,7 +751,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const script = document.createElement('script');
             script.id = 'jsonp_' + callbackName;
-            script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + callbackName;
+            // Inclui cache buster dinâmico (&_t=...)
+            script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + callbackName + '&_t=' + Date.now();
             
             script.onerror = function() {
                 cleanup();
@@ -752,6 +760,7 @@ document.addEventListener('DOMContentLoaded', function() {
             };
 
             function cleanup() {
+                clearTimeout(timeoutTimer);
                 delete window[callbackName];
                 const scriptNode = document.getElementById(script.id);
                 if (scriptNode) {
@@ -824,7 +833,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             const status = item.Status || 'Disponível';
             
-            let room = item.Comodo ?? item.comodo ?? item.Cômodo ?? item.cômodo ?? item.Categoria ?? item.categoria;
+            // Uso de operador lógico OR (||) tradicional para garantir compatibilidade com WebKit mobile antigo
+            let room = item.Comodo || item.comodo || item.Cômodo || item.cômodo || item.Categoria || item.categoria;
             if (!room) {
                 room = guessRoomByName(nome);
             }
