@@ -663,10 +663,14 @@ document.addEventListener('DOMContentLoaded', function() {
         "Air fryer.png",
         "Batedeira.png",
         "Conjunto de Mesa Cozinha.png",
+        "Ferro de Passar Roupas.png",
         "Fogão.jpg",
         "Geladeira.png",
+        "Maquina de Lavar.png",
         "Panela de arroz elétrica.png",
+        "Ventilador.png",
         "armário de cozinha.png",
+        "cama.png",
         "liquidificador.jpg",
         "microondas.png"
     ];
