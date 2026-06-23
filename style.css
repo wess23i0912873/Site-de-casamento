@@ -1908,6 +1908,7 @@ details[open] .utilidade-summary {
     width: 100%;
     height: 220px;
     overflow: hidden;
+    background-color: #ffffff; /* Fundo branco sob a imagem */
 }
 
 .presente-img-placeholder {
@@ -1933,7 +1934,8 @@ details[open] .utilidade-summary {
 .presente-img-wrapper img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain; /* Ajusta imagem sem cortar */
+    padding: 12px; /* Margem interna para evitar tocar as bordas do card */
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
@@ -2084,8 +2086,54 @@ details[open] .utilidade-summary {
 /* Ajustes Mobile Severos */
 @media (max-width: 768px) {
     .presentes-grid {
-        grid-template-columns: 1fr; /* 1 Coluna cravada no mobile */
-        gap: 24px;
+        grid-template-columns: repeat(2, 1fr); /* Pelo menos 2 colunas no mobile */
+        gap: 12px; /* Gap menor para comportar as 2 colunas */
+    }
+    
+    .presente-card {
+        border-radius: 16px; /* Cantos um pouco menores e proporcionais */
+    }
+    
+    .presente-img-wrapper {
+        height: 140px; /* Reduz altura da imagem proporcionalmente */
+    }
+    
+    .presente-img-wrapper img {
+        padding: 8px; /* Menos padding no mobile */
+    }
+    
+    .presente-info {
+        padding: 12px; /* Padding interno menor */
+    }
+    
+    .presente-nome {
+        font-size: 0.95rem; /* Fonte do nome menor */
+        margin-bottom: 4px;
+        min-height: 2.6rem; /* Altura mínima para alinhar nomes de 2 linhas */
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .presente-preco {
+        font-size: 0.9rem; /* Preço um pouco menor */
+        margin-bottom: 8px;
+    }
+    
+    .presente-actions {
+        gap: 8px;
+    }
+    
+    .btn-acao {
+        padding: 8px; /* Botão mais fino no mobile */
+        font-size: 0.7rem; /* Fonte do botão menor */
+        border-radius: 6px;
+    }
+    
+    .tooltip-mini {
+        padding: 0 4px !important;
+        font-size: 0.8rem !important;
     }
     
     .presentes-filter-bar {
@@ -2100,6 +2148,7 @@ details[open] .utilidade-summary {
     
     .action-btn-group {
         flex-direction: row; /* Mantem lado a lado */
+        gap: 4px;
     }
 }
 
