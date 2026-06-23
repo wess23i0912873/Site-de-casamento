@@ -772,7 +772,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 4. Função para carregar a lista de presentes da API via JSONP
+    // 4. Função para carregar a lista de presentes da API (Estratégia de Fallback Robusta Multicamadas)
     async function carregarPresentes() {
         container.innerHTML = `
             <div style="grid-column: 1 / -1; text-align: center; padding: 60px 40px; color: #ffffff; font-family: var(--font-sans); font-size: 1.1rem; letter-spacing: 0.05em; background: rgba(0, 0, 0, 0.2); border-radius: 28px; border: 1px solid rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);">
@@ -784,26 +784,60 @@ document.addEventListener('DOMContentLoaded', function() {
             </style>
         `;
 
+        let data = null;
+        let fetchError = null;
+
+        // --- CAMADA 1: Fetch Nativo Limpo (Sem headers customizados, sem preflight) ---
         try {
-            const data = await fetchJSONP(API_URL);
-            
-            if (Array.isArray(data)) {
-                presentesData = data.map(item => {
-                    let imagem = item.Imagem;
-                    const temExtensaoValida = imagem && /\.(jpg|jpeg|png|webp|svg)$/i.test(imagem);
-                    if (temExtensaoValida) {
-                        item.Imagem = imagem.trim().replace(/\\/g, '/');
-                    } else {
-                        item.Imagem = acharImagemPorNome(item.Nome) || "";
-                    }
-                    return item;
-                });
-                renderizarPresentes(presentesData);
+            const response = await fetch(API_URL);
+            if (response.ok) {
+                data = await response.json();
             } else {
-                throw new Error('API não retornou um array de dados.');
+                throw new Error("Resposta de rede não foi OK.");
             }
-        } catch (error) {
-            console.error(error);
+        } catch (e) {
+            fetchError = e;
+        }
+
+        // --- CAMADA 2: Fallback para JSONP (Script Injection com Cache Buster) ---
+        if (!data) {
+            try {
+                data = await fetchJSONP(API_URL, 6000); // 6 segundos de timeout
+            } catch (e) {
+                fetchError = e;
+            }
+        }
+
+        // --- CAMADA 3: Fallback para Proxy CORS Reverso (Garantia de Funcionamento) ---
+        if (!data) {
+            try {
+                const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(API_URL);
+                const response = await fetch(proxyUrl);
+                if (response.ok) {
+                    data = await response.json();
+                } else {
+                    throw new Error("Resposta do Proxy CORS não foi OK.");
+                }
+            } catch (e) {
+                fetchError = e;
+            }
+        }
+
+        // --- Renderização Final ou Exibição da Mensagem de Erro ---
+        if (data && Array.isArray(data)) {
+            presentesData = data.map(item => {
+                let imagem = item.Imagem;
+                const temExtensaoValida = imagem && /\.(jpg|jpeg|png|webp|svg)$/i.test(imagem);
+                if (temExtensaoValida) {
+                    item.Imagem = imagem.trim().replace(/\\/g, '/');
+                } else {
+                    item.Imagem = acharImagemPorNome(item.Nome) || "";
+                }
+                return item;
+            });
+            renderizarPresentes(presentesData);
+        } else {
+            console.error("Todas as tentativas de carregar os presentes falharam:", fetchError);
             container.innerHTML = `
                 <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
                     <p style="color: white; text-align: center;">Erro ao carregar a lista de presentes. Tentando conectar ao banco de dados...</p>
