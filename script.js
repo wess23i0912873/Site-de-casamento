@@ -736,6 +736,23 @@ document.addEventListener('DOMContentLoaded', function() {
         return 'Cozinha'; // Padrão
     }
 
+    // 2.1. Normalização do Cômodo para correspondência exata de filtros
+    function normalizarComodo(val) {
+        if (!val) return 'Cozinha';
+        const str = String(val).trim().toLowerCase();
+        
+        // Remove acentos
+        const semAcento = str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        
+        if (semAcento.includes('cozinha')) return 'Cozinha';
+        if (semAcento.includes('quarto')) return 'Quarto';
+        if (semAcento.includes('sala')) return 'Sala';
+        if (semAcento.includes('banheiro')) return 'Banheiro';
+        if (semAcento.includes('lavanderia')) return 'Lavanderia';
+        
+        return 'Cozinha';
+    }
+
     // 3. Função Auxiliar para Requisições JSONP com Timeout e Cache Buster
     function fetchJSONP(url, timeoutMs) {
         var ms = timeoutMs || 8000;
@@ -872,10 +889,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const status = item.Status || 'Disponível';
             
             // Uso de operador lógico OR (||) tradicional para garantir compatibilidade com WebKit mobile antigo
-            let room = item.Comodo || item.comodo || item.Cômodo || item.cômodo || item.Categoria || item.categoria;
-            if (!room) {
-                room = guessRoomByName(nome);
+            let roomRaw = item.Comodo || item.comodo || item.Cômodo || item.cômodo || item.Categoria || item.categoria;
+            if (!roomRaw) {
+                roomRaw = guessRoomByName(nome);
             }
+            const room = normalizarComodo(roomRaw);
 
             const isDisponivel = String(status).trim().toLowerCase() === 'disponível' || String(status).trim().toLowerCase() === 'disponivel';
             const isReservado = String(status).trim().toLowerCase() === 'reservado';
@@ -970,6 +988,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     const filterValue = this.getAttribute('data-filter');
                     btnToggleFiltro.innerText = `Filtros: ${this.innerText} ▼`;
 
+                    // Mostra ou esconde o container do botão "Soltar filtro"
+                    const limparFiltroContainer = document.getElementById('limpar-filtro-container');
+                    if (limparFiltroContainer) {
+                        if (filterValue === 'all') {
+                            limparFiltroContainer.style.display = 'none';
+                        } else {
+                            limparFiltroContainer.style.display = 'block';
+                        }
+                    }
+
                     const cards = document.querySelectorAll('.presente-card');
                     cards.forEach(card => {
                         if (filterValue === 'all') {
@@ -983,6 +1011,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     });
                 });
+            });
+        }
+
+        // Lógica para o botão "Soltar filtro ✕"
+        const btnLimparFiltro = document.getElementById('btn-limpar-filtro');
+        const btnFiltroTodos = document.querySelector('.btn-filtro[data-filter="all"]');
+        if (btnLimparFiltro && btnFiltroTodos) {
+            btnLimparFiltro.addEventListener('click', function() {
+                btnFiltroTodos.click();
             });
         }
     }
