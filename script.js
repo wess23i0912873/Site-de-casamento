@@ -930,7 +930,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <div class="presente-info">
                         <h3 class="presente-nome">${nome}</h3>
-                        <p class="presente-preco">${precoFormatado}</p>
+                        ${isDisponivel ? `<p class="presente-preco">${precoFormatado}</p>` : ''}
                         <div class="presente-actions">
                             ${actionsHTML}
                         </div>
@@ -1040,6 +1040,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const inputReservaAceite = document.getElementById('reserva-aceite');
     const btnConfirmarReserva = document.getElementById('btn-confirmar-reserva');
 
+    const modalContato = document.getElementById('modal-contato');
+    const btnCloseModalContato = document.getElementById('btn-close-modal-contato');
+
     // 8. Event Delegation para Abertura dos Modais
     document.addEventListener('click', function(e) {
         // Abertura Modal Presentear (Pix)
@@ -1117,6 +1120,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             return;
         }
+
+        // Abertura Modal de Contato (WhatsApp) ao clicar em qualquer item indisponível
+        const cardIndisponivel = e.target.closest('.presente-card.indisponivel');
+        if (cardIndisponivel && modalContato) {
+            modalContato.classList.remove('hidden');
+            return;
+        }
     });
 
     // 9. Lógica de Fechamento dos Modais (com atualização dinâmica)
@@ -1161,6 +1171,19 @@ document.addEventListener('DOMContentLoaded', function() {
     if (modalReservar) {
         modalReservar.addEventListener('click', function(e) {
             if (e.target === this) fecharModalReservar();
+        });
+    }
+
+    const fecharModalContato = () => {
+        if (modalContato) {
+            modalContato.classList.add('hidden');
+        }
+    };
+
+    if (btnCloseModalContato) btnCloseModalContato.addEventListener('click', fecharModalContato);
+    if (modalContato) {
+        modalContato.addEventListener('click', function(e) {
+            if (e.target === this) fecharModalContato();
         });
     }
 
