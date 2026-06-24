@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <!-- CSS File -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=1.0.4">
 </head>
 <body>
     <!-- ═══════════════════════════════════════════════════════════════════
@@ -188,6 +188,29 @@
                     Ao reservar, você sinaliza para os noivos que dará este presente fisicamente a eles.
                 </div>
 
+                <!-- Paleta de Cores Preferidas (Exibida dinamicamente apenas para itens sem preço) -->
+                <div id="reserva-cores-preferidas" class="reserva-cores-container" style="display: none;">
+                    <p class="reserva-cores-titulo">Cores de nossa preferência (fique à vontade para escolher qualquer uma destas na loja):</p>
+                    <div class="reserva-cores-paleta">
+                        <div class="cor-item">
+                            <span class="cor-esfera cor-preto"></span>
+                            <span class="cor-legenda">Preto</span>
+                        </div>
+                        <div class="cor-item">
+                            <span class="cor-esfera cor-branco"></span>
+                            <span class="cor-legenda">Branco</span>
+                        </div>
+                        <div class="cor-item">
+                            <span class="cor-esfera cor-bambu"></span>
+                            <span class="cor-legenda">Bambu</span>
+                        </div>
+                        <div class="cor-item">
+                            <span class="cor-esfera cor-inox"></span>
+                            <span class="cor-legenda">Inox</span>
+                        </div>
+                    </div>
+                </div>
+
                 <div id="modal-form-area-reservar">
                     <div class="form-group">
                         <label for="reserva-nome">Nome Completo *</label>
@@ -237,6 +260,6 @@
     <!-- Canvas Confetti Library -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <!-- Script de animação e lógica global -->
-    <script src="script.js?v=1.0.3"></script>
+    <script src="script.js?v=1.0.5"></script>
 </body>
 </html>

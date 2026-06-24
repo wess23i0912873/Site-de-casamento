@@ -726,6 +726,15 @@ document.addEventListener('DOMContentLoaded', function() {
         return strVal || 'R$ 0,00';
     }
 
+    // Função para verificar se um item é considerado "Sem Preço" (0, 0.00, 0,00, nulo, vazio)
+    function ehSemPreco(val) {
+        if (val === null || val === undefined) return true;
+        let strVal = String(val).trim();
+        if (strVal === '' || strVal === '0' || strVal === '0,00' || strVal === '0.00') return true;
+        let num = parseFloat(strVal.replace(/[^\d,-]/g, '').replace(',', '.'));
+        return isNaN(num) || num === 0;
+    }
+
     // 2. Adivinhação de Cômodo pelo Nome do Produto (Garante funcionamento dos filtros)
     function guessRoomByName(name) {
         const lowercaseName = String(name || '').toLowerCase();
@@ -868,6 +877,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Função auxiliar para verificar se o item não tem preço definido
+    function ehSemPreco(val) {
+        if (val === null || val === undefined) return true;
+        let strVal = String(val).trim().toLowerCase();
+        // Remove 'r$' e espaços para normalizar
+        strVal = strVal.replace('r$', '').trim();
+        return strVal === '' || strVal === '0' || strVal === '0,00' || strVal === '0.00' || strVal === 'null';
+    }
+
     // 4. Renderização Dinâmica dos Presentes
     function renderizarPresentes(items) {
         if (items.length === 0) {
@@ -914,18 +932,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
             let actionsHTML = '';
             if (isDisponivel) {
-                actionsHTML = `
-                    <div class="action-btn-group">
-                        <button class="btn-acao btn-pix btn-presentear" data-id="${id}">Presentear</button>
-                        <span class="tooltip-icon tooltip-mini">?</span>
-                        <div class="tooltip-box">Ao escolher Presentear, você realizará o pagamento do valor do item via Pix diretamente aos noivos.</div>
-                    </div>
-                    <div class="action-btn-group">
-                        <button class="btn-acao btn-reservar" data-id="${id}">Reservar</button>
-                        <span class="tooltip-icon tooltip-mini">?</span>
-                        <div class="tooltip-box">Ao escolher Reservar, você se compromete a comprar e entregar este presente físico aos noivos.</div>
-                    </div>
-                `;
+                if (ehSemPreco(valor)) {
+                    // Itens sem preço: exibe apenas o botão de Reservar
+                    actionsHTML = `
+                        <div class="action-btn-group">
+                            <button class="btn-acao btn-reservar" data-id="${id}">Reservar</button>
+                            <span class="tooltip-icon tooltip-mini">?</span>
+                            <div class="tooltip-box">Ao escolher Reservar, você se compromete a comprar e entregar este presente físico aos noivos.</div>
+                        </div>
+                    `;
+                } else {
+                    // Itens com preço normal: mantêm fluxo original
+                    actionsHTML = `
+                        <div class="action-btn-group">
+                            <button class="btn-acao btn-pix btn-presentear" data-id="${id}">Presentear</button>
+                            <span class="tooltip-icon tooltip-mini">?</span>
+                            <div class="tooltip-box">Ao escolher Presentear, você realizará o pagamento do valor do item via Pix diretamente aos noivos.</div>
+                        </div>
+                        <div class="action-btn-group">
+                            <button class="btn-acao btn-reservar" data-id="${id}">Reservar</button>
+                            <span class="tooltip-icon tooltip-mini">?</span>
+                            <div class="tooltip-box">Ao escolher Reservar, você se compromete a comprar e entregar este presente físico aos noivos.</div>
+                        </div>
+                    `;
+                }
             } else {
                 // Esconde apenas os botões de ação originais quando o item está indisponível
                 actionsHTML = '';
@@ -949,7 +979,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <div class="presente-info">
                         <h3 class="presente-nome">${nome}</h3>
-                        ${isDisponivel ? `<p class="presente-preco">${precoFormatado}</p>` : ''}
+                        ${isDisponivel && !ehSemPreco(valor) ? `<p class="presente-preco">${precoFormatado}</p>` : ''}
                         <div class="presente-actions">
                             ${actionsHTML}
                         </div>
@@ -1131,7 +1161,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 produtoSelecionado = item;
                 
                 modalItemNomeReservar.innerText = item.Nome;
-                modalItemPrecoReservar.innerText = formatarPreco(item.Valor);
+
+                const containerCores = document.getElementById('reserva-cores-preferidas');
+                if (ehSemPreco(item.Valor)) {
+                    modalItemPrecoReservar.style.display = 'none';
+                    if (containerCores) containerCores.style.display = 'block';
+                } else {
+                    modalItemPrecoReservar.innerText = formatarPreco(item.Valor);
+                    modalItemPrecoReservar.style.display = 'block';
+                    if (containerCores) containerCores.style.display = 'none';
+                }
 
                 const imgUrl = item.Imagem;
                 if (imgUrl) {
