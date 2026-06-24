@@ -646,6 +646,263 @@ window.addEventListener('load', function() {
 });
 
 /* ==========================================================================
+   LISTAS DE IMAGENS E CORRESPONDÊNCIA INTELIGENTE (COMPARTILHADA)
+   ========================================================================== */
+// Lista de imagens de presentes disponíveis localmente na pasta IMAGENS/PRESENTES/
+const IMAGENS_DISPONIVEIS = [
+    "2 Baldes.png",
+    "Air fryer.png",
+    "Bacias.png",
+    "Batedeira.png",
+    "Cabides.png",
+    "Cesto de roupa suja.png",
+    "Conjunto de Mesa Cozinha.png",
+    "Conjunto de panelas.png",
+    "Conjunto de xícaras.png",
+    "Depósitos de plásticos.png",
+    "Escorredor de macarrão.png",
+    "Escorredor de prato.png",
+    "Escova sanitária.png",
+    "Espelho.png",
+    "Ferro de Passar Roupas.png",
+    "Fogão.jpg",
+    "Garrafa de café.png",
+    "Geladeira.png",
+    "Jarras de suco.png",
+    "Kit Peneira.png",
+    "Kit de banheiro ( saboneteira, recipiente pra escova).png",
+    "Kit de potes.png",
+    "Kit de tapete de banheiro.png",
+    "Kit de taças de vidro.png",
+    "Lixeira pequena.png",
+    "Maquina de Lavar.png",
+    "Panela de arroz elétrica.png",
+    "Panela de pressão.png",
+    "Potes de armazenamento.png",
+    "Pratos rasos.png",
+    "Protetor de colchão.png",
+    "Quadros para decoração.png",
+    "Tábua de passar roupa.png",
+    "Varal.png",
+    "Ventilador.png",
+    "armário de cozinha.png",
+    "assadeira.png",
+    "bule de fazer café.png",
+    "cama.png",
+    "coador de café.png",
+    "cobertas de cama.png",
+    "cobertores.png",
+    "conjunto de geladeira.png",
+    "copos de vidro.png",
+    "cuscuzeira média.png",
+    "desentupidor.png",
+    "faca grande pra carne.png",
+    "faqueiros.png",
+    "flanelas.png",
+    "forma de bolo.png",
+    "garrafas para água.png",
+    "guardanapos.png",
+    "jogos de lençol.png",
+    "kit de conchas.png",
+    "kit de toalha.png",
+    "kit frigideira antiaderente.png",
+    "liquidificador.jpg",
+    "lixeira.png",
+    "microondas.png",
+    "panos de chão.png",
+    "pratos de sobremesas.png",
+    "pratos fundos.png",
+    "pá.png",
+    "ralador.png",
+    "rodo.png",
+    "tigela de vidro.png",
+    "toalha de mesa.png",
+    "travesseiros.png",
+    "tábua de carne.png",
+    "vasilhas de plastico.png",
+    "vassoura.png"
+];
+
+// Lista de imagens de doações disponíveis localmente na pasta IMAGENS/PRESENTES/Doações/
+const IMAGENS_DOACOES_DISPONIVEIS = [
+    "1 ano de academia prós noivos voltarem pro shape.png",
+    "1 ano de ovo pago para manter a dieta do noivo.png",
+    "3 meses de mercado.png",
+    "6 meses de Netflix.png",
+    "Ajuda pra comprar uma TV pra noiva ver seus doramas.png",
+    "Cooktop de última geração.png",
+    "Deus te iluminou e você resolveu ajudar na lua de mel.png",
+    "Deus tocou no seu coração.png",
+    "ajuda com o aluguel.png",
+    "ajuda extra para o DJ tocar mais.png",
+    "ajuda na primeira compra no mercado.png",
+    "ajuda ora Stefany comer e não ficar mal humorada.png",
+    "ajuda para comprar os produtos de cabelo da noiva.png",
+    "ajuda para mobiliar a casa.png",
+    "ajuda para pagar a fatura  do noivo.png",
+    "ajuda para pagar a make da noiva.png",
+    "ajuda pra comprar máquina de lavar as tralhas.png",
+    "ajuda pra custear a ração de Lucky.png",
+    "ajuda pra pagar o casamento.png",
+    "ajude  a noiva a comprar um vade Mecum novo.png",
+    "ajude o noivo alimentar a noiva.png",
+    "alexa para a noiva não mandar só no noivo.png",
+    "balança para os noivos não engordarem.png",
+    "bateria para o noivo.png",
+    "calmante pro dia do casamento.png",
+    "claro que posso pagar por esse presente, meu marido tem dois empregos.png",
+    "cobertor ppra Wesley estar coberto de razão.png",
+    "corte de cabelo do noivo por 6 meses.png",
+    "cota para perguntar quando o casal tera filhos.png",
+    "curso de culinária para a noiva.png",
+    "curso intensivo para adivinhar porque a noiva ta bicuta.png",
+    "dar pitaco-falar mal da festa.png",
+    "dia de princesa para a noiva.png",
+    "dose de paciência para a noiva.png",
+    "estoque de café quentinho para o noivo.png",
+    "eu vou dar o melhor presente.png",
+    "fone para Stefany não ouvir a bateria de Wesley.png",
+    "fritadeira pra fazer batatinha para as visitas.png",
+    "ir de branco na festa.png",
+    "ir junto com os noivos na lua de mel.png",
+    "jogar o buquê em sua direção.png",
+    "lava louça prós noivos não brigarem.png",
+    "lenço para não borrar a maquiagem.png",
+    "levar alguém que não foi convidado.png",
+    "mensalidade pros noivos ficar fortão.png",
+    "mil reais ou uma fotografia com raça negra.png",
+    "mochila para a noiva levar só o necessário pra viagem.png",
+    "patrocínio cinema do casal.png",
+    "pegar um docinho antes de liberar a mesa de doces.png",
+    "perfume novo pros noivos irem cheirosos.png",
+    "pra abastecer a moto do noivo.png",
+    "pra noiva não se atrasar.png",
+    "presente da melhor forma.png",
+    "prioridade na fila do buffet.png",
+    "psicólogo pros noivos não surtarem.png",
+    "robô para ajudar Stefany a limpar a casa.png",
+    "só pra não dizer que não dei nada.png",
+    "ta se sentindo generoso.png",
+    "tampão de ouvida pra noiva enquanto o noivo ronca.png",
+    "taxa para o buquê não cair na sua namorada.png",
+    "toalha de banho para as visitas na casa dos noivos.png",
+    "todo dinheiro que der para os noivos voltara em dobro pra vocês.png",
+    "toma ai meu bolsa família.png",
+    "toma aqui seu 50 reais.png",
+    "uno caso os noivos fiquem entediados na lua de mel.png",
+    "visita favorita dos noivos.png"
+];
+
+// Função de correspondência inteligente por nome
+function acharImagemPorNome(nomeProduto, listaImagens = IMAGENS_DISPONIVEIS, pathImagens = 'IMAGENS/PRESENTES/') {
+    if (!nomeProduto || !listaImagens || listaImagens.length === 0) return null;
+    
+    const normalizar = (txt) => {
+        let res = txt.toLowerCase()
+                  .normalize("NFD")
+                  .replace(/[\u0300-\u036f]/g, "") // remove acentos
+                  .replace(/[^a-z0-9]/g, " ") // remove caracteres especiais
+                  .trim()
+                  .replace(/\s+/g, " ");
+        
+        // Substituições de sinônimos/normalizações comuns para melhorar casamento
+        res = res.replace(/\b(conjunto|jogo)\b/g, "kit")
+                 .replace(/\b(panelas)\b/g, "panela")
+                 .replace(/\b(pratos)\b/g, "prato")
+                 .replace(/\b(bacias)\b/g, "bacia")
+                 .replace(/\b(baldes)\b/g, "balde")
+                 .replace(/\b(copos)\b/g, "copo")
+                 .replace(/\b(tacas)\b/g, "taca")
+                 .replace(/\b(xicaras)\b/g, "xicara")
+                 .replace(/\b(jarras)\b/g, "jarra")
+                 .replace(/\b(formas)\b/g, "forma")
+                 .replace(/\b(potes)\b/g, "pote")
+                 .replace(/\b(tigelas)\b/g, "tigela")
+                 .replace(/\b(vasilhas)\b/g, "vasilha")
+                 .replace(/\b(garrafas)\b/g, "garrafa")
+                 .replace(/\b(toalhas)\b/g, "toalha")
+                 .replace(/\b(recipientes)\b/g, "recipiente")
+                 .replace(/\b(cobertores|cobertas)\b/g, "cobertor")
+                 .replace(/\b(lencois|lencol)\b/g, "lencol")
+                 .replace(/\b(cabides)\b/g, "cabide")
+                 .replace(/\b(almofadas)\b/g, "almofada")
+                 .replace(/\b(quadros)\b/g, "quadro")
+                 .replace(/\b(tapetes)\b/g, "tapete")
+                 .replace(/\b(flanelas)\b/g, "flanela")
+                 .replace(/\b(panos)\b/g, "pano");
+        return res;
+    };
+
+    const nomeNorm = normalizar(nomeProduto);
+    const palavrasProduto = nomeNorm.split(' ').filter(w => w.length > 1);
+
+    // 1. Tenta correspondência exata do nome normalizado
+    for (const img of listaImagens) {
+        const imgSemExt = img.substring(0, img.lastIndexOf('.'));
+        const imgNorm = normalizar(imgSemExt);
+        if (nomeNorm === imgNorm) {
+            return `${pathImagens}${img}`;
+        }
+    }
+
+    // 2. Tenta correspondência parcial (substring)
+    for (const img of listaImagens) {
+        const imgSemExt = img.substring(0, img.lastIndexOf('.'));
+        const imgNorm = normalizar(imgSemExt);
+        if (nomeNorm.includes(imgNorm) || imgNorm.includes(nomeNorm)) {
+            return `${pathImagens}${img}`;
+        }
+    }
+
+    // 3. Tenta correspondência por palavras importantes
+    const stopWords = ['de', 'para', 'pra', 'com', 'sem', 'em', 'um', 'uma', 'uns', 'umas', 'o', 'a', 'os', 'as', 'do', 'da', 'dos', 'das', 'no', 'na', 'nos', 'nas', 'pro', 'pra', 'pros', 'pras', 'que', 'se', 'ao', 'aos', 'ou', 'ela', 'ele', 'um', 'uma', 'e', 'o'];
+    
+    let melhorImagem = null;
+    let maiorPontuacao = 0;
+
+    for (const img of listaImagens) {
+        const imgSemExt = img.substring(0, img.lastIndexOf('.'));
+        const imgNorm = normalizar(imgSemExt);
+        const palavrasImg = imgNorm.split(' ').filter(w => w.length > 1);
+
+        let score = 0;
+        let totalSignificativo = 0;
+
+        palavrasImg.forEach(w => {
+            if (stopWords.includes(w)) return;
+            totalSignificativo++;
+            
+            const singularW = w.endsWith('s') ? w.slice(0, -1) : w;
+            const matches = palavrasProduto.some(pw => {
+                const singularPw = pw.endsWith('s') ? pw.slice(0, -1) : pw;
+                return pw === w || singularPw === singularW || pw.includes(singularW) || w.includes(singularPw);
+            });
+            if (matches) {
+                score += 2;
+            }
+        });
+
+        palavrasImg.forEach(w => {
+            if (!stopWords.includes(w)) return;
+            if (palavrasProduto.includes(w)) {
+                score += 0.5;
+            }
+        });
+
+        if (score > maiorPontuacao && totalSignificativo > 0) {
+            maiorPontuacao = score;
+            melhorImagem = img;
+        }
+    }
+
+    if (maiorPontuacao >= 2) {
+        return `${pathImagens}${melhorImagem}`;
+    }
+
+    return null;
+}
+
+/* ==========================================================================
    LÓGICA DA PÁGINA DE PRESENTES (presentes.html) — INTEGRAÇÃO COM GOOGLE APPS SCRIPT
    ========================================================================== */
 document.addEventListener('DOMContentLoaded', function() {
@@ -659,58 +916,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let operacaoSucesso = false;
     let pollingInterval = null;
 
-    // Lista de imagens disponíveis localmente na pasta IMAGENS/PRESENTES/
-    const IMAGENS_DISPONIVEIS = [
-        "Air fryer.png",
-        "Batedeira.png",
-        "Conjunto de Mesa Cozinha.png",
-        "Ferro de Passar Roupas.png",
-        "Fogão.jpg",
-        "Geladeira.png",
-        "Maquina de Lavar.png",
-        "Panela de arroz elétrica.png",
-        "Ventilador.png",
-        "armário de cozinha.png",
-        "cama.png",
-        "liquidificador.jpg",
-        "microondas.png"
-    ];
-
-    // Função para encontrar a imagem correspondente pelo nome do produto
-    function acharImagemPorNome(nomeProduto) {
-        if (!nomeProduto) return null;
-        
-        const normalizar = (txt) => {
-            return txt.toLowerCase()
-                      .normalize("NFD")
-                      .replace(/[\u0300-\u036f]/g, "") // remove acentos
-                      .replace(/[^a-z0-9]/g, " ") // remove caracteres especiais
-                      .trim()
-                      .replace(/\s+/g, " ");
-        };
-
-        const nomeNorm = normalizar(nomeProduto);
-
-        // 1. Tenta correspondência exata do nome normalizado
-        for (const img of IMAGENS_DISPONIVEIS) {
-            const imgSemExt = img.substring(0, img.lastIndexOf('.'));
-            const imgNorm = normalizar(imgSemExt);
-            if (nomeNorm === imgNorm) {
-                return `IMAGENS/PRESENTES/${img}`;
-            }
-        }
-
-        // 2. Tenta correspondência parcial (ex: "Fogão 4 bocas" contém "fogao")
-        for (const img of IMAGENS_DISPONIVEIS) {
-            const imgSemExt = img.substring(0, img.lastIndexOf('.'));
-            const imgNorm = normalizar(imgSemExt);
-            if (nomeNorm.includes(imgNorm) || imgNorm.includes(nomeNorm)) {
-                return `IMAGENS/PRESENTES/${img}`;
-            }
-        }
-
-        return null;
-    }
+    // Lógica de correspondência inteligente usa as funções e listas compartilhadas definidas globalmente
 
     // 1. Função de Formatação de Moeda
     function formatarPreco(val) {
@@ -1607,7 +1813,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const nome = item.Nome;
             const valor = item.Valor;
             const valorFormatado = formatarPrecoDoacao(valor);
-            const imgPath = `${PATH_IMAGENS_DOACOES}${sanitizarNomeArquivo(nome)}.png`;
+            const imgPath = acharImagemPorNome(nome, IMAGENS_DOACOES_DISPONIVEIS, PATH_IMAGENS_DOACOES) || 'IMAGENS/WIS.svg';
 
             return `
                 <div class="doacao-card">
@@ -1651,7 +1857,7 @@ document.addEventListener('DOMContentLoaded', function() {
         modalDoarNome.innerText = item.Nome;
         modalDoarPreco.innerText = formatarPrecoDoacao(item.Valor);
 
-        const imgPath = `${PATH_IMAGENS_DOACOES}${sanitizarNomeArquivo(item.Nome)}.png`;
+        const imgPath = acharImagemPorNome(item.Nome, IMAGENS_DOACOES_DISPONIVEIS, PATH_IMAGENS_DOACOES) || 'IMAGENS/WIS.svg';
         
         // Tenta carregar a imagem usando preloader temporário para evitar bugs de cache
         const tempImg = new Image();
