@@ -1494,3 +1494,297 @@ document.addEventListener('DOMContentLoaded', function() {
     // 12. Execução Inicial
     carregarPresentes();
 });
+
+/* ==========================================================================
+   LÓGICA DA SEÇÃO DE DOAÇÕES (index.html) — INTEGRAÇÃO COM GOOGLE APPS SCRIPT
+   ========================================================================== */
+document.addEventListener('DOMContentLoaded', function() {
+    const API_URL = 'https://script.google.com/macros/s/AKfycbwSOt56V8gjDFjttF01Uv3WcRdfeInWxoTjITK6dev_qFe3Bf3rsWX3jowz1GH-hY7M/exec';
+    const PATH_IMAGENS_DOACOES = 'IMAGENS/PRESENTES/Doações/'; // Pasta de imagens das doações
+
+    const gridContainer = document.getElementById('doacoes-cards-grid');
+    if (!gridContainer) return; // Só executa na página principal (index.html) se a seção existir
+
+    const modalDoar = document.getElementById('modal-doar');
+    const btnCloseModalDoar = document.getElementById('btn-close-modal-doar');
+    const modalDoarImgPlaceholder = document.getElementById('modal-doar-img-placeholder');
+    const modalDoarImg = document.getElementById('modal-doar-img');
+    const modalDoarNome = document.getElementById('modal-doar-nome');
+    const modalDoarPreco = document.getElementById('modal-doar-preco');
+    const btnConfirmarDoacao = document.getElementById('btn-confirmar-doacao');
+    const btnDoarCopyPix = document.getElementById('btn-doar-copy-pix');
+    const keyText = document.getElementById('doar-key-text');
+    const qrImg = document.getElementById('doar-qr-img');
+    const btnDoarSucessoFechar = document.getElementById('btn-doar-sucesso-fechar');
+
+    const step1 = document.getElementById('doar-step-1');
+    const step2 = document.getElementById('doar-step-2');
+    const step3 = document.getElementById('doar-step-3');
+
+    let doacaoSelecionada = null;
+    let currentPaymentId = null;
+    let doacaoPollingInterval = null;
+
+    // Função de formatação de moeda
+    function formatarPrecoDoacao(val) {
+        if (typeof val === 'number') {
+            return `R$ ${val.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        }
+        let strVal = String(val || '').trim();
+        if (strVal.includes('R$')) return strVal;
+        let num = parseFloat(strVal.replace(/[^0-9,-]/g, '').replace(',', '.'));
+        if (isNaN(num)) return 'R$ 0,00';
+        return `R$ ${num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    // Helper JSONP
+    function fetchJSONPDoacao(url, timeoutMs) {
+        return new Promise((resolve, reject) => {
+            const callbackName = 'jsonp_doacoes_' + Math.round(100000 * Math.random());
+            const script = document.createElement('script');
+            let timer = null;
+
+            window[callbackName] = function(data) {
+                cleanup();
+                resolve(data);
+            };
+
+            script.onerror = function() {
+                cleanup();
+                reject(new Error("Erro de rede ao carregar JSONP."));
+            };
+
+            const connector = url.includes('?') ? '&' : '?';
+            script.src = `${url}${connector}callback=${callbackName}`;
+            document.body.appendChild(script);
+
+            if (timeoutMs) {
+                timer = setTimeout(() => {
+                    cleanup();
+                    reject(new Error("Limite de tempo excedido para resposta."));
+                }, timeoutMs);
+            }
+
+            function cleanup() {
+                if (timer) clearTimeout(timer);
+                if (script.parentNode) script.parentNode.removeChild(script);
+                delete window[callbackName];
+            }
+        });
+    }
+
+    // Carregar Doações
+    async function carregarDoacoes() {
+        try {
+            const url = `${API_URL}?aba=Doacoes`;
+            const data = await fetchJSONPDoacao(url, 10000);
+            if (data && Array.isArray(data)) {
+                renderizarDoacoes(data);
+            }
+        } catch (e) {
+            console.error("Falha ao carregar doações:", e);
+        }
+    }
+
+    // Renderizar Cards
+    function renderizarDoacoes(items) {
+        if (items.length === 0) {
+            gridContainer.innerHTML = `<p style="color: #fff; grid-column: 1/-1;">Nenhuma opção de doação disponível no momento.</p>`;
+            return;
+        }
+
+        gridContainer.innerHTML = items.map(item => {
+            const id = item.ID;
+            const nome = item.Nome;
+            const valor = item.Valor;
+            const valorFormatado = formatarPrecoDoacao(valor);
+            const imgPath = `${PATH_IMAGENS_DOACOES}${nome}.png`;
+
+            return `
+                <div class="doacao-card">
+                    <div class="doacao-img-wrapper">
+                        <img src="${imgPath}" alt="${nome}" onerror="this.onerror=null; this.src='IMAGENS/WIS.svg';">
+                    </div>
+                    <div class="doacao-info">
+                        <h3 class="doacao-card-titulo">${nome}</h3>
+                        <p class="doacao-card-preco">${valorFormatado}</p>
+                        <div class="doacao-btn-wrapper">
+                            <button class="btn-acao btn-pix btn-abrir-doar" data-id="${id}" style="width: 100%;">Doar</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        // Event Listeners dos botões de doar
+        const botoesDoar = gridContainer.querySelectorAll('.btn-abrir-doar');
+        botoesDoar.forEach(botao => {
+            botao.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const item = items.find(i => String(i.ID) === String(id));
+                if (item) {
+                    abrirModalDoar(item);
+                }
+            });
+        });
+    }
+
+    // Abrir Modal
+    function abrirModalDoar(item) {
+        doacaoSelecionada = item;
+        
+        // Reset passos
+        step1.style.display = 'block';
+        step2.style.display = 'none';
+        step3.style.display = 'none';
+
+        // Atualizar campos do modal
+        modalDoarNome.innerText = item.Nome;
+        modalDoarPreco.innerText = formatarPrecoDoacao(item.Valor);
+
+        const imgPath = `${PATH_IMAGENS_DOACOES}${item.Nome}.png`;
+        modalDoarImg.src = imgPath;
+        modalDoarImg.onload = function() {
+            modalDoarImg.classList.remove('hidden');
+            modalDoarImgPlaceholder.classList.add('hidden');
+        };
+        modalDoarImg.onerror = function() {
+            modalDoarImg.classList.add('hidden');
+            modalDoarImgPlaceholder.classList.remove('hidden');
+        };
+
+        // Abre modal visualmente
+        modalDoar.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // Trava scroll
+    }
+
+    // Fechar Modal
+    function fecharModalDoar() {
+        modalDoar.classList.add('hidden');
+        document.body.style.overflow = ''; // Destrava scroll
+        pararPollingDoacao();
+    }
+
+    if (btnCloseModalDoar) {
+        btnCloseModalDoar.addEventListener('click', fecharModalDoar);
+    }
+
+    // Gerar Pix (Clique no Confirmar)
+    if (btnConfirmarDoacao) {
+        btnConfirmarDoacao.addEventListener('click', async function() {
+            if (!doacaoSelecionada) return;
+
+            const id = doacaoSelecionada.ID;
+            let precoRaw = String(doacaoSelecionada.Valor).replace(/[^0-9,-]/g, '').replace(',', '.');
+            
+            const originalText = btnConfirmarDoacao.innerText;
+            btnConfirmarDoacao.innerText = 'A carregar...';
+            btnConfirmarDoacao.disabled = true;
+
+            try {
+                const queryUrl = `${API_URL}?action=gerarPix&id=${id}&convidado=${encodeURIComponent('Anônimo')}&telefone=&preco=${encodeURIComponent(precoRaw)}&aba=Doacoes`;
+                const resJson = await fetchJSONPDoacao(queryUrl, 12000);
+                
+                if (resJson && resJson.status === "sucesso_pix") {
+                    const qrCode = resJson.qr_code;
+                    const qrCodeBase64 = resJson.qr_code_base64;
+                    currentPaymentId = resJson.payment_id;
+
+                    if (keyText) keyText.innerText = qrCode;
+                    if (qrImg) {
+                        if (qrCodeBase64 && !qrCodeBase64.startsWith("data:image")) {
+                            qrImg.src = "data:image/png;base64," + qrCodeBase64;
+                        } else {
+                            qrImg.src = qrCodeBase64;
+                        }
+                    }
+
+                    // Transiciona para o QR Code (Passo 2)
+                    step1.style.display = 'none';
+                    step2.style.display = 'block';
+
+                    // Inicia Polling
+                    iniciarPollingDoacao(id, currentPaymentId);
+                } else {
+                    const msg = resJson && resJson.mensagem ? resJson.mensagem : "Erro na geração do Pix.";
+                    throw new Error(msg);
+                }
+            } catch (err) {
+                console.error("Erro ao gerar doação Pix:", err);
+                alert("Ocorreu um erro ao gerar o Pix de doação. Por favor, tente novamente.");
+            } finally {
+                btnConfirmarDoacao.innerText = originalText;
+                btnConfirmarDoacao.disabled = false;
+            }
+        });
+    }
+
+    // Copiar Chave Pix
+    if (btnDoarCopyPix && keyText) {
+        btnDoarCopyPix.addEventListener('click', function() {
+            navigator.clipboard.writeText(keyText.innerText).then(() => {
+                const originalText = btnDoarCopyPix.innerText;
+                btnDoarCopyPix.innerText = 'Copiado!';
+                btnDoarCopyPix.style.backgroundColor = '#28a745';
+                setTimeout(() => {
+                    btnDoarCopyPix.innerText = originalText;
+                    btnDoarCopyPix.style.backgroundColor = '';
+                }, 2000);
+            });
+        });
+    }
+
+    // Polling de Pagamento
+    function iniciarPollingDoacao(idItem, paymentId) {
+        pararPollingDoacao();
+
+        doacaoPollingInterval = setInterval(async function() {
+            try {
+                const pollUrl = `${API_URL}?action=checkStatus&idItem=${idItem}&paymentId=${paymentId}&aba=Doacoes`;
+                const data = await fetchJSONPDoacao(pollUrl, 4000);
+                
+                if (data && data.status) {
+                    const statusStr = String(data.status).trim().toLowerCase();
+                    if (statusStr === 'aprovado' || statusStr === 'approved') {
+                        confirmarSucessoDoacao();
+                    }
+                }
+            } catch (err) {
+                console.error("Erro no polling de doação:", err);
+            }
+        }, 3000);
+    }
+
+    // Parar Polling
+    function pararPollingDoacao() {
+        if (doacaoPollingInterval) {
+            clearInterval(doacaoPollingInterval);
+            doacaoPollingInterval = null;
+        }
+    }
+
+    // Confirmação de Sucesso
+    function confirmarSucessoDoacao() {
+        pararPollingDoacao();
+
+        // Transiciona para o Passo 3
+        step2.style.display = 'none';
+        step3.style.display = 'block';
+
+        // Animação de Confetti
+        if (typeof confetti === 'function') {
+            confetti({
+                particleCount: 150,
+                spread: 80,
+                origin: { y: 0.6 }
+            });
+        }
+    }
+
+    if (btnDoarSucessoFechar) {
+        btnDoarSucessoFechar.addEventListener('click', fecharModalDoar);
+    }
+
+    // Carrega doações ao iniciar
+    carregarDoacoes();
+});
