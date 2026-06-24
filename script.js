@@ -1337,31 +1337,18 @@ document.addEventListener('DOMContentLoaded', function() {
             let copiaColaText = "";
 
             try {
-                // Envia requisição real ao Apps Script com Nome, Telefone, ID e Preço
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        id: idDoProduto,
-                        convidado: nomeDigitado,
-                        telefone: telefoneDigitado,
-                        preco: produtoSelecionado.Valor,
-                        formaEnvio: "Pix"
-                    })
-                });
-
-                if (response.ok) {
-                    const resJson = await response.json();
-                    if (resJson && resJson.status === "sucesso_pix") {
-                        qrCodeBase64 = resJson.qr_code_base64;
-                        copiaColaText = resJson.qr_code;
-                    } else if (resJson && resJson.qrCodeBase64 && resJson.copiaCola) {
-                        // Fallback temporário para formato legado
-                        qrCodeBase64 = resJson.qrCodeBase64;
-                        copiaColaText = resJson.copiaCola;
-                    }
+                // Consulta o endpoint de gerarPix via JSONP (GET) para contornar limitações de CORS
+                const queryUrl = `${API_URL}?action=gerarPix&id=${idDoProduto}&convidado=${encodeURIComponent(nomeDigitado)}&telefone=${encodeURIComponent(telefoneDigitado)}&preco=${encodeURIComponent(produtoSelecionado.Valor)}`;
+                const resJson = await fetchJSONP(queryUrl, 10000); // 10 segundos de timeout
+                
+                if (resJson && resJson.status === "sucesso_pix") {
+                    qrCodeBase64 = resJson.qr_code_base64;
+                    copiaColaText = resJson.qr_code;
+                } else if (resJson && resJson.status === "Erro") {
+                    throw new Error(resJson.mensagem || "Erro na geração do Pix no servidor.");
                 }
             } catch (error) {
-                console.error("Falha ao gerar QR Code pela API:", error);
+                console.error("Falha ao gerar QR Code pela API JSONP:", error);
             }
 
             // Exibe alerta caso a geração do Pix real falhe
@@ -1406,36 +1393,32 @@ document.addEventListener('DOMContentLoaded', function() {
             btnConfirmarReserva.disabled = true;
 
             try {
-                // Requisição POST em modo no-cors para evitar falhas de preflight CORS com o Apps Script
-                await fetch(API_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: JSON.stringify({
-                        id: idDoProduto,
-                        convidado: nomeDigitado,
-                        telefone: telefoneDigitado,
-                        formaEnvio: "Físico",
-                        statusFinal: "Reservado"
-                    })
-                });
-
-                // Transição para mensagem de sucesso
-                operacaoSucesso = true;
-                if (typeof confetti === 'function') {
-                    confetti({
-                        particleCount: 150,
-                        spread: 80,
-                        origin: { y: 0.6 }
-                    });
+                // Consulta o endpoint de reservarFisico via JSONP (GET) para contornar limitações de CORS
+                const queryUrl = `${API_URL}?action=reservarFisico&id=${idDoProduto}&convidado=${encodeURIComponent(nomeDigitado)}&telefone=${encodeURIComponent(telefoneDigitado)}`;
+                const resJson = await fetchJSONP(queryUrl, 10000);
+                
+                if (resJson && resJson.status === "sucesso_reserva") {
+                    // Transição para mensagem de sucesso
+                    operacaoSucesso = true;
+                    if (typeof confetti === 'function') {
+                        confetti({
+                            particleCount: 150,
+                            spread: 80,
+                            origin: { y: 0.6 }
+                        });
+                    }
+                    const step1 = document.getElementById('reserva-step-1');
+                    const step2 = document.getElementById('reserva-step-2');
+                    if (step1) step1.style.display = 'none';
+                    if (step2) step2.style.display = 'block';
+                } else {
+                    const errorMsg = resJson && resJson.mensagem ? resJson.mensagem : "Erro desconhecido.";
+                    throw new Error(errorMsg);
                 }
-                const step1 = document.getElementById('reserva-step-1');
-                const step2 = document.getElementById('reserva-step-2');
-                if (step1) step1.style.display = 'none';
-                if (step2) step2.style.display = 'block';
 
             } catch (error) {
                 console.error('Erro ao registrar presente (Físico):', error);
-                alert('Ocorreu um erro ao processar a reserva. Por favor, tente novamente.');
+                alert('Ocorreu um erro ao processar a reserva: ' + error.message);
             } finally {
                 btnConfirmarReserva.innerText = originalText;
                 btnConfirmarReserva.disabled = false;
