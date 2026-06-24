@@ -2794,9 +2794,7 @@ details[open] .utilidade-summary {
     font-size: 1.75rem;
     font-weight: 700;
     margin-bottom: 24px;
-    background: linear-gradient(135deg, #dfd0be 0%, #c1a890 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #ffffff;
 }
 
 .doacao-btn-wrapper {
