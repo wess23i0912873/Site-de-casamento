@@ -1362,7 +1362,14 @@ document.addEventListener('DOMContentLoaded', function() {
             // Atualiza o modal com os dados gerados
             const qrImg = document.getElementById('pix-qr-img');
             const keyText = document.getElementById('pix-key-text');
-            if (qrImg) qrImg.src = qrCodeBase64;
+            if (qrImg) {
+                // Adiciona o prefixo MIME para imagens base64 se não estiver presente
+                if (qrCodeBase64 && !qrCodeBase64.startsWith("data:image")) {
+                    qrImg.src = "data:image/png;base64," + qrCodeBase64;
+                } else {
+                    qrImg.src = qrCodeBase64;
+                }
+            }
             if (keyText) keyText.innerText = copiaColaText;
 
             // Transição para o Passo 2 (QR Code e Polling)
