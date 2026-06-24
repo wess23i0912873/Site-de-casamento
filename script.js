@@ -1271,7 +1271,7 @@ document.addEventListener('DOMContentLoaded', function() {
         inputReservaAceite.addEventListener('change', validarFormularioReserva);
     }
 
-    // 10.1. Funções de Polling de Pagamento Pix
+    // 10.1. Funções de Polling de Pagamento Pix (JSONP)
     function iniciarPollingPagamento(idDoProduto) {
         if (pollingInterval) {
             clearInterval(pollingInterval);
@@ -1279,19 +1279,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
         pollingInterval = setInterval(async function() {
             try {
-                const response = await fetch(API_URL);
-                if (response.ok) {
-                    const data = await response.json();
-                    if (Array.isArray(data)) {
-                        const item = data.find(p => String(p.ID) === String(idDoProduto));
-                        // Verifica se o status mudou para "Aprovado" na planilha
-                        if (item && String(item.Status).trim().toLowerCase() === 'aprovado') {
-                            encerrarPollingComSucesso();
-                        }
+                // Consulta o status via JSONP para evitar bloqueio de CORS
+                const pollUrl = `${API_URL}?action=checkStatus&idItem=${idDoProduto}`;
+                const data = await fetchJSONP(pollUrl, 4000); // 4 segundos de timeout
+                
+                if (data && data.status) {
+                    const statusStr = String(data.status).trim().toLowerCase();
+                    // Confirmação do Pix recebido
+                    if (statusStr === 'aprovado' || statusStr === 'approved' || statusStr === 'reservado' || statusStr === 'indisponivel' || statusStr === 'indisponível') {
+                        encerrarPollingComSucesso();
                     }
                 }
             } catch (err) {
-                console.error("Erro no polling de status de pagamento:", err);
+                console.error("Erro no polling de status de pagamento (JSONP):", err);
             }
         }, 3000); // Polling a cada 3 segundos
     }
@@ -1351,21 +1351,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (response.ok) {
                     const resJson = await response.json();
-                    if (resJson && resJson.qrCodeBase64 && resJson.copiaCola) {
+                    if (resJson && resJson.status === "sucesso_pix") {
+                        qrCodeBase64 = resJson.qr_code_base64;
+                        copiaColaText = resJson.qr_code;
+                    } else if (resJson && resJson.qrCodeBase64 && resJson.copiaCola) {
+                        // Fallback temporário para formato legado
                         qrCodeBase64 = resJson.qrCodeBase64;
                         copiaColaText = resJson.copiaCola;
                     }
                 }
             } catch (error) {
-                console.warn("Falha ao gerar QR Code pela API real (CORS/Preflight). Usando simulação mock para testes:", error);
+                console.error("Falha ao gerar QR Code pela API:", error);
             }
 
-            // Mock de Fallback Simulado se a API não estiver conectada ou falhar
+            // Exibe alerta caso a geração do Pix real falhe
             if (!qrCodeBase64 || !copiaColaText) {
-                // Simula latência de rede de 1.2 segundos
-                await new Promise(resolve => setTimeout(resolve, 1200));
-                qrCodeBase64 = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=TESTE_PIX_CASAMENTO_" + idDoProduto;
-                copiaColaText = "00020101021226830014br.gov.bcb.pix2561api.pix.com/v2/cob/TESTE_PIX_CASAMENTO_" + idDoProduto;
+                alert("Ocorreu um erro ao gerar o Pix de pagamento com o Mercado Pago. Por favor, tente novamente.");
+                btnFazerPix.innerText = originalText;
+                btnFazerPix.disabled = false;
+                return;
             }
 
             // Atualiza o modal com os dados gerados
