@@ -944,12 +944,77 @@ document.addEventListener('DOMContentLoaded', function() {
     // 2. Adivinhação de Cômodo pelo Nome do Produto (Garante funcionamento dos filtros)
     function guessRoomByName(name) {
         const lowercaseName = String(name || '').toLowerCase();
-        if (lowercaseName.includes('cama') || lowercaseName.includes('lençol') || lowercaseName.includes('travesseiro') || lowercaseName.includes('quarto') || lowercaseName.includes('guarda-roupa') || lowercaseName.includes('colchão')) return 'Quarto';
-        if (lowercaseName.includes('panela') || lowercaseName.includes('prato') || lowercaseName.includes('copo') || lowercaseName.includes('faqueiro') || lowercaseName.includes('garfo') || lowercaseName.includes('faca') || lowercaseName.includes('liquidificador') || lowercaseName.includes('microondas') || lowercaseName.includes('cozinha') || lowercaseName.includes('cafeteira') || lowercaseName.includes('batedeira') || lowercaseName.includes('jantar') || lowercaseName.includes('talher') || lowercaseName.includes('frigideira')) return 'Cozinha';
-        if (lowercaseName.includes('sofa') || lowercaseName.includes('sofá') || lowercaseName.includes('tapete') || lowercaseName.includes('sala') || lowercaseName.includes('tv') || lowercaseName.includes('quadro') || lowercaseName.includes('poltrona') || lowercaseName.includes('painel') || lowercaseName.includes('mesa de centro')) return 'Sala';
-        if (lowercaseName.includes('banheiro') || lowercaseName.includes('toalha') || lowercaseName.includes('sabonete') || lowercaseName.includes('chuveiro') || lowercaseName.includes('box')) return 'Banheiro';
-        if (lowercaseName.includes('lavanderia') || lowercaseName.includes('máquina') || lowercaseName.includes('ferro') || lowercaseName.includes('varal') || lowercaseName.includes('tábua') || lowercaseName.includes('aspirador') || lowercaseName.includes('vassoura')) return 'Lavanderia';
-        return 'Cozinha'; // Padrão
+        
+        // 1. Banheiro
+        if (lowercaseName.includes('banheiro') || 
+            lowercaseName.includes('sabonete') || 
+            lowercaseName.includes('sanitaria') || 
+            lowercaseName.includes('sanitária') || 
+            lowercaseName.includes('desentupidor') || 
+            lowercaseName.includes('chuveiro') || 
+            lowercaseName.includes('box') || 
+            (lowercaseName.includes('toalha') && !lowercaseName.includes('mesa'))) {
+            return 'Banheiro';
+        }
+        
+        // 2. Lavanderia
+        if (lowercaseName.includes('lavanderia') || 
+            lowercaseName.includes('maquina') || 
+            lowercaseName.includes('máquina') || 
+            lowercaseName.includes('ferro') || 
+            lowercaseName.includes('varal') || 
+            lowercaseName.includes('aspirador') || 
+            lowercaseName.includes('vassoura') || 
+            lowercaseName.includes('rodo') || 
+            lowercaseName.includes('balde') || 
+            lowercaseName.includes('bacia') || 
+            lowercaseName.includes('flanela') || 
+            lowercaseName.includes('suja') || 
+            lowercaseName.includes('cesto') || 
+            lowercaseName.includes('pano de') || 
+            lowercaseName.includes('panos de') || 
+            (lowercaseName.includes('pa') && !lowercaseName.includes('panela')) || 
+            (lowercaseName.includes('pá') && !lowercaseName.includes('panela')) || 
+            (lowercaseName.includes('tabua') && !lowercaseName.includes('carne')) || 
+            (lowercaseName.includes('tábua') && !lowercaseName.includes('carne'))) {
+            return 'Lavanderia';
+        }
+        
+        // 3. Quarto
+        if (lowercaseName.includes('cama') || 
+            lowercaseName.includes('lencol') || 
+            lowercaseName.includes('lençol') || 
+            lowercaseName.includes('travesseiro') || 
+            lowercaseName.includes('quarto') || 
+            lowercaseName.includes('guarda-roupa') || 
+            lowercaseName.includes('guarda roupa') || 
+            lowercaseName.includes('colchao') || 
+            lowercaseName.includes('colchão') || 
+            lowercaseName.includes('coberta') || 
+            lowercaseName.includes('cobertor') || 
+            lowercaseName.includes('cabide') || 
+            lowercaseName.includes('espelho') || 
+            lowercaseName.includes('ventilador')) {
+            return 'Quarto';
+        }
+        
+        // 4. Sala
+        if (lowercaseName.includes('sofa') || 
+            lowercaseName.includes('sofá') || 
+            lowercaseName.includes('sala') || 
+            lowercaseName.includes('tv') || 
+            lowercaseName.includes('televisao') || 
+            lowercaseName.includes('televisão') || 
+            lowercaseName.includes('quadro') || 
+            lowercaseName.includes('poltrona') || 
+            lowercaseName.includes('painel') || 
+            lowercaseName.includes('almofada') || 
+            lowercaseName.includes('tapete')) {
+            return 'Sala';
+        }
+        
+        // 5. Cozinha (padrão)
+        return 'Cozinha';
     }
 
     // 2.1. Normalização do Cômodo para correspondência exata de filtros
