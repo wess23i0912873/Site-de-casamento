@@ -845,17 +845,8 @@ function acharImagemPorNome(nomeProduto, listaImagens = IMAGENS_DISPONIVEIS, pat
         }
     }
 
-    // 2. Tenta correspondência parcial (substring)
-    for (const img of listaImagens) {
-        const imgSemExt = img.substring(0, img.lastIndexOf('.'));
-        const imgNorm = normalizar(imgSemExt);
-        if (nomeNorm.includes(imgNorm) || imgNorm.includes(nomeNorm)) {
-            return `${pathImagens}${img}`;
-        }
-    }
-
-    // 3. Tenta correspondência por palavras importantes
-    const stopWords = ['de', 'para', 'pra', 'com', 'sem', 'em', 'um', 'uma', 'uns', 'umas', 'o', 'a', 'os', 'as', 'do', 'da', 'dos', 'das', 'no', 'na', 'nos', 'nas', 'pro', 'pra', 'pros', 'pras', 'que', 'se', 'ao', 'aos', 'ou', 'ela', 'ele', 'um', 'uma', 'e', 'o'];
+    // 2. Tenta correspondência por palavras importantes (Comparações Exatas e Plurais/Singulares)
+    const stopWords = ['de', 'para', 'pra', 'com', 'sem', 'em', 'um', 'uma', 'uns', 'umas', 'o', 'a', 'os', 'as', 'do', 'da', 'dos', 'das', 'no', 'na', 'nos', 'nas', 'pro', 'pra', 'pros', 'pras', 'que', 'se', 'ao', 'aos', 'ou', 'ela', 'ele', 'um', 'uma', 'e', 'o', 'kit', 'conjunto', 'jogo'];
     
     let melhorImagem = null;
     let maiorPontuacao = 0;
@@ -875,7 +866,7 @@ function acharImagemPorNome(nomeProduto, listaImagens = IMAGENS_DISPONIVEIS, pat
             const singularW = w.endsWith('s') ? w.slice(0, -1) : w;
             const matches = palavrasProduto.some(pw => {
                 const singularPw = pw.endsWith('s') ? pw.slice(0, -1) : pw;
-                return pw === w || singularPw === singularW || pw.includes(singularW) || w.includes(singularPw);
+                return pw === w || singularPw === singularW || pw === singularW || singularPw === w;
             });
             if (matches) {
                 score += 2;
@@ -895,8 +886,28 @@ function acharImagemPorNome(nomeProduto, listaImagens = IMAGENS_DISPONIVEIS, pat
         }
     }
 
-    if (maiorPontuacao >= 2) {
-        return `${pathImagens}${melhorImagem}`;
+    // Exigimos que pelo menos 50% das palavras significativas do nome da imagem coincidam com o produto
+    // Isso evita falsos positivos onde apenas uma palavra bate, mas as outras não.
+    if (melhorImagem && maiorPontuacao >= 2) {
+        const imgSemExt = melhorImagem.substring(0, melhorImagem.lastIndexOf('.'));
+        const imgNorm = normalizar(imgSemExt);
+        const palavrasImgSignificativas = imgNorm.split(' ').filter(w => !stopWords.includes(w) && w.length > 1);
+        
+        let palavrasCorrespondentes = 0;
+        palavrasImgSignificativas.forEach(w => {
+            const singularW = w.endsWith('s') ? w.slice(0, -1) : w;
+            const matches = palavrasProduto.some(pw => {
+                const singularPw = pw.endsWith('s') ? pw.slice(0, -1) : pw;
+                return pw === w || singularPw === singularW || pw === singularW || singularPw === w;
+            });
+            if (matches) {
+                palavrasCorrespondentes++;
+            }
+        });
+
+        if (palavrasImgSignificativas.length === 0 || (palavrasCorrespondentes / palavrasImgSignificativas.length) >= 0.5) {
+            return `${pathImagens}${melhorImagem}`;
+        }
     }
 
     return null;
