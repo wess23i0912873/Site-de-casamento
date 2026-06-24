@@ -1502,6 +1502,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const API_URL = 'https://script.google.com/macros/s/AKfycbwSOt56V8gjDFjttF01Uv3WcRdfeInWxoTjITK6dev_qFe3Bf3rsWX3jowz1GH-hY7M/exec';
     const PATH_IMAGENS_DOACOES = 'IMAGENS/PRESENTES/Doações/'; // Pasta de imagens das doações
 
+    // Função para higienizar nomes de arquivos locais
+    function sanitizarNomeArquivo(nome) {
+        if (!nome) return '';
+        return String(nome)
+            .replace(/\//g, '-') // substitui '/' por '-'
+            .replace(/\?/g, '')  // remove '?'
+            .trim();
+    }
+
     const gridContainer = document.getElementById('doacoes-cards-grid');
     if (!gridContainer) return; // Só executa na página principal (index.html) se a seção existir
 
@@ -1598,7 +1607,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const nome = item.Nome;
             const valor = item.Valor;
             const valorFormatado = formatarPrecoDoacao(valor);
-            const imgPath = `${PATH_IMAGENS_DOACOES}${nome}.png`;
+            const imgPath = `${PATH_IMAGENS_DOACOES}${sanitizarNomeArquivo(nome)}.png`;
 
             return `
                 <div class="doacao-card">
@@ -1642,7 +1651,7 @@ document.addEventListener('DOMContentLoaded', function() {
         modalDoarNome.innerText = item.Nome;
         modalDoarPreco.innerText = formatarPrecoDoacao(item.Valor);
 
-        const imgPath = `${PATH_IMAGENS_DOACOES}${item.Nome}.png`;
+        const imgPath = `${PATH_IMAGENS_DOACOES}${sanitizarNomeArquivo(item.Nome)}.png`;
         modalDoarImg.src = imgPath;
         modalDoarImg.onload = function() {
             modalDoarImg.classList.remove('hidden');
