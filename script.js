@@ -1652,15 +1652,19 @@ document.addEventListener('DOMContentLoaded', function() {
         modalDoarPreco.innerText = formatarPrecoDoacao(item.Valor);
 
         const imgPath = `${PATH_IMAGENS_DOACOES}${sanitizarNomeArquivo(item.Nome)}.png`;
-        modalDoarImg.src = imgPath;
-        modalDoarImg.onload = function() {
+        
+        // Tenta carregar a imagem usando preloader temporário para evitar bugs de cache
+        const tempImg = new Image();
+        tempImg.onload = function() {
+            modalDoarImg.src = imgPath;
             modalDoarImg.classList.remove('hidden');
             modalDoarImgPlaceholder.classList.add('hidden');
         };
-        modalDoarImg.onerror = function() {
+        tempImg.onerror = function() {
             modalDoarImg.classList.add('hidden');
             modalDoarImgPlaceholder.classList.remove('hidden');
         };
+        tempImg.src = imgPath;
 
         // Abre modal visualmente
         modalDoar.classList.remove('hidden');
