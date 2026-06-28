@@ -231,8 +231,6 @@ body {
    Inicia invisível (opacity:0); JS adiciona .visible ao fim da intro */
 /* Container de convite do Hero — centralizado sobre o carrossel
    Inicia invisível (opacity:0); JS adiciona .visible ao fim da intro */
-/* Container de convite do Hero — centralizado sobre o carrossel
-   Inicia invisível (opacity:0); JS adiciona .visible ao fim da intro */
 .hero-logo-reveal {
     position: absolute;
     top: 50%;
@@ -249,16 +247,15 @@ body {
     text-align: center;
     color: #ffffff;
     
-    /* Sombra radial suave e difusa por trás de todo o convite para escurecer sutilmente o fundo */
-    background: radial-gradient(circle, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 80%);
-    padding: 60px 40px;
-    
-    /* Sombra de texto em camadas para alto contraste em fotos claras */
+    /* Contorno preto sutil (stroke) + sombra de texto em camadas para máxima legibilidade sem quadros */
     text-shadow: 
-        0 1px 2px rgba(0, 0, 0, 0.9),
-        0 2px 4px rgba(0, 0, 0, 0.9),
-        0 4px 12px rgba(0, 0, 0, 0.8),
-        0 10px 30px rgba(0, 0, 0, 0.95);
+        -1px -1px 0 rgba(0, 0, 0, 0.6),  
+         1px -1px 0 rgba(0, 0, 0, 0.6),
+        -1px  1px 0 rgba(0, 0, 0, 0.6),
+         1px  1px 0 rgba(0, 0, 0, 0.6),
+         0 2px 4px rgba(0, 0, 0, 0.8),
+         0 4px 10px rgba(0, 0, 0, 0.8),
+         0 10px 25px rgba(0, 0, 0, 0.9);
         
     pointer-events: none;
     user-select: none;
