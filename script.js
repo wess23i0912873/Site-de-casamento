@@ -642,13 +642,22 @@ document.addEventListener('DOMContentLoaded', function() {
 /* ==========================================================================
    ÁREA DE HOSPEDAGENS (ACCORDION DINÂMICO)
    ========================================================================== */
+const iconesSVG = {
+    tv: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-amenity"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"></rect><polyline points="17 2 12 7 7 2"></polyline></svg>`,
+    ar: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-amenity"><line x1="12" y1="2" x2="12" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><path d="M20 16.66l-4-2.66 4-2.66M4 7.34l4 2.66-4 2.66M20 7.34l-4 2.66 4 2.66M4 16.66l4-2.66-4-2.66M16.66 20l-2.66-4-2.66 4M7.34 4l2.66 4 2.66-4M7.34 20l2.66-4 2.66 4M16.66 4l-2.66 4-2.66-4"></path></svg>`,
+    frigobar: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-amenity"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="5" y1="10" x2="19" y2="10"></line><line x1="9" y1="5" x2="9" y2="7"></line><line x1="9" y1="14" x2="9" y2="18"></line></svg>`,
+    cafe: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-amenity"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="2" x2="6" y2="4"></line><line x1="10" y1="2" x2="10" y2="4"></line><line x1="14" y1="2" x2="14" y2="4"></line></svg>`,
+    pin: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-map"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>`,
+    warning: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-warning"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`
+};
+
 const listaHospedagens = [
     {
         nome: "Pousada Mãe Maria",
         local: "Ipaumirim, Ceará | 10% de desconto",
         contexto: "Hotel na cidade do casamento",
         linkMaps: "https://maps.app.goo.gl/eYFWFoK4dWNfipfM6",
-        comodidadesIcones: ["📺", "❄️", "🧊", "☕"],
+        comodidadesIcones: ["tv", "ar", "frigobar", "cafe"],
         topicos: [
             "Todos os quartos contam com televisão, ar-condicionado, frigobar",
             "Oferecem café da manhã",
@@ -667,13 +676,14 @@ function renderizarHospedagens() {
     container.innerHTML = listaHospedagens.map((hotel, index) => {
         const topicosHTML = hotel.topicos.map(topico => `<li>${topico}</li>`).join('');
 
-        const iconesHTML = hotel.comodidadesIcones.map(icone => `
-            <span class="amenity-badge">${icone}</span>
-        `).join('');
+        const iconesHTML = hotel.comodidadesIcones.map(iconKey => {
+            const svgContent = iconesSVG[iconKey] || '';
+            return `<span class="amenity-badge">${svgContent}</span>`;
+        }).join('');
 
         const avisoHTML = hotel.aviso 
             ? `<div class="hotel-warning-box">
-                <span class="warning-icon">❔</span>
+                <span class="warning-icon">${iconesSVG.warning}</span>
                 <p class="warning-text">${hotel.aviso}</p>
                </div>`
             : '';
@@ -691,7 +701,7 @@ function renderizarHospedagens() {
                     <div class="hotel-body">
                         <p class="hotel-context">${hotel.contexto}</p>
                         <a href="${hotel.linkMaps}" target="_blank" class="hotel-maps-btn">
-                            <span>📍</span> Clique aqui para ver a localização
+                            ${iconesSVG.pin} Clique aqui para ver a localização
                         </a>
                         
                         <h4 class="hotel-info-title">Informações da pousada</h4>
