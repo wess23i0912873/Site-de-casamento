@@ -1490,6 +1490,214 @@ details[open] .utilidade-summary {
     opacity: 0.7;
 }
 
+/* ==========================================================================
+   CARDS DE HOSPEDAGENS (ACCORDION INTERNO)
+   ========================================================================== */
+#hospedagens-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 8px 0 0 0;
+}
+
+.hotel-card {
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.hotel-card:hover {
+    border-color: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.hotel-card.active {
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.hotel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+}
+
+.hotel-header:focus-visible {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.hotel-header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: left;
+}
+
+.hotel-name {
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: 0.02em;
+}
+
+.hotel-info {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 0.02em;
+}
+
+.hotel-icon {
+    font-size: 1.25rem;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.7);
+    transition: transform 0.3s ease;
+    line-height: 1;
+}
+
+.hotel-card.active .hotel-icon {
+    transform: rotate(45deg);
+    color: #ffffff;
+}
+
+/* Container de expansão usando CSS Grid */
+.hotel-body-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s ease;
+}
+
+.hotel-card.active .hotel-body-wrapper {
+    grid-template-rows: 1fr;
+}
+
+.hotel-body {
+    overflow: hidden;
+    min-height: 0; /* Essencial para a transição de grid funcionar */
+    padding: 0 20px 20px 20px;
+    text-align: left;
+    font-family: var(--font-sans);
+}
+
+.hotel-context {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0 0 10px 0;
+    line-height: 1.4;
+}
+
+.hotel-maps-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.82rem;
+    color: #ffffff;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    margin-bottom: 16px;
+    transition: opacity 0.2s ease;
+}
+
+.hotel-maps-link:hover {
+    opacity: 0.8;
+}
+
+.hotel-topics {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.hotel-topics li {
+    position: relative;
+    padding-left: 18px;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.hotel-topics li::before {
+    content: "•";
+    position: absolute;
+    left: 4px;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.hotel-warning-box {
+    background-color: rgba(217, 83, 79, 0.12); /* Alerta sutil */
+    border: 1px solid rgba(217, 83, 79, 0.25);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+}
+
+.warning-icon {
+    font-size: 0.95rem;
+    line-height: 1.2;
+}
+
+.warning-text {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.95);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.hotel-cta-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #25D366; /* Verde do WhatsApp */
+    color: #ffffff !important; /* Força branco */
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none !important;
+    padding: 12px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.15);
+}
+
+.hotel-cta-btn:hover {
+    background-color: #20ba5a;
+}
+
+.hotel-cta-btn:active {
+    transform: scale(0.98);
+}
+
+.hotel-cta-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+    flex-shrink: 0;
+}
+
 /* ══════════════════════════════════════════════════════════════════════════
    25. RSVP (Confirmação de Presença) — Seção #rsvp
    ══════════════════════════════════════════════════════════════════════════ */
