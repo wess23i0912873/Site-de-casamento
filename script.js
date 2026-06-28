@@ -201,10 +201,21 @@ window.scrollTo(0, 0);
   introScreen.addEventListener('click', onSkip);
 
   /* ── Inicialização ─────────────────────────────────────────────────────── */
-  document.body.style.overflow = 'hidden'; // Bloqueia scroll durante a intro
-  mainNav.classList.add('nav-hidden');     // Oculta o menu durante a intro
-  runPhase(0);                             // Dispara a Fase 0 (Logo)
+  function iniciarIntro() {
+    document.body.style.overflow = 'hidden'; // Bloqueia scroll durante a intro
+    mainNav.classList.add('nav-hidden');     // Oculta o menu durante a intro
+    runPhase(0);                             // Dispara a Fase 0 (Logo)
+  }
 
+  const preloader = document.getElementById('preloader');
+  if (preloader) {
+    window.addEventListener('load', function() {
+      // Inicia a intro apenas após o preloader terminar de sumir
+      setTimeout(iniciarIntro, 800);
+    });
+  } else {
+    iniciarIntro();
+  }
 })();
 
 /* ==========================================================================
