@@ -1766,6 +1766,48 @@ details[open] .utilidade-summary {
     flex-shrink: 0;
 }
 
+.hotel-actions-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.hotel-cta-insta-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    color: #ffffff !important;
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none !important;
+    padding: 12px;
+    border-radius: 8px;
+    transition: opacity 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 4px 12px rgba(220, 39, 67, 0.15);
+}
+
+.hotel-cta-insta-btn:hover {
+    opacity: 0.9;
+}
+
+.hotel-cta-insta-btn:active {
+    transform: scale(0.98);
+}
+
+.hotel-cta-insta-btn svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    fill: none;
+    flex-shrink: 0;
+}
+
 /* ══════════════════════════════════════════════════════════════════════════
    25. RSVP (Confirmação de Presença) — Seção #rsvp
    ══════════════════════════════════════════════════════════════════════════ */
