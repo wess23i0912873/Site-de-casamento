@@ -236,7 +236,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: clamp(280px, 85vw, 600px);   /* responsivo: mobile → desktop */
+    width: clamp(300px, 90vw, 650px);   /* responsivo: mobile → desktop */
     z-index: 2;                          /* acima das fotos, abaixo do menu */
     opacity: 0;
     transition: opacity 1.8s ease;       /* aparece suavemente com o reveal */
@@ -264,7 +264,7 @@ body {
 
 /* Imagem do logo dentro do container */
 .hero-logo-img {
-    width: clamp(180px, 50vw, 440px);
+    width: clamp(220px, 62vw, 440px);
     height: auto;
     object-fit: contain;
     margin: 15px 0;
@@ -273,7 +273,7 @@ body {
 /* Textos do convite */
 .hero-invitation-top {
     font-family: var(--font-serif);
-    font-size: clamp(0.9rem, 2.5vw, 1.25rem);
+    font-size: clamp(1rem, 2.8vw, 1.25rem);
     font-style: italic;
     font-weight: 300;
     letter-spacing: 0.05em;
@@ -283,7 +283,7 @@ body {
 
 .hero-invitation-bottom {
     font-family: var(--font-serif);
-    font-size: clamp(0.95rem, 2.8vw, 1.3rem);
+    font-size: clamp(1.05rem, 3.2vw, 1.3rem);
     font-weight: 300;
     letter-spacing: 0.1em;
     font-style: italic;
@@ -303,7 +303,7 @@ body {
 
 .hero-date-label {
     font-family: var(--font-sans);
-    font-size: clamp(0.65rem, 1.8vw, 0.8rem);
+    font-size: clamp(0.72rem, 2vw, 0.8rem);
     font-weight: 500;
     letter-spacing: 0.25em;
     color: rgba(255, 255, 255, 0.85);
@@ -316,7 +316,7 @@ body {
     align-items: center;
     justify-content: center;
     font-family: var(--font-serif);
-    font-size: clamp(2rem, 6vw, 3.2rem);
+    font-size: clamp(2.4rem, 7.5vw, 3.2rem);
     font-weight: 300;
     line-height: 1;
     color: #ffffff;
@@ -336,7 +336,7 @@ body {
 
 .hero-time-label {
     font-family: var(--font-sans);
-    font-size: clamp(0.7rem, 2vw, 0.85rem);
+    font-size: clamp(0.78rem, 2.2vw, 0.85rem);
     font-weight: 400;
     letter-spacing: 0.15em;
     color: rgba(255, 255, 255, 0.85);
@@ -346,13 +346,13 @@ body {
 /* Local */
 .hero-location {
     font-family: var(--font-serif);
-    font-size: clamp(1rem, 2.8vw, 1.4rem);
+    font-size: clamp(1.15rem, 3.2vw, 1.4rem);
     font-weight: 300;
     letter-spacing: 0.1em;
     color: #ffffff;
     border-top: 1px solid rgba(255, 255, 255, 0.25);
     padding-top: 12px;
-    width: 180px;
+    width: 220px;
     margin-top: 5px;
 }
 
