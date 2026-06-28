@@ -645,10 +645,10 @@ document.addEventListener('DOMContentLoaded', function() {
 const listaHospedagens = [
     {
         nome: "Pousada Mãe Maria",
-        localCurto: "Ipaumirim, Ceará",
-        desconto: "10% de desconto",
+        local: "Ipaumirim, Ceará | 10% de desconto",
         contexto: "Hotel na cidade do casamento",
         linkMaps: "https://maps.app.goo.gl/eYFWFoK4dWNfipfM6",
+        comodidadesIcones: ["📺", "❄️", "🧊", "☕"],
         topicos: [
             "Todos os quartos contam com televisão, ar-condicionado, frigobar",
             "Oferecem café da manhã",
@@ -656,7 +656,7 @@ const listaHospedagens = [
             "De frente a um posto de gasolina"
         ],
         aviso: "Eles não oferecem café da manhã aos domingos.",
-        linkWhatsApp: "https://wa.me/558897266655?text=Ol%C3%A1%21%20Vi%20o%20contato%20de%20voc%C3%AAs%20no%20site%20do%20casamento%20de%20Wesley%20e%20Stefany.%20Gostaria%20de%20verificar%20a%20disponibilidade%20e%20os%20valores%20de%20hospedagem."
+        linkWhats: "https://wa.me/558897266655?text=Ol%C3%A1%21%20Vi%20o%20contato%20de%20voc%C3%AAs%20no%20site%20do%20casamento%20de%20Wesley%20e%20Stefany.%20Gostaria%20de%20verificar%20a%20disponibilidade%20e%20os%20valores%20de%20hospedagem."
     }
 ];
 
@@ -665,15 +665,15 @@ function renderizarHospedagens() {
     if (!container) return;
 
     container.innerHTML = listaHospedagens.map((hotel, index) => {
-        const subtitulo = hotel.desconto 
-            ? `${hotel.localCurto} | ${hotel.desconto}` 
-            : hotel.localCurto;
-
         const topicosHTML = hotel.topicos.map(topico => `<li>${topico}</li>`).join('');
+
+        const iconesHTML = hotel.comodidadesIcones.map(icone => `
+            <span class="amenity-badge">${icone}</span>
+        `).join('');
 
         const avisoHTML = hotel.aviso 
             ? `<div class="hotel-warning-box">
-                <span class="warning-icon">⚠️</span>
+                <span class="warning-icon">❔</span>
                 <p class="warning-text">${hotel.aviso}</p>
                </div>`
             : '';
@@ -683,19 +683,27 @@ function renderizarHospedagens() {
                 <div class="hotel-header" role="button" aria-expanded="false" tabindex="0">
                     <div class="hotel-header-text">
                         <h3 class="hotel-name">${hotel.nome}</h3>
-                        <span class="hotel-info">${subtitulo}</span>
+                        <span class="hotel-info">${hotel.local}</span>
                     </div>
                     <span class="hotel-icon">+</span>
                 </div>
                 <div class="hotel-body-wrapper">
                     <div class="hotel-body">
                         <p class="hotel-context">${hotel.contexto}</p>
-                        <a href="${hotel.linkMaps}" target="_blank" class="hotel-maps-link">📍 Clique aqui para ver a localização</a>
+                        <a href="${hotel.linkMaps}" target="_blank" class="hotel-maps-btn">
+                            <span>📍</span> Clique aqui para ver a localização
+                        </a>
+                        
+                        <h4 class="hotel-info-title">Informações da pousada</h4>
+                        <div class="hotel-amenities-container">
+                            ${iconesHTML}
+                        </div>
+                        
                         <ul class="hotel-topics">
                             ${topicosHTML}
                         </ul>
                         ${avisoHTML}
-                        <a href="${hotel.linkWhatsApp}" target="_blank" class="hotel-cta-btn">
+                        <a href="${hotel.linkWhats}" target="_blank" class="hotel-cta-btn">
                             <svg viewBox="0 0 24 24">
                                 <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 001.37 5.054L2 22l5.077-1.33a9.927 9.927 0 004.93 1.302c5.507 0 9.99-4.478 9.99-9.985A9.997 9.997 0 0012.012 2zm6.035 13.92c-.248.696-1.246 1.258-1.716 1.312-.43.05-.98.077-1.583-.114a8.12 8.12 0 01-3.69-2.316 9.4 9.4 0 01-2.22-3.153 3.868 3.868 0 01-.762-2.072c0-1.127.587-1.688.804-1.91.217-.223.479-.28.636-.28.156 0 .313.003.45.01a1.295 1.295 0 01.954.463c.272.656.924 2.257 1.004 2.42.08.162.133.351.026.565-.107.214-.16.35-.32.533-.16.183-.337.408-.48.55-.16.16-.328.334-.142.653.186.318.826 1.362 1.77 2.203.943.84 1.737 1.1 2.062 1.259.325.16.513.133.705-.084.192-.217.826-.961 1.047-1.288.222-.328.444-.275.748-.163.303.11 1.923.906 2.253 1.07.33.165.55.247.63.385.08.138.08.8-.167 1.496z"/>
                             </svg>
