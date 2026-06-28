@@ -671,6 +671,7 @@ const IMAGENS_DISPONIVEIS = [
     "Geladeira.png",
     "Jarras de suco.png",
     "Kit Peneira.png",
+    "Kit de almofadas.png",
     "Kit de banheiro ( saboneteira, recipiente pra escova).png",
     "Kit de potes.png",
     "Kit de recipientes de geladeira.png",

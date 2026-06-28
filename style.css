@@ -229,26 +229,125 @@ body {
 
 /* Logo decorativo grande — centralizado sobre o carrossel
    Inicia invisível (opacity:0); JS adiciona .visible ao fim da intro */
+/* Container de convite do Hero — centralizado sobre o carrossel
+   Inicia invisível (opacity:0); JS adiciona .visible ao fim da intro */
 .hero-logo-reveal {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: clamp(200px, 55vw, 520px);   /* responsivo: mobile → desktop */
-    max-height: 75vh;
-    object-fit: contain;
-    pointer-events: none;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-    -webkit-user-drag: none;
+    width: clamp(280px, 85vw, 600px);   /* responsivo: mobile → desktop */
     z-index: 2;                          /* acima das fotos, abaixo do menu */
     opacity: 0;
     transition: opacity 1.8s ease;       /* aparece suavemente com o reveal */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    user-select: none;
 }
 
 .hero-logo-reveal.visible {
     opacity: 1;
+}
+
+/* Imagem do logo dentro do container */
+.hero-logo-img {
+    width: clamp(180px, 50vw, 440px);
+    height: auto;
+    object-fit: contain;
+    margin: 15px 0;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+}
+
+/* Textos do convite */
+.hero-invitation-top {
+    font-family: var(--font-serif);
+    font-size: clamp(0.9rem, 2.5vw, 1.25rem);
+    font-style: italic;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 5px;
+}
+
+.hero-invitation-bottom {
+    font-family: var(--font-serif);
+    font-size: clamp(0.95rem, 2.8vw, 1.3rem);
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.95);
+    margin-top: 5px;
+    margin-bottom: 25px;
+}
+
+/* Layout de Data (estilo elegante em caixas ou divisores) */
+.hero-date-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.hero-date-label {
+    font-family: var(--font-sans);
+    font-size: clamp(0.65rem, 1.8vw, 0.8rem);
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+}
+
+.hero-date-numbers {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 6vw, 3.2rem);
+    font-weight: 300;
+    line-height: 1;
+    color: #ffffff;
+    margin-bottom: 12px;
+}
+
+.hero-date-numbers span {
+    padding: 0 10px;
+}
+
+.hero-date-numbers span.divider {
+    font-weight: 100;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.9em;
+    padding: 0;
+}
+
+.hero-time-label {
+    font-family: var(--font-sans);
+    font-size: clamp(0.7rem, 2vw, 0.85rem);
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    color: rgba(255, 255, 255, 0.85);
+    text-transform: uppercase;
+}
+
+/* Local */
+.hero-location {
+    font-family: var(--font-serif);
+    font-size: clamp(1rem, 2.8vw, 1.4rem);
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: #ffffff;
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    padding-top: 12px;
+    width: 180px;
+    margin-top: 5px;
 }
 
 
