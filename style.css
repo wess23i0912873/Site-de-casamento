@@ -247,15 +247,12 @@ body {
     text-align: center;
     color: #ffffff;
     
-    /* Contorno preto sutil (stroke) + sombra de texto em camadas para máxima legibilidade sem quadros */
+    /* Sombra de texto suave e empilhada (halo difuso) para máxima legibilidade sem contornos duplos */
     text-shadow: 
-        -1px -1px 0 rgba(0, 0, 0, 0.6),  
-         1px -1px 0 rgba(0, 0, 0, 0.6),
-        -1px  1px 0 rgba(0, 0, 0, 0.6),
-         1px  1px 0 rgba(0, 0, 0, 0.6),
-         0 2px 4px rgba(0, 0, 0, 0.8),
-         0 4px 10px rgba(0, 0, 0, 0.8),
-         0 10px 25px rgba(0, 0, 0, 0.9);
+        0 2px 5px rgba(0, 0, 0, 0.6),
+        0 5px 15px rgba(0, 0, 0, 0.5),
+        0 10px 30px rgba(0, 0, 0, 0.5),
+        0 15px 50px rgba(0, 0, 0, 0.6);
         
     pointer-events: none;
     user-select: none;
