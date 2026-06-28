@@ -647,6 +647,7 @@ const iconesSVG = {
     ar: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-amenity"><line x1="12" y1="2" x2="12" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><path d="M20 16.66l-4-2.66 4-2.66M4 7.34l4 2.66-4 2.66M20 7.34l-4 2.66 4 2.66M4 16.66l4-2.66-4-2.66M16.66 20l-2.66-4-2.66 4M7.34 4l2.66 4 2.66-4M7.34 20l2.66-4 2.66 4M16.66 4l-2.66 4-2.66-4"></path></svg>`,
     frigobar: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-amenity"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="5" y1="10" x2="19" y2="10"></line><line x1="9" y1="5" x2="9" y2="7"></line><line x1="9" y1="14" x2="9" y2="18"></line></svg>`,
     cafe: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-amenity"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="2" x2="6" y2="4"></line><line x1="10" y1="2" x2="10" y2="4"></line><line x1="14" y1="2" x2="14" y2="4"></line></svg>`,
+    parking: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-amenity"><rect x="3" y="3" width="18" height="18" rx="5" ry="5"></rect><path d="M9 17V7h4a3 3 0 0 1 0 6H9"></path></svg>`,
     pin: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-map"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>`,
     warning: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-warning"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>`
 };
@@ -672,7 +673,7 @@ const listaHospedagens = [
         local: "Cajazeiras, PB",
         contexto: "Hotel a 29 min da cidade do casamento",
         linkMaps: "https://maps.app.goo.gl/3oJgL7nTMpijtjAn6",
-        comodidadesIcones: ["tv", "ar", "frigobar", "cafe"],
+        comodidadesIcones: ["tv", "ar", "frigobar", "cafe", "parking"],
         topicos: [
             "Café da manhã incluso",
             "Todos os quartos contam com televisão, ar-condicionado, frigobar",
