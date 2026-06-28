@@ -847,10 +847,10 @@ main {
 /* Assinatura — elegante e manuscrita, separada do corpo */
 .sobre-text__assinatura {
     font-family: 'Pinyon Script', cursive, var(--font-serif);
-    font-size: clamp(2rem, 5.5vw, 2.8rem);
+    font-size: clamp(1rem, 2.8vw, 1.25rem);
     font-weight: 400;
     color: #050a14; /* Azul navy super escuro / quase preto */
-    line-height: 1.3;
+    line-height: 1.4;
     margin-top: 28px;
     margin-bottom: 0;
 }
