@@ -1310,6 +1310,12 @@ document.addEventListener('DOMContentLoaded', function() {
         // --- Renderização Final ou Exibição da Mensagem de Erro ---
         if (data && Array.isArray(data)) {
             presentesData = data.map(item => {
+                // GATILHO SECRETO: Itens com '*' no nome são infinitos
+                if (item.Nome && item.Nome.includes('*')) {
+                    item.Nome = item.Nome.replace(/\*/g, '').trim();
+                    item.Status = 'Disponível';
+                }
+
                 let imagem = item.Imagem;
                 const temExtensaoValida = imagem && /\.(jpg|jpeg|png|webp|svg)$/i.test(imagem);
                 if (temExtensaoValida) {
