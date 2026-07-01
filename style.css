@@ -3310,4 +3310,49 @@ details[open] .utilidade-summary {
     display: none !important;
 }
 
+/* ==========================================================================
+   AJUSTES MOBILE DE DOAÇÕES (2 CARDS POR LINHA)
+   ========================================================================== */
+@media (max-width: 768px) {
+    .doacoes-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+        margin-top: 24px !important;
+    }
 
+    .doacao-card {
+        padding: 12px !important;
+        border-radius: 16px !important;
+    }
+
+    .doacao-img-wrapper {
+        aspect-ratio: 4/3 !important;
+    }
+
+    .doacao-info {
+        margin-top: 12px !important;
+        padding: 0 !important;
+    }
+
+    .doacao-card-titulo {
+        font-size: 0.85rem !important;
+        margin-bottom: 4px !important;
+        min-height: 2.6rem !important; /* Altura mínima para alinhar títulos de 2 linhas */
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        line-height: 1.3 !important;
+    }
+
+    .doacao-card-preco {
+        font-size: 1.15rem !important;
+        margin-bottom: 12px !important;
+    }
+
+    .doacao-btn-wrapper .btn-acao {
+        padding: 10px !important;
+        font-size: 0.8rem !important;
+        border-radius: 8px !important;
+    }
+}
