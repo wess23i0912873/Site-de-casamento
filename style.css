@@ -1913,9 +1913,26 @@ details[open] .utilidade-summary {
 .rsvp-form input:focus,
 .rsvp-form select:focus,
 .rsvp-form textarea:focus {
-    outline: none;
-    border-color: rgba(255, 255, 255, 0.6);
-    background: rgba(255, 255, 255, 0.1);
+    outline: none !important;
+    border-color: rgba(255, 255, 255, 0.6) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+}
+
+/* Correção do preenchimento automático (Autofill) do navegador */
+.rsvp-form input:-webkit-autofill,
+.rsvp-form input:-webkit-autofill:hover, 
+.rsvp-form input:-webkit-autofill:focus,
+.rsvp-form select:-webkit-autofill,
+.rsvp-form select:-webkit-autofill:hover,
+.rsvp-form select:-webkit-autofill:focus,
+.rsvp-form textarea:-webkit-autofill,
+.rsvp-form textarea:-webkit-autofill:hover,
+.rsvp-form textarea:-webkit-autofill:focus {
+    -webkit-text-fill-color: #ffffff !important;
+    -webkit-box-shadow: 0 0 0px 1000px #1a1a1a inset !important;
+    transition: background-color 5000s ease-in-out 0s !important;
+    caret-color: #ffffff !important;
 }
 
 .rsvp-form select option {
