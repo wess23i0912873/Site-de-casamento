@@ -695,13 +695,13 @@ main {
    -------------------------------------------------------------------------- */
 .reveal-block {
     opacity: 0;
-    transform: translateY(28px);
+    transform: translate3d(0, 28px, 0);
     transition: opacity 0.85s ease, transform 0.85s ease;
 }
 
 .reveal-block.is-visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0);
 }
 
 /* Staggered Animations para galerias */
@@ -1498,6 +1498,7 @@ details[open] .utilidade-summary {
     flex-direction: column;
     gap: 12px;
     padding: 8px 0 0 0;
+    contain: layout style;
 }
 
 /* Garante que nada dentro do accordion de hospedagens herde itálico */
@@ -1513,6 +1514,10 @@ details[open] .utilidade-summary {
     -webkit-backdrop-filter: blur(10px);
     transition: all 0.3s ease;
     overflow: hidden;
+    isolation: isolate;
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 .hotel-card:hover {
@@ -2368,6 +2373,7 @@ details[open] .utilidade-summary {
     gap: 30px;
     max-width: 1200px;
     margin: 0 auto;
+    contain: layout style;
 }
 
 /* Ocultar cards via JS */
@@ -2387,10 +2393,14 @@ details[open] .utilidade-summary {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
+    isolation: isolate;
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 .presente-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-5px) translateZ(0);
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
 }
 
@@ -3180,6 +3190,7 @@ details[open] .utilidade-summary {
     text-align: center;
     position: relative;
     z-index: 10;
+    contain: layout style;
 }
 
 .doacoes-container {
@@ -3227,17 +3238,20 @@ details[open] .utilidade-summary {
     padding: 24px;
     text-align: center;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), 
-                box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), 
+                border-color 0.4s ease;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     height: 100%;
     box-sizing: border-box;
+    isolation: isolate;
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 .doacao-card:hover {
-    transform: translateY(-8px);
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.55);
     border-color: rgba(255, 255, 255, 0.2);
 }
@@ -3258,9 +3272,7 @@ details[open] .utilidade-summary {
     transition: transform 0.6s ease;
 }
 
-.doacao-card:hover .doacao-img-wrapper img {
-    transform: scale(1.05);
-}
+/* Removido transform no hover de imagens das doações */
 
 .doacao-info {
     margin-top: 20px;

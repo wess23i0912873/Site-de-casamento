@@ -1451,7 +1451,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return `
                 <div class="presente-card ${isDisponivel ? '' : 'indisponivel'}" data-room="${room}" ${cardStyle}>
                     <div class="presente-img-wrapper">
-                        ${imagem ? `<img src="${imagem}" alt="${nome}" draggable="false">` : `
+                        ${imagem ? `<img src="${imagem}" alt="${nome}" draggable="false" decoding="async" loading="lazy">` : `
                         <div class="presente-img-placeholder">
                             <span>Imagem do Presente</span>
                         </div>`}
@@ -2109,7 +2109,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return `
                 <div class="doacao-card">
                     <div class="doacao-img-wrapper">
-                        <img src="${imgPath}" alt="${nome}" onerror="this.onerror=null; this.src='IMAGENS/WIS.svg';">
+                        <img src="${imgPath}" alt="${nome}" onerror="this.onerror=null; this.src='IMAGENS/WIS.svg';" decoding="async" loading="lazy">
                     </div>
                     <div class="doacao-info">
                         <h3 class="doacao-card-titulo">${nome}</h3>
