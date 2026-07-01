@@ -709,7 +709,7 @@ function renderizarHospedagens() {
         const ctaWhatsHTML = hotel.linkWhats
             ? `<a href="${hotel.linkWhats}" target="_blank" class="hotel-cta-btn">
                 <svg viewBox="0 0 24 24">
-                    <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 001.37 5.054L2 22l5.077-1.33a9.927 9.927 0 004.93 1.302c5.507 0 9.99-4.478 9.99-9.985A9.997 9.997 0 0012.012 2zm6.035 13.92c-.248.696-1.246 1.258-1.716 1.312-.43.05-.98.077-1.583-.114a8.12 8.12 0 01-3.69-2.316 9.4 9.4 0 01-2.22-3.153 3.868 3.868 0 01-.762-2.072c0-1.127.587-1.688.804-1.91.217-.223.479-.28.636-.28.156 0 .313.003.45.01a1.295 1.295 0 01.954.463c.272.656.924 2.257 1.004 2.42.08.162.133.351.026.565-.107.214-.16.35-.32.533-.16.183-.337.408-.48.55-.16.16-.328.334-.142.653.186.318.826 1.362 1.77 2.203.943.84 1.737 1.1 2.062 1.259.325.16.513.133.705-.084.192-.217.826-.961 1.047-1.288.222-.328.444-.275.748-.163.303.11 1.923.906 2.253 1.07.33.165.55.247.63.385.08.138.08.8-.167 1.496z"/>
+                    <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 001.37 5.054L2 22l5.077-1.33a9.927 9.927 0 004.93 1.302c5.507 0 9.99-4.478 9.99-9.985A9.997 9.997 0 0012.012 2zm6.035 13.92c-.248.696-1.246 1.258-1.716 1.312-.43.05-.98.077-1.583-.114a8.12 8.12 0 01-3.69-2.316 9.4 9.4 0 01-2.22-3.153 3.868 3.868 0 01-.762-2.072c0-1.127.587-1.688.804-1.91.217-.223.479-.28.636-.28.156 0 .313.003.45.01a1.295 1.295 0 01.954.463c.272.656.924 2.257 1.004 2.42.08.162.133.351.026.565-.107.214-.16.35-.32.533-.16.183-.337.408-.48.55-.16.16-.328.334-.142.653.186.318.826 1.362 1.77 2.203.943.84 1.737 1.1 2.062 1.259.325.16.513.133.705-.084.192-.217.826-.961 1.047-1.288.222-.328.444-.275.748-.163.303.11 1.923.906 2.253 1.07.33.165.55.247.63.385.08.138.08.8-.167 1.496z"></path>
                 </svg>
                 Entre em contato pelo WhatsApp
                </a>`
@@ -964,55 +964,81 @@ const IMAGENS_DOACOES_DISPONIVEIS = [
     "visita favorita dos noivos.png"
 ];
 
+// Cache para evitar repetir o mapeamento e normalização pesados das listas de imagens
+const cacheImagensNormalizadas = new Map();
+
+// Função pura de normalização de texto
+function normalizarTexto(txt) {
+    if (!txt) return '';
+    let res = txt.toLowerCase()
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "") // remove acentos
+              .replace(/[^a-z0-9]/g, " ") // remove caracteres especiais
+              .trim()
+              .replace(/\s+/g, " ");
+    
+    // Substituições de sinônimos/normalizações comuns para melhorar casamento
+    res = res.replace(/\b(conjunto|jogo)\b/g, "kit")
+             .replace(/\b(panelas)\b/g, "panela")
+             .replace(/\b(pratos)\b/g, "prato")
+             .replace(/\b(bacias)\b/g, "bacia")
+             .replace(/\b(baldes)\b/g, "balde")
+             .replace(/\b(copos)\b/g, "copo")
+             .replace(/\b(tacas)\b/g, "taca")
+             .replace(/\b(xicaras)\b/g, "xicara")
+             .replace(/\b(jarras)\b/g, "jarra")
+             .replace(/\b(formas)\b/g, "forma")
+             .replace(/\b(potes)\b/g, "pote")
+             .replace(/\b(tigelas)\b/g, "tigela")
+             .replace(/\b(vasilhas)\b/g, "vasilha")
+             .replace(/\b(garrafas)\b/g, "garrafa")
+             .replace(/\b(toalhas)\b/g, "toalha")
+             .replace(/\b(recipientes)\b/g, "recipiente")
+             .replace(/\b(cobertores|cobertas)\b/g, "cobertor")
+             .replace(/\b(lencois|lencol)\b/g, "lencol")
+             .replace(/\b(cabides)\b/g, "cabide")
+             .replace(/\b(almofadas)\b/g, "almofada")
+             .replace(/\b(quadros)\b/g, "quadro")
+             .replace(/\b(tapetes)\b/g, "tapete")
+             .replace(/\b(flanelas)\b/g, "flanela")
+             .replace(/\b(panos)\b/g, "pano");
+    return res;
+}
+
+// Mapeia e cacheia a lista de imagens para evitar processamento redundante de strings
+function obterImagensNormalizadas(listaImagens) {
+    if (cacheImagensNormalizadas.has(listaImagens)) {
+        return cacheImagensNormalizadas.get(listaImagens);
+    }
+    const mapeadas = listaImagens.map(img => {
+        const idx = img.lastIndexOf('.');
+        const imgSemExt = idx !== -1 ? img.substring(0, idx) : img;
+        const imgNorm = normalizarTexto(imgSemExt);
+        const palavrasImg = imgNorm.split(' ').filter(w => w.length > 1);
+        return {
+            original: img,
+            normalizada: imgNorm,
+            palavras: palavrasImg
+        };
+    });
+    cacheImagensNormalizadas.set(listaImagens, mapeadas);
+    return mapeadas;
+}
+
 // Função de correspondência inteligente por nome
 function acharImagemPorNome(nomeProduto, listaImagens = IMAGENS_DISPONIVEIS, pathImagens = 'IMAGENS/PRESENTES/') {
     if (!nomeProduto || !listaImagens || listaImagens.length === 0) return null;
-    
-    const normalizar = (txt) => {
-        let res = txt.toLowerCase()
-                  .normalize("NFD")
-                  .replace(/[\u0300-\u036f]/g, "") // remove acentos
-                  .replace(/[^a-z0-9]/g, " ") // remove caracteres especiais
-                  .trim()
-                  .replace(/\s+/g, " ");
-        
-        // Substituições de sinônimos/normalizações comuns para melhorar casamento
-        res = res.replace(/\b(conjunto|jogo)\b/g, "kit")
-                 .replace(/\b(panelas)\b/g, "panela")
-                 .replace(/\b(pratos)\b/g, "prato")
-                 .replace(/\b(bacias)\b/g, "bacia")
-                 .replace(/\b(baldes)\b/g, "balde")
-                 .replace(/\b(copos)\b/g, "copo")
-                 .replace(/\b(tacas)\b/g, "taca")
-                 .replace(/\b(xicaras)\b/g, "xicara")
-                 .replace(/\b(jarras)\b/g, "jarra")
-                 .replace(/\b(formas)\b/g, "forma")
-                 .replace(/\b(potes)\b/g, "pote")
-                 .replace(/\b(tigelas)\b/g, "tigela")
-                 .replace(/\b(vasilhas)\b/g, "vasilha")
-                 .replace(/\b(garrafas)\b/g, "garrafa")
-                 .replace(/\b(toalhas)\b/g, "toalha")
-                 .replace(/\b(recipientes)\b/g, "recipiente")
-                 .replace(/\b(cobertores|cobertas)\b/g, "cobertor")
-                 .replace(/\b(lencois|lencol)\b/g, "lencol")
-                 .replace(/\b(cabides)\b/g, "cabide")
-                 .replace(/\b(almofadas)\b/g, "almofada")
-                 .replace(/\b(quadros)\b/g, "quadro")
-                 .replace(/\b(tapetes)\b/g, "tapete")
-                 .replace(/\b(flanelas)\b/g, "flanela")
-                 .replace(/\b(panos)\b/g, "pano");
-        return res;
-    };
 
-    const nomeNorm = normalizar(nomeProduto);
+    const nomeNorm = normalizarTexto(nomeProduto);
     const palavrasProduto = nomeNorm.split(' ').filter(w => w.length > 1);
 
+    const imagensMapeadas = obterImagensNormalizadas(listaImagens);
+
     // 1. Tenta correspondência exata do nome normalizado
-    for (const img of listaImagens) {
-        const imgSemExt = img.substring(0, img.lastIndexOf('.'));
-        const imgNorm = normalizar(imgSemExt);
-        if (nomeNorm === imgNorm) {
-            return `${pathImagens}${img}`;
+    for (let i = 0; i < imagensMapeadas.length; i++) {
+        const imgObj = imagensMapeadas[i];
+        if (nomeNorm === imgObj.normalizada) {
+            return `${pathImagens}${imgObj.original}`;
         }
     }
 
@@ -1022,15 +1048,12 @@ function acharImagemPorNome(nomeProduto, listaImagens = IMAGENS_DISPONIVEIS, pat
     let melhorImagem = null;
     let maiorPontuacao = 0;
 
-    for (const img of listaImagens) {
-        const imgSemExt = img.substring(0, img.lastIndexOf('.'));
-        const imgNorm = normalizar(imgSemExt);
-        const palavrasImg = imgNorm.split(' ').filter(w => w.length > 1);
-
+    for (let i = 0; i < imagensMapeadas.length; i++) {
+        const imgObj = imagensMapeadas[i];
         let score = 0;
         let totalSignificativo = 0;
 
-        palavrasImg.forEach(w => {
+        imgObj.palavras.forEach(w => {
             if (stopWords.includes(w)) return;
             totalSignificativo++;
             
@@ -1044,7 +1067,7 @@ function acharImagemPorNome(nomeProduto, listaImagens = IMAGENS_DISPONIVEIS, pat
             }
         });
 
-        palavrasImg.forEach(w => {
+        imgObj.palavras.forEach(w => {
             if (!stopWords.includes(w)) return;
             if (palavrasProduto.includes(w)) {
                 score += 0.5;
@@ -1053,31 +1076,32 @@ function acharImagemPorNome(nomeProduto, listaImagens = IMAGENS_DISPONIVEIS, pat
 
         if (score > maiorPontuacao && totalSignificativo > 0) {
             maiorPontuacao = score;
-            melhorImagem = img;
+            melhorImagem = imgObj.original;
         }
     }
 
     // Exigimos que pelo menos 50% das palavras significativas do nome da imagem coincidam com o produto
     // Isso evita falsos positivos onde apenas uma palavra bate, mas as outras não.
     if (melhorImagem && maiorPontuacao >= 2) {
-        const imgSemExt = melhorImagem.substring(0, melhorImagem.lastIndexOf('.'));
-        const imgNorm = normalizar(imgSemExt);
-        const palavrasImgSignificativas = imgNorm.split(' ').filter(w => !stopWords.includes(w) && w.length > 1);
-        
-        let palavrasCorrespondentes = 0;
-        palavrasImgSignificativas.forEach(w => {
-            const singularW = w.endsWith('s') ? w.slice(0, -1) : w;
-            const matches = palavrasProduto.some(pw => {
-                const singularPw = pw.endsWith('s') ? pw.slice(0, -1) : pw;
-                return pw === w || singularPw === singularW || pw === singularW || singularPw === w;
+        const imgObj = imagensMapeadas.find(o => o.original === melhorImagem);
+        if (imgObj) {
+            const palavrasImgSignificativas = imgObj.palavras.filter(w => !stopWords.includes(w));
+            
+            let palavrasCorrespondentes = 0;
+            palavrasImgSignificativas.forEach(w => {
+                const singularW = w.endsWith('s') ? w.slice(0, -1) : w;
+                const matches = palavrasProduto.some(pw => {
+                    const singularPw = pw.endsWith('s') ? pw.slice(0, -1) : pw;
+                    return pw === w || singularPw === singularW || pw === singularW || singularPw === w;
+                });
+                if (matches) {
+                    palavrasCorrespondentes++;
+                }
             });
-            if (matches) {
-                palavrasCorrespondentes++;
-            }
-        });
 
-        if (palavrasImgSignificativas.length === 0 || (palavrasCorrespondentes / palavrasImgSignificativas.length) >= 0.5) {
-            return `${pathImagens}${melhorImagem}`;
+            if (palavrasImgSignificativas.length === 0 || (palavrasCorrespondentes / palavrasImgSignificativas.length) >= 0.5) {
+                return `${pathImagens}${melhorImagem}`;
+            }
         }
     }
 
@@ -1310,10 +1334,12 @@ document.addEventListener('DOMContentLoaded', function() {
         // --- Renderização Final ou Exibição da Mensagem de Erro ---
         if (data && Array.isArray(data)) {
             presentesData = data.map(item => {
-                // GATILHO SECRETO: Itens com '*' no nome são infinitos
-                if (item.Nome && item.Nome.includes('*')) {
-                    item.Nome = item.Nome.replace(/\*/g, '').trim();
-                    item.Status = 'Disponível';
+                if (item.Nome && typeof item.Nome === 'string') {
+                    // GATILHO SECRETO: Itens com '*' no nome são infinitos
+                    if (item.Nome.includes('*')) {
+                        item.Nome = item.Nome.replace(/\*/g, '').trim();
+                        item.Status = 'Disponível';
+                    }
                 }
 
                 let imagem = item.Imagem;
@@ -1538,10 +1564,19 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    let scrollTimeout = null;
     window.addEventListener('scroll', function() {
-        document.querySelectorAll('.tooltip-box.show').forEach(b => {
-            b.classList.remove('show');
-        });
+        if (!scrollTimeout) {
+            scrollTimeout = requestAnimationFrame(() => {
+                const openTooltips = document.querySelectorAll('.tooltip-box.show');
+                if (openTooltips.length > 0) {
+                    openTooltips.forEach(b => {
+                        b.classList.remove('show');
+                    });
+                }
+                scrollTimeout = null;
+            });
+        }
     }, { passive: true });
 
     // 7. Modais (Elementos do DOM)
@@ -2063,7 +2098,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         gridContainer.innerHTML = items.map(item => {
             const id = item.ID;
-            const nome = item.Nome;
+            let nome = item.Nome || '';
+            if (typeof nome === 'string' && nome.includes('*')) {
+                nome = nome.replace(/\*/g, '').trim();
+            }
             const valor = item.Valor;
             const valorFormatado = formatarPrecoDoacao(valor);
             const imgPath = acharImagemPorNome(nome, IMAGENS_DOACOES_DISPONIVEIS, PATH_IMAGENS_DOACOES) || 'IMAGENS/WIS.svg';
@@ -2139,6 +2177,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (btnCloseModalDoar) {
         btnCloseModalDoar.addEventListener('click', fecharModalDoar);
+    }
+    if (modalDoar) {
+        modalDoar.addEventListener('click', function(e) {
+            if (e.target === this) fecharModalDoar();
+        });
     }
 
     // Gerar Pix (Clique no Confirmar)
