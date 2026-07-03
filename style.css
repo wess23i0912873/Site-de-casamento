@@ -3454,17 +3454,16 @@ details[open] .utilidade-summary {
     flex: 1;
 }
 
-.credit-main,
-.credit-secondary {
+.footer-credit-text {
     font-family: var(--font-sans);
-    font-size: 0.88rem;
-    color: #333333;
-    margin-bottom: 10px;
-    font-weight: 500;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    color: #333333 !important;
+    margin: 0 0 10px 0;
     line-height: 1.5;
 }
 
-.credit-secondary {
+.footer-credit-text:last-child {
     margin-bottom: 0;
 }
 
