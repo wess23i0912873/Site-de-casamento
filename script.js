@@ -581,6 +581,23 @@ function initRSVP() {
     const rsvpForm = document.getElementById('rsvpForm');
     if (!rsvpForm) return;
 
+    const rsvpConfirmadoRadios = rsvpForm.querySelectorAll('input[name="confirmado"]');
+    const justificativaContainer = document.getElementById('rsvp-justificativa-container');
+    const justificativaInput = document.getElementById('rsvp-justificativa');
+
+    if (rsvpConfirmadoRadios && justificativaContainer && justificativaInput) {
+        rsvpConfirmadoRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'Não') {
+                    justificativaContainer.style.display = 'block';
+                } else {
+                    justificativaContainer.style.display = 'none';
+                    justificativaInput.value = '';
+                }
+            });
+        });
+    }
+
     rsvpForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
@@ -596,6 +613,14 @@ function initRSVP() {
         
         // Captura e formata os dados para o padrão nativo da web
         const formData = new FormData(rsvpForm);
+        
+        // Manipulação condicional do payload para a justificativa de ausência
+        const confirmado = formData.get('confirmado');
+        const justificativaVal = justificativaInput ? justificativaInput.value.trim() : '';
+        if (confirmado === 'Não' && justificativaVal) {
+            formData.set('observacoes', 'Justificativa de ausência: ' + justificativaVal);
+        }
+
         const dataParams = new URLSearchParams(formData);
 
         const scriptURL = 'https://script.google.com/macros/s/AKfycbwPB6eqiozVrqDzwX0IVbCuNnZu43XMOwGy3mVwOCZdweQ87JFFBipjbsk8LYKGtDxf/exec';
