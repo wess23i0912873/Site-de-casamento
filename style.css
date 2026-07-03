@@ -1928,15 +1928,32 @@ details[open] .utilidade-summary {
 .rsvp-form input:-webkit-autofill,
 .rsvp-form input:-webkit-autofill:hover, 
 .rsvp-form input:-webkit-autofill:focus,
+.rsvp-form input:-webkit-autofill:active,
 .rsvp-form select:-webkit-autofill,
 .rsvp-form select:-webkit-autofill:hover,
 .rsvp-form select:-webkit-autofill:focus,
+.rsvp-form select:-webkit-autofill:active,
 .rsvp-form textarea:-webkit-autofill,
 .rsvp-form textarea:-webkit-autofill:hover,
-.rsvp-form textarea:-webkit-autofill:focus {
+.rsvp-form textarea:-webkit-autofill:focus,
+.rsvp-form textarea:-webkit-autofill:active,
+.rsvp-form input:autofill,
+.rsvp-form input:autofill:hover, 
+.rsvp-form input:autofill:focus,
+.rsvp-form input:autofill:active,
+.rsvp-form select:autofill,
+.rsvp-form select:autofill:hover,
+.rsvp-form select:autofill:focus,
+.rsvp-form select:autofill:active,
+.rsvp-form textarea:autofill,
+.rsvp-form textarea:autofill:hover,
+.rsvp-form textarea:autofill:focus,
+.rsvp-form textarea:autofill:active {
     -webkit-text-fill-color: #ffffff !important;
-    -webkit-box-shadow: 0 0 0px 1000px #1a1a1a inset !important;
-    transition: background-color 5000s ease-in-out 0s !important;
+    text-fill-color: #ffffff !important;
+    -webkit-box-shadow: 0 0 0 1000px #1a1a1a inset !important;
+    box-shadow: 0 0 0 1000px #1a1a1a inset !important;
+    transition: background-color 999999s ease-in-out 0s !important;
     caret-color: #ffffff !important;
 }
 
@@ -2911,7 +2928,7 @@ details[open] .utilidade-summary {
     margin-bottom: 16px;
 }
 
-.form-group label {
+.modal-content .form-group label {
     display: block;
     font-family: var(--font-sans);
     font-size: 0.8rem;
@@ -2922,7 +2939,7 @@ details[open] .utilidade-summary {
     letter-spacing: 0.05em;
 }
 
-.form-group input {
+.modal-content .form-group input {
     width: 100%;
     padding: 14px 16px;
     border: 1px solid rgba(0,0,0,0.15);
@@ -2934,7 +2951,7 @@ details[open] .utilidade-summary {
     background: #fafafa;
 }
 
-.form-group input:focus {
+.modal-content .form-group input:focus {
     outline: none;
     border-color: var(--color-accent-blue);
     background: #ffffff;
