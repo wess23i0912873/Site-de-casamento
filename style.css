@@ -3454,7 +3454,8 @@ details[open] .utilidade-summary {
     flex: 1;
 }
 
-.credit-main {
+.credit-main,
+.credit-secondary {
     font-family: var(--font-sans);
     font-size: 0.88rem;
     color: #333333;
@@ -3464,11 +3465,7 @@ details[open] .utilidade-summary {
 }
 
 .credit-secondary {
-    font-family: var(--font-sans);
-    font-size: 0.8rem;
-    color: #777777;
-    margin: 0;
-    line-height: 1.5;
+    margin-bottom: 0;
 }
 
 .footer-link {
