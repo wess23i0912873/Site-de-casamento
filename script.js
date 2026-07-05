@@ -1447,8 +1447,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     actionsHTML = `
                         <div class="action-btn-group">
                             <button class="btn-acao btn-reservar" data-id="${id}">Reservar</button>
-                            <span class="tooltip-icon tooltip-mini">?</span>
-                            <div class="tooltip-box">Ao escolher Reservar, você se compromete a comprar e entregar este presente físico aos noivos.</div>
                         </div>
                     `;
                 } else {
@@ -1456,13 +1454,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     actionsHTML = `
                         <div class="action-btn-group">
                             <button class="btn-acao btn-pix btn-presentear" data-id="${id}">Presentear</button>
-                            <span class="tooltip-icon tooltip-mini">?</span>
-                            <div class="tooltip-box">Ao escolher Presentear, você realizará o pagamento do valor do item via Pix diretamente aos noivos.</div>
                         </div>
                         <div class="action-btn-group">
                             <button class="btn-acao btn-reservar" data-id="${id}">Reservar</button>
-                            <span class="tooltip-icon tooltip-mini">?</span>
-                            <div class="tooltip-box">Ao escolher Reservar, você se compromete a comprar e entregar este presente físico aos noivos.</div>
                         </div>
                     `;
                 }
