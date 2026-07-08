@@ -3207,7 +3207,6 @@ details[open] .utilidade-summary {
     text-align: center;
     position: relative;
     z-index: 10;
-    contain: layout style;
 }
 
 .doacoes-container {
