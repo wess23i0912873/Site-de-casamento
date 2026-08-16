@@ -844,6 +844,7 @@ const IMAGENS_DISPONIVEIS = [
     "Air fryer.png",
     "Bacias.png",
     "Batedeira.png",
+    "Bebedouro De Água.png",
     "Cabides.png",
     "Cesto de roupa suja.png",
     "Climatizador.png",
@@ -851,6 +852,7 @@ const IMAGENS_DISPONIVEIS = [
     "Conjunto de panelas.png",
     "Conjunto de xícaras.png",
     "Depósitos de plásticos.png",
+    "Echo Dot - Caixa de som.png",
     "Escorredor de macarrão.png",
     "Escorredor de prato.png",
     "Escova sanitária.png",
@@ -867,6 +869,8 @@ const IMAGENS_DISPONIVEIS = [
     "Kit de recipientes de geladeira.png",
     "Kit de tapete de banheiro.png",
     "Kit de taças de vidro.png",
+    "Kit utensílios de Silicone.png",
+    "Lava Louças.png",
     "Lixeira pequena.png",
     "Maquina de Lavar.png",
     "Painel De TV.png",
@@ -1240,7 +1244,10 @@ document.addEventListener('DOMContentLoaded', function() {
             lowercaseName.includes('poltrona') || 
             lowercaseName.includes('painel') || 
             lowercaseName.includes('almofada') || 
-            lowercaseName.includes('tapete')) {
+            lowercaseName.includes('tapete') ||
+            lowercaseName.includes('echo') ||
+            lowercaseName.includes('alexa') ||
+            lowercaseName.includes('som')) {
             return 'Sala';
         }
         
