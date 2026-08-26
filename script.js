@@ -842,11 +842,16 @@ window.addEventListener('load', function() {
 const IMAGENS_DISPONIVEIS = [
     "2 Baldes.png",
     "Air fryer.png",
+    "Aspirador de pó.png",
     "Bacias.png",
     "Batedeira.png",
     "Bebedouro De Água.png",
     "Cabides.png",
+    "Cafeteira elétrica.png",
+    "Caixa de som.png",
     "Cesto de roupa suja.png",
+    "Chaleira Elétrica.png",
+    "Chuveiro elétrico.png",
     "Climatizador.png",
     "Conjunto de Mesa Cozinha.png",
     "Conjunto de panelas.png",
@@ -857,8 +862,10 @@ const IMAGENS_DISPONIVEIS = [
     "Escorredor de prato.png",
     "Escova sanitária.png",
     "Espelho.png",
+    "Estante para dispensa.png",
     "Ferro de Passar Roupas.png",
     "Fogão.jpg",
+    "Forno elétrico.png",
     "Garrafa de café.png",
     "Geladeira.png",
     "Jarras de suco.png",
@@ -869,20 +876,27 @@ const IMAGENS_DISPONIVEIS = [
     "Kit de recipientes de geladeira.png",
     "Kit de tapete de banheiro.png",
     "Kit de taças de vidro.png",
+    "Kit formas de bolo.png",
     "Kit utensílios de Silicone.png",
     "Lava Louças.png",
     "Lixeira pequena.png",
     "Maquina de Lavar.png",
+    "Mesa de Centro.png",
+    "Mop Giratório.png",
     "Painel De TV.png",
     "Panela de arroz elétrica.png",
     "Panela de pressão.png",
+    "Pipoqueira Elétrica.png",
+    "Poltronas.png",
     "Potes de armazenamento.png",
     "Pratos rasos.png",
+    "Processador de alimentos.png",
     "Protetor de colchão.png",
     "Quadros para decoração.png",
     "Televisão.png",
     "Tábua de passar roupa.png",
     "Varal.png",
+    "Vasos para plantas.png",
     "Ventilador.png",
     "armário de cozinha.png",
     "assadeira.png",
@@ -1007,7 +1021,7 @@ function normalizarTexto(txt) {
               .replace(/\s+/g, " ");
     
     // Substituições de sinônimos/normalizações comuns para melhorar casamento
-    res = res.replace(/\b(conjunto|jogo)\b/g, "kit")
+    res = res.replace(/\b(conjunto|jogos|jogo)\b/g, "kit")
              .replace(/\b(panelas)\b/g, "panela")
              .replace(/\b(pratos)\b/g, "prato")
              .replace(/\b(bacias)\b/g, "bacia")
@@ -1023,14 +1037,18 @@ function normalizarTexto(txt) {
              .replace(/\b(garrafas)\b/g, "garrafa")
              .replace(/\b(toalhas)\b/g, "toalha")
              .replace(/\b(recipientes)\b/g, "recipiente")
-             .replace(/\b(cobertores|cobertas)\b/g, "cobertor")
+             .replace(/\b(cobertores|cobertas|coberta|cobertor)\b/g, "coberta")
              .replace(/\b(lencois|lencol)\b/g, "lencol")
              .replace(/\b(cabides)\b/g, "cabide")
              .replace(/\b(almofadas)\b/g, "almofada")
              .replace(/\b(quadros)\b/g, "quadro")
              .replace(/\b(tapetes)\b/g, "tapete")
              .replace(/\b(flanelas)\b/g, "flanela")
-             .replace(/\b(panos)\b/g, "pano");
+             .replace(/\b(panos)\b/g, "pano")
+             .replace(/\b(poltronas)\b/g, "poltrona")
+             .replace(/\b(vasos)\b/g, "vaso")
+             .replace(/\b(plantas)\b/g, "planta")
+             .replace(/\b(televisao|televisoes|tv)\b/g, "tv");
     return res;
 }
 
@@ -1054,12 +1072,43 @@ function obterImagensNormalizadas(listaImagens) {
     return mapeadas;
 }
 
+// Mapeamento direto prioritário para itens com nomes específicos ou pontuações
+const MAPA_DIRETO_PRESENTES = {
+    "forno eletrico": "Forno elétrico.png",
+    "processador de alimentos": "Processador de alimentos.png",
+    "aspirador de po": "Aspirador de pó.png",
+    "mop giratorio": "Mop Giratório.png",
+    "kit formas de bolo": "Kit formas de bolo.png",
+    "kit forma de bolo": "Kit formas de bolo.png",
+    "pipoqueira eletrica": "Pipoqueira Elétrica.png",
+    "chaleira eletrica": "Chaleira Elétrica.png",
+    "chuveiro eletrico": "Chuveiro elétrico.png",
+    "mesa de centro": "Mesa de Centro.png",
+    "poltronas": "Poltronas.png",
+    "poltrona": "Poltronas.png",
+    "vasos para plantas": "Vasos para plantas.png",
+    "vaso para plantas": "Vasos para plantas.png",
+    "kit de quadros": "Quadros para decoração.png",
+    "kit quadros": "Quadros para decoração.png",
+    "quadros": "Quadros para decoração.png",
+    "estante para dispensa": "Estante para dispensa.png",
+    "estante dispensa": "Estante para dispensa.png",
+    "caixa de som": "Caixa de som.png",
+    "echo dot caixa de som": "Echo Dot - Caixa de som.png",
+    "cafeteira eletrica": "Cafeteira elétrica.png"
+};
+
 // Função de correspondência inteligente por nome
 function acharImagemPorNome(nomeProduto, listaImagens = IMAGENS_DISPONIVEIS, pathImagens = 'IMAGENS/PRESENTES/') {
     if (!nomeProduto || !listaImagens || listaImagens.length === 0) return null;
 
     const nomeNorm = normalizarTexto(nomeProduto);
     const palavrasProduto = nomeNorm.split(' ').filter(w => w.length > 1);
+
+    // 0. Mapeamento direto prioritário
+    if (MAPA_DIRETO_PRESENTES[nomeNorm]) {
+        return `${pathImagens}${MAPA_DIRETO_PRESENTES[nomeNorm]}`;
+    }
 
     const imagensMapeadas = obterImagensNormalizadas(listaImagens);
 
@@ -1072,7 +1121,7 @@ function acharImagemPorNome(nomeProduto, listaImagens = IMAGENS_DISPONIVEIS, pat
     }
 
     // 2. Tenta correspondência por palavras importantes (Comparações Exatas e Plurais/Singulares)
-    const stopWords = ['de', 'para', 'pra', 'com', 'sem', 'em', 'um', 'uma', 'uns', 'umas', 'o', 'a', 'os', 'as', 'do', 'da', 'dos', 'das', 'no', 'na', 'nos', 'nas', 'pro', 'pra', 'pros', 'pras', 'que', 'se', 'ao', 'aos', 'ou', 'ela', 'ele', 'um', 'uma', 'e', 'o', 'kit', 'conjunto', 'jogo'];
+    const stopWords = ['de', 'para', 'pra', 'com', 'sem', 'em', 'um', 'uma', 'uns', 'umas', 'o', 'a', 'os', 'as', 'do', 'da', 'dos', 'das', 'no', 'na', 'nos', 'nas', 'pro', 'pra', 'pros', 'pras', 'que', 'se', 'ao', 'aos', 'ou', 'ela', 'ele', 'um', 'uma', 'e', 'o', 'kit', 'conjunto', 'jogo', 'para', 'decoracao'];
     
     let melhorImagem = null;
     let maiorPontuacao = 0;
@@ -1109,8 +1158,8 @@ function acharImagemPorNome(nomeProduto, listaImagens = IMAGENS_DISPONIVEIS, pat
         }
     }
 
-    // Exigimos que pelo menos 50% das palavras significativas do nome da imagem coincidam com o produto
-    // Isso evita falsos positivos onde apenas uma palavra bate, mas as outras não.
+    // Exigimos que as palavras significativas do nome da imagem coincidam com o produto
+    // Para nomes curtos (<=2 palavras chave), exige 100% de precisão para evitar falsos positivos
     if (melhorImagem && maiorPontuacao >= 2) {
         const imgObj = imagensMapeadas.find(o => o.original === melhorImagem);
         if (imgObj) {
@@ -1128,7 +1177,8 @@ function acharImagemPorNome(nomeProduto, listaImagens = IMAGENS_DISPONIVEIS, pat
                 }
             });
 
-            if (palavrasImgSignificativas.length === 0 || (palavrasCorrespondentes / palavrasImgSignificativas.length) >= 0.5) {
+            const ratioExigido = palavrasImgSignificativas.length <= 2 ? 0.99 : 0.6;
+            if (palavrasImgSignificativas.length === 0 || (palavrasCorrespondentes / palavrasImgSignificativas.length) >= ratioExigido) {
                 return `${pathImagens}${melhorImagem}`;
             }
         }
@@ -1201,6 +1251,7 @@ document.addEventListener('DOMContentLoaded', function() {
             lowercaseName.includes('aspirador') || 
             lowercaseName.includes('vassoura') || 
             lowercaseName.includes('rodo') || 
+            lowercaseName.includes('mop') || 
             lowercaseName.includes('balde') || 
             lowercaseName.includes('bacia') || 
             lowercaseName.includes('flanela') || 
@@ -1247,7 +1298,10 @@ document.addEventListener('DOMContentLoaded', function() {
             lowercaseName.includes('tapete') ||
             lowercaseName.includes('echo') ||
             lowercaseName.includes('alexa') ||
-            lowercaseName.includes('som')) {
+            lowercaseName.includes('som') ||
+            lowercaseName.includes('mesa de centro') ||
+            lowercaseName.includes('vaso') ||
+            lowercaseName.includes('planta')) {
             return 'Sala';
         }
         
