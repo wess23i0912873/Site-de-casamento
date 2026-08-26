@@ -1437,6 +1437,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 return item;
             });
+            presentesData = reordenarPresentes(presentesData);
             renderizarPresentes(presentesData);
         } else {
             console.error("Todas as tentativas de carregar os presentes falharam:", fetchError);
@@ -1446,6 +1447,81 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             `;
         }
+    }
+
+    // 3.5. Reordenação Inteligente e Harmônica:
+    // Garante que a maioria dos itens reservados fique distribuída mais para baixo,
+    // mantendo maior concentração de itens disponíveis no topo de forma natural e mesclada.
+    function reordenarPresentes(items) {
+        if (!items || items.length === 0) return items;
+
+        const disponiveis = [];
+        const reservados = [];
+
+        items.forEach(item => {
+            const status = item.Status || 'Disponível';
+            const isDisp = String(status).trim().toLowerCase() === 'disponível' || String(status).trim().toLowerCase() === 'disponivel';
+            if (isDisp) {
+                disponiveis.push(item);
+            } else {
+                reservados.push(item);
+            }
+        });
+
+        if (disponiveis.length === 0 || reservados.length === 0) {
+            return items;
+        }
+
+        const resultado = [];
+        let dispIdx = 0;
+        let resIdx = 0;
+        const total = items.length;
+
+        // Bloco 1 (Top 30% da lista): ~85% disponíveis, ~15% reservados
+        const bloco1Size = Math.floor(total * 0.30);
+        const resBloco1 = Math.min(Math.round(reservados.length * 0.15), 3);
+        const dispBloco1 = Math.min(bloco1Size - resBloco1, disponiveis.length);
+
+        let step1 = Math.max(Math.floor(dispBloco1 / (resBloco1 + 1)), 2);
+        for (let i = 0; i < dispBloco1 && dispIdx < disponiveis.length; i++) {
+            resultado.push(disponiveis[dispIdx++]);
+            if ((i + 1) % step1 === 0 && resIdx < resBloco1 && resIdx < reservados.length) {
+                resultado.push(reservados[resIdx++]);
+            }
+        }
+        while (resIdx < resBloco1 && resIdx < reservados.length) {
+            resultado.push(reservados[resIdx++]);
+        }
+
+        // Bloco 2 (Meio 40% da lista): ~60% disponíveis, ~40% reservados
+        const bloco2Size = Math.floor(total * 0.40);
+        const resBloco2Total = Math.min(Math.round(reservados.length * 0.50), 10);
+        const resBloco2 = resBloco2Total - resIdx;
+        const dispBloco2 = Math.min(bloco2Size - resBloco2, disponiveis.length - dispIdx);
+
+        let step2 = Math.max(Math.floor(dispBloco2 / (resBloco2 + 1)), 2);
+        for (let i = 0; i < dispBloco2 && dispIdx < disponiveis.length; i++) {
+            resultado.push(disponiveis[dispIdx++]);
+            if ((i + 1) % step2 === 0 && resIdx < resBloco2Total && resIdx < reservados.length) {
+                resultado.push(reservados[resIdx++]);
+            }
+        }
+        while (resIdx < resBloco2Total && resIdx < reservados.length) {
+            resultado.push(reservados[resIdx++]);
+        }
+
+        // Bloco 3 (Finais 30% da lista): Restante com maior concentração de reservados
+        while (dispIdx < disponiveis.length || resIdx < reservados.length) {
+            if (dispIdx < disponiveis.length && (resultado.length % 3 === 0 || resIdx >= reservados.length)) {
+                resultado.push(disponiveis[dispIdx++]);
+            } else if (resIdx < reservados.length) {
+                resultado.push(reservados[resIdx++]);
+            } else if (dispIdx < disponiveis.length) {
+                resultado.push(disponiveis[dispIdx++]);
+            }
+        }
+
+        return resultado;
     }
 
     // Função auxiliar para verificar se o item não tem preço definido
